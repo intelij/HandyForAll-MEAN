@@ -1,0 +1,52 @@
+{
+    "port": "3003",
+    "mongodb": {
+        "host": "localhost",
+        "port": "27017",
+        "database": "stuffondemandonline",
+        "username": "admin",
+        "password": "admin"
+    },
+    "settings": {
+        "wallet": {
+            "amount": {
+                "minimum": "10",
+                "maximum": "10000",
+                "welcome": "50"
+            },
+            "status": "1"
+        },
+        "site_title": "Stuff-On-Demand - Spinac Systems (Pty) Ltd",
+        "site_url": "http://localhost/",
+        "location": "Kifr fdfw",
+        "siteaddress": "gww dfsdf",
+        "email_address": "admin@outlook.com",
+        "admin_commission": "10",
+        "minimum_amount": "300",
+        "service_tax": "15",
+        "billingcycle": "6",
+        "accepttime": "20",
+        "minaccepttime": "10",
+        "distanceby": "km",
+        "bookingIdPrefix": "SOD",
+        "time_zone": "Africa/Johannesburg",
+        "date_format": "MMMM Do, YYYY",
+        "time_format": "HH:mm",
+        "pay_by_cash": {
+            "status": "1"
+        },
+        "referral": {
+            "status": "1",
+            "amount": {
+                "referral": "50",
+                "referrer": "35"
+            }
+        },
+        "categorycommission": {
+            "status": "1"
+        },
+        "logo": "uploads/images/others/1518439351144.png",
+        "light_logo": "uploads/images/others/1518439351145.png",
+        "favicon": "uploads/images/others/1518439351147.png"
+    }
+}

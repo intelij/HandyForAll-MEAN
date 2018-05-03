@@ -1,0 +1,108 @@
+<div class="modal-header">
+  <h3 class="modal-title">Live Tracking</h3>
+</div>
+<div class="modal-body">
+ <!--    <div>  Destination Location:{{LTC.data.location}}</div>
+ {{LTC.wayPoints}} -->
+
+<div class="modal-body">
+<!-- <map ng-if ="render" id="map" zoom="14" center="[{{LTC.data.location.lat}}, {{LTC.data.location.lng}}]" style="height:300px; width: 100%;">
+  <directions draggable="false" travel-mode="DRIVING" origin="{{LTC.data.tasker.location}}" waypoints = "{{LTC.wayPoints}}" destination="[{{LTC.data.location.lat}}, {{LTC.data.location.lng}}]">
+  </directions> <custom-marker id="start" position="{{LTC.position}}">
+  <div> <img src="uploads/default/carmove.png"> </div> </custom-marker>
+ </map> -->
+
+<ng-map id="map" ng-if="render" center="[{{LTC.data.location.lat}}, {{LTC.data.location.lng}}]" >
+       <directions draggable="false"
+      panel="directions-panel"
+      travel-mode="DRIVING"
+      waypoints="{{LTC.wayPoints}}"
+      suppress-markers="true"
+      origin="{{LTC.data.tasker.location}}"
+      destination="[{{LTC.data.location.lat}}, {{LTC.data.location.lng}}] " >
+    </directions>
+    <!-- <custom-marker id="start" p
+    osition="{{LTC.data.tasker.location}}">
+      <div> <img src="uploads/default/carmove.png"> </div> </custom-marker> -->
+
+	   <!-- <marker  id="end" position="LTC.wayPoints[0].location" title="START"
+      optimized="false"
+      icon="{
+        url:'uploads/images/others/car-marker.png'
+      }">
+     </marker> -->
+
+
+
+   <marker id="start" position="{{LTC.data.tasker.location.lat}},{{LTC.data.tasker.location.lng}}" title="Start"
+     optimized="false"
+     image="false"
+     suppress-markers="true"
+     icon="{
+       url:'uploads/default/start.png',
+        scaledSize:[58,58]
+     }" class="markers"
+      >
+   </marker>
+
+	  <marker id="end" position="{{LTC.wayPoints[0].location.lat}},{{LTC.wayPoints[0].location.lng}}" title="Current"
+      optimized="false"
+      image="false"
+      suppress-markers="true"
+      icon="{
+        url:'uploads/default/car.png',
+         scaledSize:[64,64]
+      }" class="markers"
+       >
+    </marker>
+   
+   <marker id="end" position="{{LTC.data.location.lat}},{{LTC.data.location.lng}}" title="End"
+     optimized="false"
+     image="false"
+     suppress-markers="true"
+     icon="{
+       url:'uploads/default/end.png',
+        scaledSize:[58,58]
+     }" class="markers"
+      >
+   </marker>
+
+
+
+
+  </ng-map>
+    <div>{{validation_text}}</div>
+  </div>
+  <div class="modal-footer">
+
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+  </div>
+  <div>{{validation_text}}</div>
+</div>
+
+<style media="screen">
+    .modal-lg {
+      width: 1080px;
+}
+map#gmimap16 {
+    display: none;
+}
+.gmnoprint img{
+	display: none!important;
+}
+</style>
+
+<!--
+<ng-map ng-if="render" id="map" zoom="14" center="[{{LTC.data.location.lat}}, {{LTC.data.location.lng}}]" style="height:300px; width: 100%;">
+  <marker animation="Animation.DROP" position="51.546550, 0.026345" ></marker>
+
+      <marker animation="Animation.DROP" position="51.5493953, 0.0412878"></marker>
+      <directions
+        draggable="true"
+        waypoints="{{wayPoints}}"
+        suppress-markers="true"
+        origin="51.546550, 0.026345"
+        destination="51.5493953, 0.0412878"
+        >
+      </directions>
+    </ng-map> -->

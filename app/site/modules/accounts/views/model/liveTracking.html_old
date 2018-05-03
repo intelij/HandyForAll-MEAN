@@ -1,0 +1,48 @@
+<div class="modal-header">
+  <h3 class="modal-title">Live Tracking</h3>
+</div>
+<div class="modal-body">
+    <div> 
+
+  <div class="modal-body">
+    <ng-map id="map" ng-if="render" center="[{{LTC.data.location.lat}}, {{LTC.data.location.lng}}]" >
+       <directions draggable="false"
+      panel="directions-panel"
+      travel-mode="DRIVING"
+      waypoints="{{LTC.wayPoints}}"
+      optimizeWaypoints = 'true'
+      origin="{{LTC.data.tasker.location}}"
+      destination="[{{LTC.data.location.lat}}, {{LTC.data.location.lng}}] " >
+    </directions>
+	<marker  id="start" position="{{LTC.wayPoints.lat}},{{LTC.wayPoints.lng}}" title="START"
+      optimized="false"
+      icon="{
+        url:'uploads/images/others/car-marker.png',
+        scaledSize:[100,100],
+        origin: [10,10],
+        anchor: [50,50]
+      }"></marker>
+	  <marker id="end" position="{{LTC.data.location.lat}},{{LTC.data.location.lng}}" title="END"
+      optimized="false"
+      icon="{
+        url:'uploads/images/others/car-marker.png',
+        scaledSize:[100,100],
+        origin: [10,10],
+        anchor: [50,50]
+      }"></marker>
+	  
+  </ng-map>
+    <div>{{validation_text}}</div>
+  </div>
+  <div class="modal-footer">
+
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+  </div>
+  <div>{{validation_text}}</div>
+</div>
+
+<style media="screen">
+    .modal-lg {
+      width: 1080px;
+}
+</style>
