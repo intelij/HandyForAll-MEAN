@@ -87,7 +87,7 @@ figlet('HandyForAll', function (err, data) {
                                         if (err) {
                                             console.log('Error On Admin');
                                         } else {
-                                            db.UpdateDocument('settings', { alias: 'general' }, { $set: { "settings.site_title": request.sitename, "settings.site_url": request.siteurl } }, { multi: false }, function (err, result) {
+                                            db.UpdateDocument('settings', { alias: 'general' }, { $set: { "settings.site_title": request.sitename, "settings.site_url": request.siteurl } }, { multi: false, upsert: true }, function (err, result) {
                                                 if (err) {
                                                     console.log('Website Installation Already');
                                                 } else {
