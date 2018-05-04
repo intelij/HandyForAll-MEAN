@@ -7,7 +7,7 @@ var CONFIG = require('../config/config');
 function ensureAuthorized(req, res, next) {
     var token = req.headers.authorization;
     if (token) {
-        jwt.verify(token, CONFIG.SECRET_KEY, function (err, decoded) {
+        jwt.verify(token, CONFIG.SECRET_KEY, function(err, decoded) {
             if (err) {
                 res.send('Unauthorized Access');
             } else {
@@ -19,7 +19,7 @@ function ensureAuthorized(req, res, next) {
     }
 }
 
-module.exports = function (app, io) {
+module.exports = function(app, io) {
     try {
         var admins = require('../controller/admin/admins.js')();
         var users = require('../controller/admin/users.js')();
