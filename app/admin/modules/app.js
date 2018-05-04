@@ -1932,12 +1932,12 @@ angular.module('handyforall.admin')
             $scope.main = {
                 title: data.site_title,
                 settings: {
-                    navbarHeaderColor: data.admin.colors.header,
-                    sidebarColor: data.admin.colors.sidebar,
-                    brandingColor: data.admin.colors.branding,
-                    activeColor: data.admin.colors.active,
-                    headerFixed: data.admin.fixed_header == 'true' ? true : false,
-                    asideFixed: data.admin.fixed_aside == 'true' ? true : false
+                    navbarHeaderColor: !data.admin || !data.admin.colors || !data.admin.colors.header ? "scheme-default" : data.admin.colors.header,
+                    sidebarColor: !data.admin || !data.admin.colors || !data.admin.colors.sidebar ? "scheme-default" : data.admin.colors.sidebar,
+                    brandingColor: !data.admin || !data.admin.colors || !data.admin.colors.branding ? "scheme-default" : data.admin.colors.branding,
+                    activeColor: !data.admin || !data.admin.colors || !data.admin.colors.active ? "scheme-default" : data.admin.colors.active,
+                    headerFixed: !data.admin || data.admin.fixed_header == 'true',
+                    asideFixed: !data.admin || data.admin.fixed_aside == 'true'
                 }
             };
         });
