@@ -50,8 +50,10 @@
         "css": {
           "src": [
             "./app/site/public/css/library/bootstrap.css",
+            "./app/site/public/css/library/bootstrap-social.css",
             "./app/site/public/css/library/font-awesome.css",
             "./app/site/public/css/main.css",
+            "./app/site/public/css/login.css",
             "./app/site/public/css/font-awesome1.min.css",
             "./app/site/public/css/style1.css",
             "./app/site/public/css/submain.css",

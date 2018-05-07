@@ -6,6 +6,7 @@
   "license": "ISC",
   "scripts": {
     "start": "node app.js",
+    "dev": "nodemon app.js",
     "test": "mocha"
   },
   "dependencies": {
@@ -77,14 +78,18 @@
     "querystring": "^0.2.0",
     "serve-favicon": "^2.3.0",
     "sha512": "0.0.1",
+    "slack-winston": "0.0.9",
     "socket.io": "^1.4.8",
     "stream-series": "^0.1.1",
     "stripe": "^4.4.0",
     "url": "^0.11.0",
     "util": "^0.10.3",
+    "winston": "^2.4.2",
     "xml2js": "^0.4.16",
     "xmlbuilder": "^8.2.2"
   },
   "main": "app.js",
-  "devDependencies": {}
+  "devDependencies": {
+    "nodemon": "^1.17.3"
+  }
 }

@@ -70,7 +70,7 @@ function userloginCtrl($scope, $http, $rootScope, $location, AuthenticationServi
             top = (window.outerHeight - height) / 2,
             left = (window.outerWidth - width) / 2;
         $window.open(url, 'facebook_login', 'width=' + width + ',height=' + height + ',scrollbars=0,top=' + top + ',left=' + left);
-    }
+    };
 
     $window.app = {
         authState: function (data) {

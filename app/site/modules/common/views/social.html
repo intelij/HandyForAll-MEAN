@@ -6,14 +6,23 @@
     </div>
 
     <ul class="sign-btns">
-      <li>
-        <!--<button type="button" class="blue-btn vl-btn" ng-click="login()" style="width: 100%;">Facebook</button></li>
+      <!--<li>
+        <button type="button" class="blue-btn vl-btn" ng-click="login()" style="width: 100%;">Facebook</button>
+      </li>
       <li><a class="grn-btn red-btn" href="/auth/google" target="_self">Google</a></li>
       <li><small class="opr-text">or</small></li>-->
-        <li><small class="logtext">{{'LOGIN_OR_SIGNUP_WITH_EMAIL' | translate}} </small></li>
-        <li class="half-pges"><a ui-sref="userlogin">{{'LOGIN' | translate}}</a>
-          <a ui-sref="register({type:'user'})" href="/register">{{'SIGN_UP' | translate}}</a></li>
-        <li><a class="grn-btn fb-btn" href="#" ng-click="facebookLogin()">{{'LOGIN_WITH_FACEBOOK'| translate}}</a></li>
+      <li><small class="logtext">{{'LOGIN_OR_SIGNUP_WITH_EMAIL' | translate}} </small></li>
+      <li class="half-pges">
+        <a ui-sref="userlogin">{{'LOGIN' | translate}}</a>
+        <a ui-sref="register({type:'user'})" href="/register">{{'SIGN_UP' | translate}}</a>
+      </li>
+    </ul>
+    <ul class="social-login-btns">
+      <li><a class="btn btn-block btn-md btn-social btn-facebook" href="#" ng-click="facebookLogin()"><i class="fa fa-facebook"></i> {{'LOGIN_WITH_FACEBOOK'| translate}}</a></li>
+      <li><a class="btn btn-block btn-md btn-social btn-google" href="/auth/google" target="_self"><i class="fa fa-google"></i> {{'LOGIN_WITH_GOOGLE'| translate}}</a></li>
+      <li><a class="btn btn-block btn-md btn-social btn-twitter" href="/auth/twitter" target="_self"><i class="fa fa-twitter"></i> {{'LOGIN_WITH_TWITTER'| translate}}</a></li>
+      <li><a class="btn btn-block btn-md btn-social btn-github" href="/auth/github" target="_self"><i class="fa fa-github"></i> {{'LOGIN_WITH_GITHUB'| translate}}</a></li>
+      <li><a class="btn btn-block btn-md btn-social btn-linkedin" href="/auth/linkedin" target="_self"><i class="fa fa-linkedin"></i> {{'LOGIN_WITH_LINKEDIN'| translate}}</a></li>
     </ul>
     <ul class="sign-btns">
       <li><small class="logtext">{{'BY_SIGNING_UP_YOU_AGREE_TO_OUR'| translate}}  <a href="{{rc.site_url}}/page/termsandconditions">{{'TERMSOFUSE'| translate}} </a> {{'AND'| translate}} <a href="{{rc.site_url}}/page/privacypolicy"> {{'PRIVACY_POLICY'| translate}}.</a> </small></li>
@@ -28,19 +37,19 @@
 
       <div class="form-group" ng-class="{ 'has-error' : form.username.$invalid && !form.username.$pristine, 'has-success' : form.username.$valid && !form.username.$pristine}">
         <input type="text" autocomplete="remember==true?on:off" class="form-control underline-input" name="username" placeholder="User Name"
-          ng-model="username" required>
+               ng-model="username" required>
         <span ng-show="form.username.$dirty && form.username.$error.required" class="help-block">Username is required</span>
       </div>
 
       <div class="form-group" ng-class="{ 'has-error' : form.username.$invalid && !form.username.$pristine, 'has-success' : form.username.$valid && !form.username.$pristine}">
         <input type="password" autocomplete="remember==true?on:off" placeholder="Password" name="password" class="form-control underline-input"
-          ng-model="password" required>
+               ng-model="password" required>
         <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
       </div>
 
       <div class="form-group" ng-class="{ 'has-error' : form.username.$invalid && !form.username.$pristine, 'has-success' : form.username.$valid && !form.username.$pristine}">
         <input type="password" autocomplete="remember==true?on:off" placeholder="Confirm Password" name="password" class="form-control underline-input"
-          ng-model="password" required>
+               ng-model="password" required>
         <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
       </div>
 

@@ -493,11 +493,9 @@ input.banser {
   margin-bottom: 10px; }
 
 .sign-btns {
-  float: left;
   width: 100%; }
 
 .sign-btns li {
-  float: left;
   width: 100%;
   margin: 5px 0 0;
 }
@@ -527,16 +525,17 @@ input.banser {
   font-size: 14px; }
 
 .red-btn {
-  background: #D73D32; }
+  background-color: #D73D32; }
 
 .vl-btn {
   background: #3B5998; }
 
-.half-pges {
-  float: left;
+.sign-btns li.half-pges {
+  display: table;
   width: 100%; }
 
 .sign-btns li.half-pges a {
+  display: table-cell;
   border: 1px solid #158aa2;
   border-radius: 3px;
   float: left;
@@ -544,7 +543,6 @@ input.banser {
   padding: 8px 0;
   color: #158aa2;
   width: 48%;
-  /*font-family: proximanovaregular;*/
    }
 
 .sign-btns li.half-pges a + a {

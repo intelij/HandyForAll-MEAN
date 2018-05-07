@@ -97,10 +97,15 @@ CONFIG.GLOBAL.SITE_URL = config.settings.site_url;
 
 CONFIG.SOCIAL_NETWORKS = {
     'facebookAuth': {
-        'clientID': '1699671247014568',
-        'clientSecret': 'ca21cf003efc524a7ffb8af9c380f547',
-        'callbackURL': 'http://localhost:3002/auth/facebook/callback'
+        clientID: '1699671247014568',
+        clientSecret: 'ca21cf003efc524a7ffb8af9c380f547',
+        callbackURL: 'http://localhost:3003/auth/facebook/callback'
     },
+    'googleAuth': {
+        clientID: process.env.GOOGLE_ID || '904519912223-85dk8huqv4237dvclc0baj0uhfkj1rp7.apps.googleusercontent.com',
+        clientSecret: process.env.GOOGLE_SECRET || '5ivSvEfncV7C6emQvaQIBrqJ',
+        callbackURL: (process.env.DOMAIN || '') + '/auth/google/callback'
+    }
 };
 
 //Export Module
