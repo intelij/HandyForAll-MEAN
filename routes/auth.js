@@ -85,6 +85,7 @@ module.exports = function(passport, io) {
                                                             newUser.name = { 'first_name': req.body.firstname, 'last_name': req.body.lastname };
                                                             newUser.activity = { 'created': req.body.today, 'modified': req.body.today, 'last_login': req.body.today, 'last_logout': req.body.today };
 
+                                                            req.session.passport = req.session.passport || {};
                                                             req.session.passport.header = authHeader;
                                                             userLibrary.userRegister({ 'newUser': newUser, 'smsdocdata': smsdocdata }, function(err, response) {
                                                                 if (err || !response) {
@@ -106,11 +107,13 @@ module.exports = function(passport, io) {
                                                                             if (err) {
                                                                                 return done(err);
                                                                             } else {
+                                                                                req.session.passport = req.session.passport || {};
                                                                                 req.session.passport.header = ({ username: newUser.username });
                                                                                 return done(null, response, { message: 'Login Success' });
                                                                             }
                                                                         });
                                                                     } else {
+                                                                        req.session.passport = req.session.passport || {};
                                                                         req.session.passport.header = ({ username: newUser.username });
                                                                         return done(null, response, { message: 'Login Success' });
                                                                     }
@@ -169,6 +172,7 @@ module.exports = function(passport, io) {
                             if (err) {
                                 return done(null, false, req.flash('Error', 'That email or username is already taken.'));
                             }
+                            req.session.passport = req.session.passport || {};
                             req.session.passport.header = authHeader;
                             return done(null, newUser);
                         });
@@ -230,66 +234,66 @@ module.exports = function(passport, io) {
                         if (err || !settings) {
                             return done(null, false, { message: 'Unable to get data' });
                         } else {
-                            if (settings) {
-                                if (settings.settings.twilio.mode == 'production') { //production
-                                    db.GetOneDocument('users', { '_id': user._id, 'verification_code.mobile': { $exists: false } }, {}, {}, function(err, user) {
-                                        if (err || !user) {
-                                            return done(null, false, { message: 'Verify Your Mobile Number' });
-                                        } else {
-                                            if (user.password) {
-                                                if (!user.validPassword(password)) {
-                                                    return done(null, false, { message: 'Incorrect username/password.' });
-                                                } else {
-                                                    if (user.status == 2) {
-                                                        return done(null, false, { message: 'Your account has been suspended , Please activate your account' });
-                                                    } else {
-                                                        req.session.passport.header = authHeader;
-                                                        var data = { activity: {} };
-                                                        data.activity.last_login = Date();
-                                                        db.UpdateDocument('users', { _id: user._id }, data, {}, function(err, docdata) {
-                                                            if (err) {
-                                                                res.send(err);
-                                                            } else {
-                                                                return done(null, user, { message: 'Login Success' });
-                                                            }
-                                                        });
-                                                    }
-                                                }
+                            if (settings.settings.twilio && settings.settings.twilio.mode == 'production') { //production
+                                db.GetOneDocument('users', { '_id': user._id, 'verification_code.mobile': { $exists: false } }, {}, {}, function(err, user) {
+                                    if (err || !user) {
+                                        return done(null, false, { message: 'Verify Your Mobile Number' });
+                                    } else {
+                                        if (user.password) {
+                                            if (!user.validPassword(password)) {
+                                                return done(null, false, { message: 'Incorrect username/password.' });
                                             } else {
-                                                return done(null, false, { message: 'Invalid Login, Please try again' });
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    db.GetOneDocument('users', { '_id': user._id }, {}, {}, function(err, user) {
-                                        if (err || !user) {
-                                            return done(null, false, { message: 'Invalid User' });
-                                        } else {
-                                            if (user.password) {
-                                                if (!user.validPassword(password)) {
-                                                    return done(null, false, { message: 'Incorrect username/password.' });
+                                                if (user.status == 2) {
+                                                    return done(null, false, { message: 'Your account has been suspended , Please activate your account' });
                                                 } else {
-                                                    if (user.status == 2) {
-                                                        return done(null, false, { message: 'Your account has been suspended , Please activate your account' });
-                                                    } else {
-                                                        req.session.passport.header = authHeader;
-                                                        var data = { activity: {} };
-                                                        data.activity.last_login = Date();
-                                                        db.UpdateDocument('users', { _id: user._id }, data, {}, function(err, docdata) {
-                                                            if (err) {
-                                                                res.send(err);
-                                                            } else {
-                                                                return done(null, user, { message: 'Login Success' });
-                                                            }
-                                                        });
-                                                    }
+                                                    req.session.passport = req.session.passport || {};
+                                                    req.session.passport.header = authHeader;
+                                                    var data = { activity: {} };
+                                                    data.activity.last_login = Date();
+                                                    db.UpdateDocument('users', { _id: user._id }, data, {}, function(err, docdata) {
+                                                        if (err) {
+                                                            res.send(err);
+                                                        } else {
+                                                            return done(null, user, { message: 'Login Success' });
+                                                        }
+                                                    });
                                                 }
-                                            } else {
-                                                return done(null, false, { message: 'Invalid Login, Please try again' });
                                             }
+                                        } else {
+                                            return done(null, false, { message: 'Invalid Login, Please try again' });
                                         }
-                                    });
-                                }
+                                    }
+                                });
+                            } else {
+                                db.GetOneDocument('users', { '_id': user._id }, {}, {}, function(err, user) {
+                                    if (err || !user) {
+                                        return done(null, false, { message: 'Invalid User' });
+                                    } else {
+                                        if (user.password) {
+                                            if (!user.validPassword(password)) {
+                                                return done(null, false, { message: 'Incorrect username/password.' });
+                                            } else {
+                                                if (user.status == 2) {
+                                                    return done(null, false, { message: 'Your account has been suspended , Please activate your account' });
+                                                } else {
+                                                    req.session.passport = req.session.passport || {};
+                                                    req.session.passport.header = authHeader;
+                                                    var data = { activity: {} };
+                                                    data.activity.last_login = Date();
+                                                    db.UpdateDocument('users', { _id: user._id }, data, {}, function(err, docdata) {
+                                                        if (err) {
+                                                            res.send(err);
+                                                        } else {
+                                                            return done(null, user, { message: 'Login Success' });
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        } else {
+                                            return done(null, false, { message: 'Invalid Login, Please try again' });
+                                        }
+                                    }
+                                });
                             }
                         }
                     })
@@ -318,6 +322,7 @@ module.exports = function(passport, io) {
                 } else if (user.status == 3) {
                     return done(null, false, { message: 'Admin need to verify your account' });
                 } else {
+                    req.session.passport = req.session.passport || {};
                     req.session.passport.header = authHeader;
                     var data = { activity: {} };
                     data.activity.last_login = Date();
@@ -433,6 +438,7 @@ module.exports = function(passport, io) {
                             if (err) {
                                 return done(null, false, req.flash('Error', 'That email or username is already taken.'));
                             }
+                            req.session.passport = req.session.passport || {};
                             req.session.passport.header = authHeader;
                             var mailData = {};
                             mailData.template = 'Sighnupmessage';
