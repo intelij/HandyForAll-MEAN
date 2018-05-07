@@ -1,5 +1,9 @@
 "use strict";
 
+if (typeof(PhusionPassenger) != 'undefined') {
+    PhusionPassenger.configure({ autoInstall: false });
+}
+
 /** Dependency Injection */
 var express = require('express') // $ npm install express
     , path = require('path') // Node In-Build Module
