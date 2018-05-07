@@ -3,6 +3,7 @@ npm-debug.log
 npm-debug.log.*
 
 db/*
+logs/*
 
 uploads/images/tasker/*
 uploads/images/users/*
