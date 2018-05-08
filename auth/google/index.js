@@ -1,8 +1,16 @@
 'use strict';
 var express = require('express');
 var passport = require('passport');
+var jwt = require('jsonwebtoken');
+
+var CONFIG = require('../../config/config');
 
 var router = express.Router();
+
+function jwtSign(payload) {
+    var token = jwt.sign(payload, CONFIG.SECRET_KEY);
+    return token;
+}
 
 router
     .get('/', passport.authenticate('google', {
@@ -15,15 +23,16 @@ router
     }))
     .get('/callback', passport.authenticate('google', {
         failureRedirect: '/signup',
-        session: false
-    }),function(req, res){
-        req.session.user = {
-            id: req.user._id,
-            email: req.user.email,
+        session: true
+    }), function(req, res){
+        var authHeader = jwtSign({ username: req.user.username });
+
+        req.session.passport = {
+            user: req.user,
+            header: authHeader
         };
-        req.session.firstVisit = req.user.firstVisit;
-        req.session.isUserLocal = false;
-        res.redirect('/bookmarks');
+
+        res.redirect('/');
     });
 
 module.exports = router;

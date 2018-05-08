@@ -94,14 +94,13 @@ module.exports = function (io) {
                     if (err || !settingdata) {
                         callback(err, user);
                     } else {
-                        if (smsdocdata.settings.twilio.mode == 'production') {
+                        if (smsdocdata.settings && smsdocdata.settings.twilio && smsdocdata.settings.twilio.mode == 'production') {
                             var to = user.phone.code + user.phone.number;
                             var message = 'Thank you for register! Your OTP is: ' + newUser.verification_code[0].mobile;
                             twilio.createMessage(to, '', message, function (err, response) { });
                         }
 
-                        var testingStatus = settingdata.settings.referral.status;
-                        if (settingdata.settings.referral.status != 0) {
+                        if (settingdata.settings && settingdata.settings.referral && settingdata.settings.referral.status) {
                             var mailData = {};
                             mailData.template = 'Sighnupmessage';
                             mailData.to = user.email;

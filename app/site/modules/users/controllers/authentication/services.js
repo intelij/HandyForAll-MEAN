@@ -24,6 +24,15 @@ function AuthenticationService($http, $cookieStore, $rootScope, toastr, $q, $coo
             });
     };
 
+    service.checkLogin = function (callback) {
+        $http.get('/site-success')
+            .success(function (response) {
+                callback(response);
+            }).error(function (err) {
+            toastr.error('login error', 'Error');
+        });
+    };
+
     service.facebookuser = function (facebookdata) {
         var deferred = $q.defer();
         $http({

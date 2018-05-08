@@ -18,6 +18,7 @@ function isAdminAuth(req, res, next) {
     }
 }
 
+/**
 function isSiteAuth(req, res, next) {
     try {
         if (req.isAuthenticated()) {
@@ -29,6 +30,7 @@ function isSiteAuth(req, res, next) {
         console.log("Login authenticate error", ex);
     }
 }
+//*/
 
 function validationLoginUser(req, res, next) {
     req.checkBody('username', ' Username is required').notEmpty();
@@ -47,6 +49,8 @@ function validationLoginUser(req, res, next) {
 
 module.exports = function(app, passport, io) {
     try {
+
+        app.use('/auth', require('../auth')(io));
 
         require('./auth.js')(passport, io);
 
@@ -112,10 +116,24 @@ module.exports = function(app, passport, io) {
             res.render('site/auth_fail', { err: req.session.flash });
         });
 
-        app.get('/site-success', isSiteAuth, function(req, res) {
-            global.name = req.session.passport.user._id;
-            res.cookie('username', req.session.passport.header || req.session.passport.user.token);
-            res.send({ user: req.session.passport.user.username, email: req.session.passport.user.email, user_id: req.session.passport.user._id, token: req.session.passport.header, user_type: req.session.passport.user.role, tasker_status: req.session.passport.user.tasker_status, status: req.session.passport.user.status, verification_code: req.session.passport.user.verification_code, phone: req.session.passport.user.phone.number });
+        app.get('/site-success', function(req, res) {
+            if (req.session.passport && req.session.passport.user) {
+                global.name = req.session.passport.user._id;
+                res.cookie('username', req.session.passport.header || req.session.passport.user.token);
+                res.send({
+                    user: req.session.passport.user.username,
+                    email: req.session.passport.user.email,
+                    user_id: req.session.passport.user._id,
+                    token: req.session.passport.header,
+                    user_type: req.session.passport.user.role,
+                    tasker_status: req.session.passport.user.tasker_status,
+                    status: req.session.passport.user.status,
+                    verification_code: req.session.passport.user.verification_code,
+                    phone: !req.session.passport.user.phone ? "" : req.session.passport.user.phone.number
+                });
+            } else {
+                res.send(null);
+            }
         });
 
         app.post('/siteregister', validationLoginUser, passport.authenticate('site-register', {
@@ -215,6 +233,10 @@ module.exports = function(app, passport, io) {
                     settings.siteUrl = docdata[0].settings.site_url;
                     settings.fbappId = CONFIG.SOCIAL_NETWORKS.facebookAuth.clientID;
                     settings.googleMapAPI = CONFIG.GOOGLE_MAP_API_KEY;
+
+                    if (req.session.passport && req.session.passport.user)
+                        settings.username = req.session.passport.user.username;
+
                     res.render('site/layout', settings);
                 }
             });

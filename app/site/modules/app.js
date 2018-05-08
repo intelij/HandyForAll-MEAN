@@ -88,7 +88,23 @@ angular.module('handyforall.site', ['Authentication',
                 }, function (error) {
                     toastr.error('Server Down !');
                 });
+        } else {
+            AuthenticationService.checkLogin(function (response) {
+                if (response) {
+                    AuthenticationService.SetCredentials(response.user, response.user_id, response.token, response.user_type, response.tasker_status);
+                    $cookieStore.remove('TaskerData');
+                    $rootScope.$emit('notification', { user: response.user_id, type: response.user_type });
+                    $rootScope.$emit('webNotification', { user: response.user_id, type: response.user_type });
+
+                    if ($rootScope.currentState) {
+                        $state.go($rootScope.currentState.name, $rootScope.currentparams, { reload: true });
+                    } else {
+                        $state.go('landing', {}, { reload: true });
+                    }
+                }
+            });
         }
+
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
             var userdata = AuthenticationService.GetCredentials();
 
