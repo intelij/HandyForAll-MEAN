@@ -5,5 +5,10 @@ npm-debug.log.*
 db/*
 logs/*
 
+app/admin/public/css/lib/vendor.min.css
+app/admin/public/scripts/main.min.js
+app/site/public/css/library/vendor.min.css
+app/site/public/scripts/minified/main.min.js
+
 uploads/images/tasker/*
 uploads/images/users/*
