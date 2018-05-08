@@ -87,34 +87,34 @@ module.exports = function(app, passport, io) {
             failureFlash: true
         }));
 
-        app.get('/auth/facebook', passport.authenticate('facebook', { scope: ["email", "user_location"] }));
+        // app.get('/auth/facebook', passport.authenticate('facebook', { scope: ["email", "user_location"] }));
 
-        app.get('/auth/facebook/callback',
-            passport.authenticate('facebook', {
-                successRedirect: '/auth/success',
-                failureRedirect: '/auth/failure',
-                failureFlash: true
-            }));
+        // app.get('/auth/facebook/callback',
+        //     passport.authenticate('facebook', {
+        //         successRedirect: '/auth/success',
+        //         failureRedirect: '/auth/failure',
+        //         failureFlash: true
+        //     }));
 
-        app.get('/auth/success', function(req, res) {
-            global.name = req.session.passport.user.user._id;
-            if (!req.session.passport.user.user.role) {
-                req.session.passport.user.user.role = "user"
-            }
-            res.cookie('username', req.session.passport.header);
-            res.render('site/after_auth', {
-                username: req.session.passport.user.user.username,
-                email: req.session.passport.user.user.email,
-                _id: req.session.passport.user.user._id,
-                role: req.session.passport.user.user.role,
-                token: req.session.passport.user.header,
-                avatar: req.session.passport.user.user.avatar
-            });
-        });
-
-        app.get('/auth/failure', function(req, res) {
-            res.render('site/auth_fail', { err: req.session.flash });
-        });
+        // app.get('/auth/success', function(req, res) {
+        //     global.name = req.session.passport.user.user._id;
+        //     if (!req.session.passport.user.user.role) {
+        //         req.session.passport.user.user.role = "user"
+        //     }
+        //     res.cookie('username', req.session.passport.header);
+        //     res.render('site/after_auth', {
+        //         username: req.session.passport.user.user.username,
+        //         email: req.session.passport.user.user.email,
+        //         _id: req.session.passport.user.user._id,
+        //         role: req.session.passport.user.user.role,
+        //         token: req.session.passport.user.header,
+        //         avatar: req.session.passport.user.user.avatar
+        //     });
+        // });
+        //
+        // app.get('/auth/failure', function(req, res) {
+        //     res.render('site/auth_fail', { err: req.session.flash });
+        // });
 
         app.get('/site-success', function(req, res) {
             if (req.session.passport && req.session.passport.user) {
@@ -208,11 +208,11 @@ module.exports = function(app, passport, io) {
             });
         });
 
-        app.post('/facebookregister', passport.authenticate('facebooksite-register', {
-            successRedirect: '/site-success',
-            failureRedirect: '/site-failure',
-            failureFlash: true
-        }));
+        // app.post('/facebookregister', passport.authenticate('facebooksite-register', {
+        //     successRedirect: '/site-success',
+        //     failureRedirect: '/site-failure',
+        //     failureFlash: true
+        // }));
 
         if (CONFIG.MOBILE_API) {
             var mobile = require('../routes/mobile.js')(app, io);

@@ -119,7 +119,7 @@ module.exports = function (io) {
                             mailData2.template = 'SighnupmessageWithoutreferal';
                             mailData2.to = user.email;
                             mailData2.html = [];
-                            mailData2.html.push({ name: 'testingStatus', value: settingdata.settings.referral.status });
+                            mailData2.html.push({ name: 'testingStatus', value: 0 });
                             mailData2.html.push({ name: 'name', value: user.name.first_name });
                             mailData2.html.push({ name: 'email', value: user.email });
                             mailData2.html.push({ name: 'site_url', value: settingdata.settings.site_url });

@@ -6,15 +6,17 @@ module.exports = function(io){
     logger.debug('Initializing Auth...');
 
     //Passport Configuration
+    require('./facebook/passport').setup(io);
+    require('./twitter/passport').setup(io);
     require('./google/passport').setup(io);
-    // require('./github/passport').setup();
-    // require('./twitter/passport').setup();
-    // require('./linkedin/passport').setup();
+    require('./github/passport').setup(io);
+    require('./linkedin/passport').setup(io);
 
+    router.use('/facebook', require('./facebook'));
+    router.use('/twitter', require('./twitter'));
     router.use('/google', require('./google'));
-    // router.use('/github', require('./github'));
-    // router.use('/twitter', require('./twitter'));
-    // router.use('/linkedin', require('./linkedin'));
+    router.use('/github', require('./github'));
+    router.use('/linkedin', require('./linkedin'));
 
     return router;
 }

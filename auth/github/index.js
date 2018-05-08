@@ -13,15 +13,11 @@ function jwtSign(payload) {
 }
 
 router
-    .get('/', passport.authenticate('google', {
+    .get('/', passport.authenticate('github', {
         failureRedirect: '/signup',
-        scope: [
-            'https://www.googleapis.com/auth/userinfo.profile',
-            'https://www.googleapis.com/auth/userinfo.email'
-        ],
         session: false
     }))
-    .get('/callback', passport.authenticate('google', {
+    .get('/callback', passport.authenticate('github', {
         failureRedirect: '/signup',
         session: false
     }), function(req, res){

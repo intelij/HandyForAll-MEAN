@@ -1,5 +1,5 @@
 var LocalStrategy = require('passport-local').Strategy;
-var FacebookStrategy = require('passport-facebook').Strategy;
+// var FacebookStrategy = require('passport-facebook').Strategy;
 var CONFIG = require('../config/config'); //configuration variables
 var User = require('../model/mongodb.js').users;
 var Tasker = require('../model/mongodb.js').tasker;
@@ -338,6 +338,7 @@ module.exports = function(passport, io) {
         });
     }));
 
+    /**
     passport.use(new FacebookStrategy({
         clientID: CONFIG.SOCIAL_NETWORKS.facebookAuth.clientID,
         clientSecret: CONFIG.SOCIAL_NETWORKS.facebookAuth.clientSecret,
@@ -398,9 +399,9 @@ module.exports = function(passport, io) {
             });
         });
     }));
+     //*/
 
-
-    /*
+    /**
     passport.use('facebook-register', new LocalStrategy({
         usernameField: 'email',
         passwordField: 'pwd',
@@ -548,5 +549,5 @@ module.exports = function(passport, io) {
             });
         });
     }));
-    */
+    //*/
 };
