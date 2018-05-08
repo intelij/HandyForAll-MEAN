@@ -1128,14 +1128,16 @@ angular.module('handyforall.site', ['Authentication',
             $rootScope.siteurl = results.response[0].settings.site_url;
             $rootScope.tasker = results.response[0].tasker;
             $rootScope.user = results.response[0].user;
-            $scope.cashOption = rc.getsetting.pay_by_cash.status;
+            $scope.cashOption = rc.getsetting.pay_by_cash ? rc.getsetting.pay_by_cash.status : "";
             rc.favicon = results.response[0].settings.site_url + results.response[0].settings.favicon;
 
             ngMeta.setDefaultTag('title', results.response[1].seo.seo_title);
             ngMeta.setDefaultTag('titleSuffix', ' | ' + rc.title);
             ngMeta.setDefaultTag('keyword', results.response[1].seo.focus_keyword);
             ngMeta.setDefaultTag('description', results.response[1].seo.meta_description);
-            $window.ga('create', results.response[1].seo.webmaster.google_analytics, 'auto');
+
+            if (results.response[1].seo.webmaster)
+                $window.ga('create', results.response[1].seo.webmaster.google_analytics, 'auto');
 
             rc.socialNetworks = results.response[2].social;
             rc.language = results.response[3].languages;
@@ -1151,17 +1153,25 @@ angular.module('handyforall.site', ['Authentication',
 
             rc.social = [];
             rc.appstore = [];
-            rc.sociallinks[0].settings.link.filter(function (data) {
-                if (data.status == 1) {
-                    rc.social.push(data);
-                }
-            });
-            rc.sociallinks[0].settings.mobileapp.filter(function (data) {
-                if (data.status == 1) {
-                    rc.appstore.push(data);
-                }
-            });
+
+            if (rc.sociallinks[0].settings.link) {
+                rc.sociallinks[0].settings.link.filter(function (data) {
+                    if (data.status == 1) {
+                        rc.social.push(data);
+                    }
+                });
+            }
+
+            if (rc.sociallinks[0].settings.mobileapp) {
+                rc.sociallinks[0].settings.mobileapp.filter(function (data) {
+                    if (data.status == 1) {
+                        rc.appstore.push(data);
+                    }
+                });
+            }
+
             rc.copyrightYear = new Date();
+
             $scope.date = {
                 'format': results.response[0].settings.date_format + ' ' + results.response[0].settings.time_format,
                 'timezone': results.response[0].settings.time_zone,
@@ -1213,7 +1223,7 @@ angular.module('handyforall.site', ['Authentication',
                 rc.DefaultLanguage = $cookieStore.get('language');
                 $rootScope.language = $cookieStore.get('language');
                 $translate.proposedLanguage(rc.language_code) || $translate.use(rc.language_code);
-            } else {
+            } else if (response && response.length) {
                 rc.DefaultLanguage = response[0].name
                 $rootScope.language = response[0].name;
                 $translate.proposedLanguage(response[0].code) || $translate.use(response[0].code);
@@ -1222,6 +1232,9 @@ angular.module('handyforall.site', ['Authentication',
 
         rc.setDefaultLanguage = function setDefaultLanguage(data) {
             MainService.getDefaultLanguage(data).then(function (response) {
+                if (!response || !response.length)
+                    return;
+
                 $cookieStore.put('language', response[0].name);
                 $rootScope.language = response[0].name;
                 $cookieStore.put('language_code', response[0].code);
