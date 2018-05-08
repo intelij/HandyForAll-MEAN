@@ -16,8 +16,8 @@ module.exports = {
             callbackURL: (process.env.DOMAIN || 'http://businessblog.win') + '/auth/twitter/callback'
         },
         'githubAuth': {
-            clientID: '33ac35ff65c633b348d3',
-            clientSecret: 'a04dc6b98b99324904054f76d61a024d7dba3151',
+            clientID: '4f7a5bbc74befae6dc96',
+            clientSecret: 'cb905d2372a818568af8cb56e202c891010263b3',
             callbackURL: (process.env.DOMAIN || 'http://businessblog.win') + '/auth/github/callback'
         },
         'linkedinAuth': {
