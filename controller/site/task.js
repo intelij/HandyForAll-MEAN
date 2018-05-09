@@ -1,3 +1,6 @@
+var moment = require('moment');
+var timezone = require('moment-timezone');
+var geodist = require('geodist');
 
 var db = require('../../controller/adaptor/mongodb.js');
 var async = require("async");
@@ -5,8 +8,6 @@ var mail = require('../../model/mail.js');
 var mongoose = require('mongoose');
 var mailcontent = require('../../model/mailcontent.js');
 var CONFIG = require('../../config/config');
-var moment = require('moment');
-var timezone = require('moment-timezone');
 
 module.exports = function (io) {
 
@@ -347,6 +348,7 @@ module.exports = function (io) {
 									"phone": 1,
 									"taskerskills": 1,
 									"avatar": 1,
+                                    "location": 1,
 									"tasker_area": 1,
 									"tasks": 1,
 									"booked":
@@ -365,6 +367,7 @@ module.exports = function (io) {
 									"phone": { $first: "$phone" },
 									"taskerskills": { $first: "$taskerskills" },
 									"avatar": { $first: "$avatar" },
+                                    "location": { $first: "$location" },
 									"tasker_area": { $first: "$tasker_area" },
 									"booked": { $sum: "$booked" },
 									//"tasks": { "$push": "$tasks" }
@@ -438,8 +441,27 @@ module.exports = function (io) {
 										if ((startAmount <= amountData[j].taskerskills[xx].hour_rate) && (endAmount >= amountData[j].taskerskills[xx].hour_rate)) {
 											newArray.push(amountData[j]);
 											if (newArray[j]) {
-												if (newArray[j].avatar == '' || !newArray[j].avatar) {
+												if (!newArray[j].avatar)
 													newArray[j].avatar = './' + CONFIG.USER_PROFILE_IMAGE_DEFAULT;
+
+												if (settingData.settings.distanceby == 'km') {
+                                                    newArray[j].distance = geodist({
+                                                        lat: parseFloat(taskData[0].location.lat),
+                                                        lon: parseFloat(taskData[0].location.log)
+                                                    }, {
+                                                        lat: newArray[j].location.lat,
+                                                        lon: newArray[j].location.lng,
+                                                    }, {
+                                                        unit: 'km'
+													}) + " km";
+												} else {
+                                                    newArray[j].distance = geodist({
+														lat: parseFloat(taskData[0].location.lat),
+                                                        lon: parseFloat(taskData[0].location.log)
+													}, {
+                                                    	lat: newArray[j].location.lat,
+                                                        lon: newArray[j].location.lng,
+													}) + " miles";
 												}
 											}
 										}
@@ -791,6 +813,26 @@ module.exports = function (io) {
 												if (newArray[j].avatar == '' || !newArray[j].avatar) {
 													newArray[j].avatar = './' + CONFIG.USER_PROFILE_IMAGE_DEFAULT;
 												}
+
+                                                if (settingData.settings.distanceby == 'km') {
+                                                    newArray[j].distance = geodist({
+                                                        lat: parseFloat(taskData[0].location.lat),
+                                                        lon: parseFloat(taskData[0].location.log)
+                                                    }, {
+                                                        lat: newArray[j].location.lat,
+                                                        lon: newArray[j].location.lng,
+                                                    }, {
+                                                        unit: 'km'
+                                                    }) + " km";
+                                                } else {
+                                                    newArray[j].distance = geodist({
+                                                        lat: parseFloat(taskData[0].location.lat),
+                                                        lon: parseFloat(taskData[0].location.log)
+                                                    }, {
+                                                        lat: newArray[j].location.lat,
+                                                        lon: newArray[j].location.lng,
+                                                    }) + " miles";
+                                                }
 											}
 										}
 									}

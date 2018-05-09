@@ -380,11 +380,9 @@ angular.module('handyforall.admin')
                     MainResolve: function (MainService, menuProvider, $cookieStore) {
                         var cookieStore = $cookieStore.get('globals');
                         if (cookieStore) {
-                            console.log('username', cookieStore.currentUser.username);
                             return MainService.getCurrentUsers(cookieStore.currentUser.username).then(function (data) {
-                                console.log('user', data[0]);
-
                                 MainService.setCurrentUserValue(data[0]);
+
                                 return menuProvider.menu(data[0]);
                             });
                         } else {
