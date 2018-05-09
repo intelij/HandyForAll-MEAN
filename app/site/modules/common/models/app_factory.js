@@ -260,7 +260,7 @@ function MainService($http, $q) {
         var deferred = $q.defer();
         $http({
             method: 'GET',
-            url: '/site/landing/getDefaultCurrency?name=' + data
+            url: '/site/landing/getDefaultCurrency?name=' + (!data ? "" : data)
         }).success(function (data) {
             deferred.resolve(data);
         }).error(function (err) {

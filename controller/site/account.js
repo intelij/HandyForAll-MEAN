@@ -3058,6 +3058,7 @@ module.exports = function (io) {
 		}
 		data.taskerskills.experience = req.body.experience;
 		data.taskerskills.hour_rate = req.body.hour_rate;
+        data.taskerskills.km_rate = req.body.km_rate;
 		data.taskerskills.quick_pitch = req.body.quick_pitch;
 		data.taskerskills.categoryid = req.body.categoryid;
 		data.taskerskills.childid = req.body.childid;

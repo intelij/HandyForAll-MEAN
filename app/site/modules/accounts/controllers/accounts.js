@@ -1,43 +1,49 @@
 angular.module('handyforall.accounts').controller('accountsCtrl', accountsCtrl);
 
-accountsCtrl.$inject = ['$scope', '$rootScope', 'MainService', 'accountService', 'accountServiceResolve', '$filter', '$uibModal', '$location', 'toastr', '$timeout', 'Slug', '$state', '$window', '$anchorScroll', 'AuthenticationService', 'sweet', '$stateParams', '$translate', 'NgMap', 'socket', 'notify'];
-function accountsCtrl($scope, $rootScope, MainService, accountService, accountServiceResolve, $filter, $uibModal, $location, toastr, $timeout, Slug, $state, $window, $anchorScroll, AuthenticationService, sweet, $stateParams, $translate, NgMap, socket, notify) {
-
+accountsCtrl.$inject = ['$scope', '$rootScope', 'MainService', 'accountService', 'accountServiceResolve', '$filter', '$uibModal', '$location', 'toastr', '$timeout', 'Slug', '$state', '$window', '$anchorScroll', 'AuthenticationService', 'sweet', '$stateParams', '$translate', 'NgMap', 'socket', 'notify', '$q'];
+function accountsCtrl($scope, $rootScope, MainService, accountService, accountServiceResolve, $filter, $uibModal, $location, toastr, $timeout, Slug, $state, $window, $anchorScroll, AuthenticationService, sweet, $stateParams, $translate, NgMap, socket, notify, $q) {
 	var acc = this;
-	if ($rootScope.settings) {
-		acc.radiusby = $rootScope.settings.distanceby;
-	}
+    var account_status = $stateParams.status;
+    var user = AuthenticationService.GetCredentials();
 
-	if (acc.radiusby == 'km') {
-		acc.radiusval = 1000;
-	}
-	else {
-		acc.radiusval = 1609.34;
-	}
+    acc.radiusby = $rootScope.settings ? $rootScope.settings.distanceby : "";
+	acc.radiusval = acc.radiusby == "km" ? 1000 : 1609.34;
+	acc.taskervariable = user;
 
-	var stateparamcontent = $stateParams;
-	acc.taskervariable = AuthenticationService.GetCredentials();
-	var user = AuthenticationService.GetCredentials();
 	if (accountServiceResolve[0]) {
 		acc.user = accountServiceResolve[0] || {};
 	}
+
 	$scope.visibleValue = false;
-	if (acc.accountMode == false) {
-		$scope.visibleValue = false;
-	}
+
+    $q.all([
+        MainService.getDefaultCurrency(),
+        accountService.getsettings()
+    ]).then(function(responses) {
+        console.log('responses', responses);
+        acc.DefaultCurrency = responses[0];
+        acc.getsettings = responses[1];
+
+        acc.inter = parseInt(acc.getsettings.settings.wallet.amount.maximum) + parseInt(acc.getsettings.settings.wallet.amount.minimum);
+        acc.interamount = acc.inter / 2;
+        acc.walletMinAmt = (acc.getsettings.settings.wallet.amount.minimum * $scope.DefaultCurrency[0].value).toFixed(2);
+        acc.walletMaxAmt = (acc.getsettings.settings.wallet.amount.maximum * $scope.DefaultCurrency[0].value).toFixed(2);
+        acc.walletMidAmt = ((acc.getsettings.settings.wallet.amount.maximum / 2) * $scope.DefaultCurrency[0].value).toFixed(2);
+    }).catch(function(error) {
+        console.error('Failed to load basic data', error);
+    });
+
 	console.log("acc.user", acc.user);
+
 	if (acc.user) {
 		if (acc.user.gender) {
 			acc.user.gender = acc.user.gender.toLowerCase().replace(/\s+/g, '');
 		}
 
 		if (acc.user.role == 'tasker') {
-			if (acc.user.availability == 1) {
-				acc.availabilityvalue = true;
-			} else {
-				acc.availabilityvalue = false;
-			}
-			if (acc.user.location) {
+		    acc.availabilityvalue = acc.user.availability == 1;
+
+		    if (acc.user.location) {
 				var latlng = new google.maps.LatLng(acc.user.location.lat, acc.user.location.lng);
 				var geocoder = geocoder = new google.maps.Geocoder();
 				geocoder.geocode({ 'latLng': latlng }, function (results, status) {
@@ -57,8 +63,6 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 			}
 		}
 	}
-
-
 
 	// Croping
 	$scope.myImage = '';
@@ -92,9 +96,6 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 		}
 	}
 
-
-
-
 	acc.mapToInput = function (event) {
 		if ($scope.maps[0]) {
 			acc.user.radius = parseInt($scope.maps[0].shapes.circle.radius / acc.radiusval);
@@ -113,7 +114,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 				}
 			});
 		}
-	}
+	};
 
 	acc.valueChange = function () {
 		var user = AuthenticationService.GetCredentials();
@@ -135,15 +136,6 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 			}
 		}
 	};
-
-	accountService.getsettings().then(function (response) {
-		acc.getsettings = response;
-		acc.inter = parseInt(acc.getsettings.settings.wallet.amount.maximum) + parseInt(acc.getsettings.settings.wallet.amount.minimum);
-		acc.interamount = acc.inter / 2;
-		acc.walletMinAmt = (response.settings.wallet.amount.minimum * $scope.DefaultCurrency[0].value).toFixed(2);
-		acc.walletMaxAmt = (response.settings.wallet.amount.maximum * $scope.DefaultCurrency[0].value).toFixed(2);
-		acc.walletMidAmt = ((response.settings.wallet.amount.maximum / 2) * $scope.DefaultCurrency[0].value).toFixed(2);
-	});
 
 	$scope.fileupload = function fileupload($files, $event, $rejectedFiles) {
 		if ($files) {
@@ -249,7 +241,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 				if (acc.user.type == 'facebook') {
 					if ((menu.type == 'common') || (menu.type == 'user')) {
 						if (menu.heading != 'PASSWORD') {
-							if (stateparamcontent.status == undefined) {
+							if (account_status == undefined) {
 								if (menu.heading == 'TASK DETAILS') {
 									menu.active = false;
 								}
@@ -266,7 +258,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 					}
 				} else {
 					if ((menu.type == 'common') || (menu.type == 'user')) {
-						if (stateparamcontent.status == undefined) {
+						if (account_status == undefined) {
 							if (menu.heading == 'TASK DETAILS') {
 								menu.active = false;
 							}
@@ -284,7 +276,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 			}
 			else {
 				if ((menu.type == 'common') || (menu.type == 'tasker')) {
-					if (stateparamcontent.status == undefined) {
+					if (account_status == undefined) {
 						if (menu.heading == 'JOB DETAILS') {
 							menu.active = false;
 						}
@@ -676,10 +668,6 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 			$translate('PLEASE ENTER THE VALID DATA').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
 		}
 	};
-
-	MainService.getDefaultCurrency().then(function (response) {
-		acc.DefaultCurrency = response;
-	});
 
 	acc.categoryModal = function (category) {
 		var modalInstance = $uibModal.open({
@@ -2066,7 +2054,7 @@ angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl',
 	}
 
 
-	acm.selectedCategoryData.hour_rate = parseFloat((acm.selectedCategoryData.hour_rate * acm.defaultcurrency[0].value).toFixed(2));
+	acm.selectedCategoryData.hour_rate = parseFloat((acm.selectedCategoryData.hour_rate * (!acm.defaultcurrency || !acm.defaultcurrency.length ? 1 : acm.defaultcurrency[0].value)).toFixed(2));
 	acm.ok = function (valid) {
 		if (valid) {
 			$uibModalInstance.close(acm.selectedCategoryData);
