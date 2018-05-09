@@ -60,32 +60,62 @@ module.exports = function(app, passport, io) {
             res.render('admin/layout', settings);
         });
         app.post('/admin', passport.authenticate('adminLogin', {
-            successRedirect: '/admin-success',
             failureRedirect: '/admin-logouts',
             failureFlash: true
-        }));
+        }), function(req, res){
+            req.session.passport = req.session.passport || {};
+
+            req.session.passport.user = req.user;
+            req.session.passport.header = req.user.token;
+
+            res.cookie('username', req.session.passport.header);
+
+            res.send({ user: req.session.passport.user.username, token: req.session.passport.header });
+        });
 
         app.get('/admin-logouts', function(req, res) {
             res.cookie('username', 'wrong');
             res.send(req.session.flash.error);
         });
 
-        app.get('/admin-success', isAdminAuth, function(req, res) {
-            res.cookie('username', req.session.passport.header);
-            res.send({ user: req.session.passport.user.username, token: req.session.passport.header });
-        });
-
         app.post('/site', passport.authenticate('local-site-login', {
-            successRedirect: '/site-success',
             failureRedirect: '/site-failure',
             failureFlash: true
+        }), function(req, res) {
+            req.session.passport = req.session.passport || {};
 
-        }));
+            req.session.passport.user = req.user;
+            req.session.passport.header = req.user.token;
+
+            global.name = req.session.passport.user._id;
+
+            res.cookie('username', req.session.passport.header || req.session.passport.user.token);
+
+            res.send({
+                user: req.session.passport.user.username,
+                email: req.session.passport.user.email,
+                user_id: req.session.passport.user._id,
+                token: req.session.passport.header,
+                user_type: req.session.passport.user.role,
+                tasker_status: req.session.passport.user.tasker_status,
+                status: req.session.passport.user.status,
+                verification_code: req.session.passport.user.verification_code,
+                phone: !req.session.passport.user.phone ? "" : req.session.passport.user.phone.number
+            });
+        });
+
         app.post('/site/taskerlogin', passport.authenticate('local-taskersite-login', {
             successRedirect: '/site-success',
             failureRedirect: '/tasker-error',
             failureFlash: true
         }));
+
+        app.post('/siteregister', validationLoginUser, passport.authenticate('site-register', {
+            successRedirect: '/site-success',
+            failureRedirect: '/site-failure',
+            failureFlash: true
+        }));
+
 
         // app.get('/auth/facebook', passport.authenticate('facebook', { scope: ["email", "user_location"] }));
 
@@ -115,32 +145,6 @@ module.exports = function(app, passport, io) {
         // app.get('/auth/failure', function(req, res) {
         //     res.render('site/auth_fail', { err: req.session.flash });
         // });
-
-        app.get('/site-success', function(req, res) {
-            if (req.session.passport && req.session.passport.user) {
-                global.name = req.session.passport.user._id;
-                res.cookie('username', req.session.passport.header || req.session.passport.user.token);
-                res.send({
-                    user: req.session.passport.user.username,
-                    email: req.session.passport.user.email,
-                    user_id: req.session.passport.user._id,
-                    token: req.session.passport.header,
-                    user_type: req.session.passport.user.role,
-                    tasker_status: req.session.passport.user.tasker_status,
-                    status: req.session.passport.user.status,
-                    verification_code: req.session.passport.user.verification_code,
-                    phone: !req.session.passport.user.phone ? "" : req.session.passport.user.phone.number
-                });
-            } else {
-                res.send(null);
-            }
-        });
-
-        app.post('/siteregister', validationLoginUser, passport.authenticate('site-register', {
-            successRedirect: '/site-success',
-            failureRedirect: '/site-failure',
-            failureFlash: true
-        }));
 
         /*
         app.post('/facebookregister', passport.authenticate('facebook-register', {

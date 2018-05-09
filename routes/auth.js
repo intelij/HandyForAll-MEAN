@@ -66,7 +66,7 @@ module.exports = function(passport, io) {
                                                 else {
                                                     db.GetOneDocument('settings', { 'alias': 'sms' }, {}, {}, function(err, smsdocdata) {
                                                         if (err || !smsdocdata) {
-                                                            res.send(err);
+                                                            return done(err);
                                                         } else {
                                                             var newUser = {};
                                                             var authHeader = jwtSign({ username: req.body.username });
@@ -188,43 +188,38 @@ module.exports = function(passport, io) {
         passwordField: 'password',
         passReqToCallback: true
     }, function(req, username, password, done) {
-        var authHeader = jwtSign({ username: username });
         db.GetOneDocument('admins', { 'username': username, 'role': { $in: ['admin', 'subadmin'] }, 'status': 1 }, {}, {}, function(err, user) {
             if (err) {
                 return done(err);
+            } else if (!user || !user.validPassword(password)) {
+                return done(null, false, { message: 'You are not authorized to sign in. Verify that you are using valid credentials' });
             } else {
-                if (!user || !user.validPassword(password)) {
-                    return done(null, false, { message: 'You are not authorized to sign in. Verify that you are using valid credentials' });
-                } else {
-                    req.session.passport = req.session.passport || {};
-                    req.session.passport.header = authHeader;
+                var data = {
+                    activity: {
+                        last_login: new Date()
+                    }
+                };
 
-                    var data = {
-                        activity: {
-                            last_login: new Date()
-                        }
-                    };
+                db.UpdateDocument('admins', { _id: user._id }, data, {}, function(err, docdata) {
+                    if (err) {
+                        return done(err);
+                    } else {
+                        user.token = jwtSign({ username: username });
 
-                    db.UpdateDocument('admins', { _id: user._id }, data, {}, function(err, docdata) {
-                        if (err) {
-                            res.send(err);
-                        } else {
-                            return done(null, user);
-                        }
-                    });
-                }
+                        return done(null, user);
+                    }
+                });
             }
         });
     }));
-
 
     passport.use('local-site-login', new LocalStrategy({
         usernameField: 'username',
         passwordField: 'password',
         passReqToCallback: true
     }, function(req, username, password, done) {
-        console.log("username", username);
         var authHeader = jwtSign({ username: username });
+
         db.GetOneDocument('users', { $or: [{ 'username': username }, { 'email': username }, { 'phone.number': username }], 'status': { $ne: 0 } }, {}, {}, function(err, user) {
             if (err) {
                 return done(err);
@@ -246,14 +241,18 @@ module.exports = function(passport, io) {
                                                 if (user.status == 2) {
                                                     return done(null, false, { message: 'Your account has been suspended , Please activate your account' });
                                                 } else {
-                                                    req.session.passport = req.session.passport || {};
-                                                    req.session.passport.header = authHeader;
-                                                    var data = { activity: {} };
-                                                    data.activity.last_login = Date();
+                                                    var data = {
+                                                        activity: {
+                                                            last_login: Date()
+                                                        }
+                                                    };
+
                                                     db.UpdateDocument('users', { _id: user._id }, data, {}, function(err, docdata) {
                                                         if (err) {
-                                                            res.send(err);
+                                                            return done(err);
                                                         } else {
+                                                            user.token = authHeader;
+
                                                             return done(null, user, { message: 'Login Success' });
                                                         }
                                                     });
@@ -276,14 +275,18 @@ module.exports = function(passport, io) {
                                                 if (user.status == 2) {
                                                     return done(null, false, { message: 'Your account has been suspended , Please activate your account' });
                                                 } else {
-                                                    req.session.passport = req.session.passport || {};
-                                                    req.session.passport.header = authHeader;
-                                                    var data = { activity: {} };
-                                                    data.activity.last_login = Date();
+                                                    var data = {
+                                                        activity: {
+                                                            last_login: Date()
+                                                        }
+                                                    };
+
                                                     db.UpdateDocument('users', { _id: user._id }, data, {}, function(err, docdata) {
                                                         if (err) {
-                                                            res.send(err);
+                                                            return done(err);
                                                         } else {
+                                                            user.token = authHeader;
+
                                                             return done(null, user, { message: 'Login Success' });
                                                         }
                                                     });
@@ -328,7 +331,7 @@ module.exports = function(passport, io) {
                     data.activity.last_login = Date();
                     db.UpdateDocument('tasker', { _id: user._id }, data, {}, function(err, docdata) {
                         if (err) {
-                            res.send(err);
+                            return done(err);
                         } else {
                             return done(null, user, { message: 'Login Success' });
                         }
