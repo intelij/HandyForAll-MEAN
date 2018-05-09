@@ -89,6 +89,7 @@ TASKER_SCHEMA.TASKER = {
         name: String,
         quick_pitch: String,
         hour_rate: Number,
+        km_rate: Number,
         experience: { type: Schema.ObjectId, ref: 'experience' },
         status: { type: Number, default: 1 }
     }],
