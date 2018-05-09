@@ -78,6 +78,30 @@ function handleSocialLogin(provider, objUserInfo, io, callback) {
     });
 }
 
+function handleLocalLogin(req, res) {
+    req.session.passport = req.session.passport || {};
+
+    req.session.passport.user = req.user;
+    req.session.passport.header = req.user.token;
+
+    global.name = req.session.passport.user._id;
+
+    res.cookie('username', req.session.passport.header || req.session.passport.user.token);
+
+    res.send({
+        user: req.session.passport.user.username,
+        email: req.session.passport.user.email,
+        user_id: req.session.passport.user._id,
+        token: req.session.passport.header,
+        user_type: req.session.passport.user.role,
+        tasker_status: req.session.passport.user.tasker_status,
+        status: req.session.passport.user.status,
+        verification_code: req.session.passport.user.verification_code,
+        phone: !req.session.passport.user.phone ? "" : req.session.passport.user.phone.number
+    });
+}
+
 module.exports = {
-    "handleSocialLogin": handleSocialLogin
+    "handleSocialLogin": handleSocialLogin,
+    "handleLocalLogin": handleLocalLogin
 };

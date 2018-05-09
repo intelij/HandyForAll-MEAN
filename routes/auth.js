@@ -313,7 +313,7 @@ module.exports = function(passport, io) {
         passReqToCallback: true // allows us to pass back the entire request to the callback
     }, function(req, username, password, done) {
         var authHeader = jwtSign({ username: username });
-        console.log("username", username);
+
         db.GetOneDocument('tasker', { $or: [{ 'username': username }, { 'email': username }, { 'phone.number': username }], 'status': { $in: [1, 2, 3] } }, {}, {}, function(err, user) {
             if (err) {
                 return done(err);
@@ -325,14 +325,18 @@ module.exports = function(passport, io) {
                 } else if (user.status == 3) {
                     return done(null, false, { message: 'Admin need to verify your account' });
                 } else {
-                    req.session.passport = req.session.passport || {};
-                    req.session.passport.header = authHeader;
-                    var data = { activity: {} };
-                    data.activity.last_login = Date();
+                    var data = {
+                        activity: {
+                            last_login: Date()
+                        }
+                    };
+
                     db.UpdateDocument('tasker', { _id: user._id }, data, {}, function(err, docdata) {
                         if (err) {
                             return done(err);
                         } else {
+                            user.token = authHeader;
+
                             return done(null, user, { message: 'Login Success' });
                         }
                     });

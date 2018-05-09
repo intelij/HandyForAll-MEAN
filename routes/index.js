@@ -2,8 +2,10 @@
 
 var path = require('path');
 var jwt = require('jsonwebtoken');
+
 var CONFIG = require('../config/config');
 var db = require('../controller/adaptor/mongodb.js');
+var AuthService = require('../auth/auth.service');
 
 
 function isAdminAuth(req, res, next) {
@@ -81,34 +83,33 @@ module.exports = function(app, passport, io) {
         app.post('/site', passport.authenticate('local-site-login', {
             failureRedirect: '/site-failure',
             failureFlash: true
-        }), function(req, res) {
-            req.session.passport = req.session.passport || {};
-
-            req.session.passport.user = req.user;
-            req.session.passport.header = req.user.token;
-
-            global.name = req.session.passport.user._id;
-
-            res.cookie('username', req.session.passport.header || req.session.passport.user.token);
-
-            res.send({
-                user: req.session.passport.user.username,
-                email: req.session.passport.user.email,
-                user_id: req.session.passport.user._id,
-                token: req.session.passport.header,
-                user_type: req.session.passport.user.role,
-                tasker_status: req.session.passport.user.tasker_status,
-                status: req.session.passport.user.status,
-                verification_code: req.session.passport.user.verification_code,
-                phone: !req.session.passport.user.phone ? "" : req.session.passport.user.phone.number
-            });
-        });
+        }), AuthService.handleLocalLogin);
 
         app.post('/site/taskerlogin', passport.authenticate('local-taskersite-login', {
-            successRedirect: '/site-success',
             failureRedirect: '/tasker-error',
             failureFlash: true
-        }));
+        }), AuthService.handleLocalLogin);
+
+        // This is also used to get the current user.
+        app.get('/site-success', function(req, res) {
+            if (req.session.passport && req.session.passport.user) {
+                global.name = req.session.passport.user._id;
+                res.cookie('username', req.session.passport.header || req.session.passport.user.token);
+                res.send({
+                    user: req.session.passport.user.username,
+                    email: req.session.passport.user.email,
+                    user_id: req.session.passport.user._id,
+                    token: req.session.passport.header,
+                    user_type: req.session.passport.user.role,
+                    tasker_status: req.session.passport.user.tasker_status,
+                    status: req.session.passport.user.status,
+                    verification_code: req.session.passport.user.verification_code,
+                    phone: !req.session.passport.user.phone ? "" : req.session.passport.user.phone.number
+                });
+            } else {
+                res.send(null);
+            }
+        });
 
         app.post('/siteregister', validationLoginUser, passport.authenticate('site-register', {
             successRedirect: '/site-success',
