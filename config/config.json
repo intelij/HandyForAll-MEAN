@@ -11,26 +11,24 @@
         "wallet": {
             "amount": {
                 "minimum": "10",
-                "maximum": "10000",
-                "welcome": "50"
+                "maximum": "1000"
             },
             "status": "1"
         },
-        "site_title": "Stuff-On-Demand - Spinac Systems (Pty) Ltd",
-        "site_url": "http://local.handyforall.com:3003/",
-        "location": "Kifr fdfw",
-        "siteaddress": "gww dfsdf",
-        "email_address": "admin@outlook.com",
-        "admin_commission": "10",
-        "minimum_amount": "300",
-        "service_tax": "15",
-        "billingcycle": "6",
-        "accepttime": "20",
+        "site_title": "HandyForAll",
+        "site_url": "local.handyforall.com",
+        "location": "Miami International Airport, Miami, FL 33126, USA",
+        "siteaddress": "Miami International Airport, Miami, FL 33126, USA",
+        "email_address": "gold.luckystar.0206@gmail.com",
+        "admin_commission": "5",
+        "service_tax": "5",
+        "billingcycle": "10",
+        "accepttime": "30",
         "minaccepttime": "10",
         "distanceby": "km",
-        "bookingIdPrefix": "SOD",
-        "time_zone": "Africa/Johannesburg",
-        "date_format": "MMMM Do, YYYY",
+        "bookingIdPrefix": "handyforall_",
+        "time_zone": "US/Pacific",
+        "date_format": "YYYY-MM-DD",
         "time_format": "HH:mm",
         "pay_by_cash": {
             "status": "1"
@@ -38,15 +36,15 @@
         "referral": {
             "status": "1",
             "amount": {
-                "referral": "50",
-                "referrer": "35"
+                "referral": "5",
+                "referrer": "5"
             }
         },
         "categorycommission": {
             "status": "1"
         },
-        "logo": "uploads/images/others/1518439351144.png",
-        "light_logo": "uploads/images/others/1518439351145.png",
-        "favicon": "uploads/images/others/1518439351147.png"
+        "logo": "uploads/images/others/1525862933692.jpg",
+        "light_logo": "uploads/images/others/1525862933693.png",
+        "favicon": "uploads/images/others/1525862933693.jpg"
     }
 }
