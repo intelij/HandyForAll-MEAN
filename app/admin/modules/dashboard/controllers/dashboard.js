@@ -8,24 +8,27 @@ function DashboardCtrl(UsersService, toastr, TasksService, TaskersService, userC
     dlc.tasks = getRecentTasksResolve[0];
     dlc.users = userCountServiceResolve[0];
     dlc.taskers = getRecentTaskersResolve[0];
-    dlc.permission = $scope.privileges.filter(function (menu) {
-        return (menu.alias === "users");
-    }).map(function (menu) {
-        return menu.status;
-    })[0];
 
-    dlc.taskerpermission = $scope.privileges.filter(function (menu) {
-        return (menu.alias === "tasker");
-    }).map(function (menu) {
-        return menu.status;
+    if ($scope.privileges) {
+        dlc.permission = $scope.privileges.filter(function (menu) {
+            return (menu.alias === "users");
+        }).map(function (menu) {
+            return menu.status;
+        })[0];
 
-    })[0];
+        dlc.taskerpermission = $scope.privileges.filter(function (menu) {
+            return (menu.alias === "tasker");
+        }).map(function (menu) {
+            return menu.status;
 
-    dlc.taskpermission = $scope.privileges.filter(function (menu) {
-        return (menu.alias === "tasks");
-    }).map(function (menu) {
-        return menu.status;
-    })[0];
+        })[0];
+
+        dlc.taskpermission = $scope.privileges.filter(function (menu) {
+            return (menu.alias === "tasks");
+        }).map(function (menu) {
+            return menu.status;
+        })[0];
+    }
 
     var layout = [
         {

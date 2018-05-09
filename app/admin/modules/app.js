@@ -207,81 +207,85 @@ angular.module('handyforall.admin')
                 return {
                     menu: function (user) {
                         var deferred = $q.defer();
+
                         $http.get('app/admin/public/asserts/json/menu.json').success(function (data) {
-                            if (user) {
-                                if (user.role == 'admin') {
-                                    $rootScope.userVisiblevalue = true;
-                                    $rootScope.taskerVisiblevalue = true;
-                                    $rootScope.taskVisiblevalue = true;
-                                    $rootScope.earningsVisiblevalue = true;
-                                    $rootScope.categoriesVisiblevalue = true;
-                                    $rootScope.couponsVisiblevalue = true;
-                                    $rootScope.newsletterVisiblevalue = true;
-                                }
-                                if (user.role != 'admin') { 
-                                    user.privileges.filter(function (data) {
-                                        if (data.alias == "users") {
-                                            if (data.status.view == true) {
-                                                $rootScope.userVisiblevalue = true;
-                                            }
+                            if (!user || typeof user !== "object")
+                                return deferred.reject(user);
+
+                            if (user.role == 'admin') {
+                                $rootScope.userVisiblevalue = true;
+                                $rootScope.taskerVisiblevalue = true;
+                                $rootScope.taskVisiblevalue = true;
+                                $rootScope.earningsVisiblevalue = true;
+                                $rootScope.categoriesVisiblevalue = true;
+                                $rootScope.couponsVisiblevalue = true;
+                                $rootScope.newsletterVisiblevalue = true;
+                            }
+
+                            if (user.privileges && user.role != 'admin') {
+                                user.privileges.filter(function (data) {
+                                    if (data.alias == "users") {
+                                        if (data.status.view == true) {
+                                            $rootScope.userVisiblevalue = true;
                                         }
-                                        if (data.alias == "tasker") {
-                                            if (data.status.view == true) {
-                                                $rootScope.taskerVisiblevalue = true;
-                                            }
+                                    }
+                                    if (data.alias == "tasker") {
+                                        if (data.status.view == true) {
+                                            $rootScope.taskerVisiblevalue = true;
                                         }
-                                        if (data.alias == "tasks") {
-                                            if (data.status.view == true) {
-                                                $rootScope.taskVisiblevalue = true;
-                                            }
+                                    }
+                                    if (data.alias == "tasks") {
+                                        if (data.status.view == true) {
+                                            $rootScope.taskVisiblevalue = true;
                                         }
-                                        if (data.alias == "earnings") {
-                                            if (data.status.view == true) {
-                                                $rootScope.earningsVisiblevalue = true;
-                                            }
+                                    }
+                                    if (data.alias == "earnings") {
+                                        if (data.status.view == true) {
+                                            $rootScope.earningsVisiblevalue = true;
                                         }
-                                        if (data.alias == "categories") {
-                                            if (data.status.view == true) {
-                                                $rootScope.categoriesVisiblevalue = true;
-                                            }
+                                    }
+                                    if (data.alias == "categories") {
+                                        if (data.status.view == true) {
+                                            $rootScope.categoriesVisiblevalue = true;
                                         }
-                                        if (data.alias == "coupons") {
-                                            if (data.status.view == true) {
-                                                $rootScope.couponsVisiblevalue = true;
-                                            }
+                                    }
+                                    if (data.alias == "coupons") {
+                                        if (data.status.view == true) {
+                                            $rootScope.couponsVisiblevalue = true;
                                         }
-                                        if (data.alias == "newsletter") {
-                                            if (data.status.view == true) {
-                                                $rootScope.newsletterVisiblevalue = true;
+                                    }
+                                    if (data.alias == "newsletter") {
+                                        if (data.status.view == true) {
+                                            $rootScope.newsletterVisiblevalue = true;
+                                        }
+                                    }
+                                });
+
+                                for (var j = 0; j < data.length; j++) {
+                                    user.privileges.filter(function (childs) {
+                                        if (childs.state == data[j].state) {
+                                            if (childs.status.view == false && childs.status.add == false && childs.status.edit == false && childs.status.delete == false) {
+                                                data.splice(j, 1);
+                                            } else if (data[j].childs) {
+                                                data[j].childs.filter(function (menu, index, arr) {
+                                                    if (childs.status.view == false && menu.action == 'view') {
+                                                        if (data[j].childs[index].state == menu.state) { data[j].childs.splice(index, 1); }
+                                                    } else if (childs.status.add == false && menu.action == 'add') {
+                                                        if (data[j].childs[index].state == menu.state) { data[j].childs.splice(index, 1); }
+                                                    } else if (childs.status.edit == false && menu.action == 'edit') {
+                                                        if (data[j].childs[index].state == menu.state) { data[j].childs.splice(index, 1); }
+                                                    } else if (childs.status.delete == false && menu.action == 'delete') {
+                                                        if (data[j].childs[index].state == menu.state) { data[j].childs.splice(index, 1); }
+                                                    }
+                                                });
                                             }
                                         }
                                     });
                                 }
-                                if (user.privileges && user.role != 'admin') {
-                                    for (var j = 0; j < data.length; j++) {
-                                        user.privileges.filter(function (childs) {
-                                            if (childs.state == data[j].state) {
-                                                if (childs.status.view == false && childs.status.add == false && childs.status.edit == false && childs.status.delete == false) {
-                                                    data.splice(j, 1);
-                                                } else if (data[j].childs) {
-                                                    data[j].childs.filter(function (menu, index, arr) {
-                                                        if (childs.status.view == false && menu.action == 'view') {
-                                                            if (data[j].childs[index].state == menu.state) { data[j].childs.splice(index, 1); }
-                                                        } else if (childs.status.add == false && menu.action == 'add') {
-                                                            if (data[j].childs[index].state == menu.state) { data[j].childs.splice(index, 1); }
-                                                        } else if (childs.status.edit == false && menu.action == 'edit') {
-                                                            if (data[j].childs[index].state == menu.state) { data[j].childs.splice(index, 1); }
-                                                        } else if (childs.status.delete == false && menu.action == 'delete') {
-                                                            if (data[j].childs[index].state == menu.state) { data[j].childs.splice(index, 1); }
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
                             }
+
                             user.menu = data;
+
                             deferred.resolve(user);
                         }).error(function (err) {
                             deferred.reject(err);
@@ -376,7 +380,10 @@ angular.module('handyforall.admin')
                     MainResolve: function (MainService, menuProvider, $cookieStore) {
                         var cookieStore = $cookieStore.get('globals');
                         if (cookieStore) {
+                            console.log('username', cookieStore.currentUser.username);
                             return MainService.getCurrentUsers(cookieStore.currentUser.username).then(function (data) {
+                                console.log('user', data[0]);
+
                                 MainService.setCurrentUserValue(data[0]);
                                 return menuProvider.menu(data[0]);
                             });
@@ -1842,7 +1849,7 @@ angular.module('handyforall.admin')
             $scope.pendingTaskerLength = response[1];
         });
 
-        if ($scope.presentUser) {
+        if ($scope.presentUser && $scope.presentUser.privileges) {
             $scope.settingdata = $scope.presentUser.privileges.filter(function (menu) {
                 return (menu.alias === "settings");
             }).map(function (menu) {

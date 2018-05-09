@@ -1252,35 +1252,41 @@ angular.module('handyforall.site', ['Authentication',
                     MainService.getTransalatePageNames(rc.DefaultLanguage).then(function (response) {
                         var translatepages = response;
                         var matchid;
-                        angular.forEach(rc.pages[0].categoryname, function (data, key) {
-                            angular.forEach(translatepages, function (data1) {
-                                if (data.parent) {
-                                    currentid = data.parent;
-                                } else {
-                                    currentid = data._id;
-                                }
-                                if (data1.parent) {
-                                    matchid = data1.parent;
-                                } else {
-                                    matchid = data1._id;
-                                }
-                                if (currentid == matchid) {
-                                    rc.pages[0].categoryname[key] = data1;
-                                }
+
+                        if (rc.pages && rc.pages.length) {
+                            angular.forEach(rc.pages[0].categoryname, function (data, key) {
+                                angular.forEach(translatepages, function (data1) {
+                                    if (data.parent) {
+                                        currentid = data.parent;
+                                    } else {
+                                        currentid = data._id;
+                                    }
+                                    if (data1.parent) {
+                                        matchid = data1.parent;
+                                    } else {
+                                        matchid = data1._id;
+                                    }
+                                    if (currentid == matchid) {
+                                        rc.pages[0].categoryname[key] = data1;
+                                    }
+                                });
                             });
-                        });
-                        angular.forEach(rc.pages[1].categoryname, function (data, key) {
-                            angular.forEach(translatepages, function (data1) {
-                                if (data1.parent) {
-                                    matchid = data1.parent;
-                                } else {
-                                    matchid = data1._id;
-                                }
-                                if (data._id == matchid) {
-                                    rc.pages[1].categoryname[key] = data1;
-                                }
-                            });
-                        });
+
+                            if (rc.pages.length > 1) {
+                                angular.forEach(rc.pages[1].categoryname, function (data, key) {
+                                    angular.forEach(translatepages, function (data1) {
+                                        if (data1.parent) {
+                                            matchid = data1.parent;
+                                        } else {
+                                            matchid = data1._id;
+                                        }
+                                        if (data._id == matchid) {
+                                            rc.pages[1].categoryname[key] = data1;
+                                        }
+                                    });
+                                });
+                            }
+                        }
                     });
                 }
             });
