@@ -13,3 +13,5 @@ app/site/public/scripts/minified/main.min.js
 uploads/images/tasker/*
 uploads/images/users/*
 uploads/images/others/*
+
+.idea/
