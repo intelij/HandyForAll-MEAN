@@ -16,7 +16,7 @@ angular.module('Authentication')
     }])
 
     .controller('LogoutController', ['AuthenticationService', '$state','$rootScope' ,function (AuthenticationService, $state, $rootScope) {
-        AuthenticationService.ClearCredentials();
+        AuthenticationService.clearCredentials();
         AuthenticationService.Logout().then(function (data) {
             if (data.retStatus == 'Success') {
                                         $rootScope.userVisiblevalue = false;
