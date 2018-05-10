@@ -101,6 +101,7 @@ module.exports = function(app, io) {
 
     app.post('/taskers/addNewCategory', ensureAuthorized, taskers.addNewCategory);
     app.post('/taskers/getexperience', ensureAuthorized, taskers.getExperience);
+    app.get('/taskers/travel_arrangement', ensureAuthorized, taskers.getTravelArrangementList);
     app.post('/taskers/category', ensureAuthorized, taskers.category);
     app.post('/taskers/availability/save', ensureAuthorized, taskers.saveAvailability);
     app.post('/taskers/deletecategory', ensureAuthorized, taskers.deleteCategory);
