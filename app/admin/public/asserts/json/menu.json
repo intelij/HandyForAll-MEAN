@@ -234,6 +234,12 @@
         "state": "app.tasker_management.experience.list"
       },
       {
+        "name": "SubMenu.TRAVEL_ARRANGEMENT",
+        "alias": "view",
+        "action": "all",
+        "state": "app.tasker_management.travel-arrangement.list"
+      },
+      {
         "name": "SubMenu.QUESTIONS",
         "alias": "view",
         "action": "all",

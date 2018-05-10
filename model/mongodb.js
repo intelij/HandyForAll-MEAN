@@ -12,6 +12,7 @@ var config_faq_schema = require('../schema/faqs.schema.js');
 var config_postheader_schema = require('../schema/postheaders.schema.js');
 var config_category_schema = require('../schema/categories.schema.js');
 var config_experience_schema = require('../schema/experience.schema.js');
+var config_travel_arrangement_schema = require('../schema/travel_arrangement.schema.js');
 var config_question_schema = require('../schema/questions.schema.js');
 var config_settings_schema = require('../schema/setting.schema.js');
 var config_newsletter_schema = require('../schema/newsletter.schema.js');
@@ -44,6 +45,7 @@ var categorySchema = mongoose.Schema(config_category_schema.CATEGORIES, { timest
 var faqSchema = mongoose.Schema(config_faq_schema.FAQ, { timestamps: true, versionKey: false });
 var postheaderSchema = mongoose.Schema(config_postheader_schema.POSTHEADER, { timestamps: true, versionKey: false });
 var experienceSchema = mongoose.Schema(config_experience_schema.EXPERIENCES, { timestamps: true, versionKey: false });
+var travelArrangementSchema = mongoose.Schema(config_travel_arrangement_schema.TRAVEL_ARRANGEMENTS, { timestamps: true, versionKey: false });
 var questionSchema = mongoose.Schema(config_question_schema.QUESTIONS, { timestamps: true, versionKey: false });
 var settingsSchema = mongoose.Schema(config_settings_schema.settings, { timestamps: true, versionKey: false });
 var currencySchema = mongoose.Schema(config_settings_schema.currency, { timestamps: true, versionKey: false });
@@ -108,6 +110,7 @@ var category = mongoose.model('categories', categorySchema, 'categories');
 var faq = mongoose.model('faq', faqSchema, 'faq');
 var postheader = mongoose.model('postheader', postheaderSchema, 'postheader');
 var experience = mongoose.model('experience', experienceSchema, 'experience');
+var travel_arrangement = mongoose.model('travel_arrangement', travelArrangementSchema, 'travel_arrangement');
 var question = mongoose.model('question', questionSchema, 'question');
 var settings = mongoose.model('settings', settingsSchema, 'settings');
 var languages = mongoose.model('languages', languagesSchema, 'languages');
@@ -140,6 +143,7 @@ module.exports = {
     'faq': faq,
     'postheader': postheader,
     'experience': experience,
+    'travel_arrangement': travel_arrangement,
     'question': question,
     'settings': settings,
     'languages': languages,
