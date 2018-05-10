@@ -1,0 +1,31 @@
+{
+  "extends": "eslint-config-airbnb-es5",
+  "rules": {
+    "no-underscore-dangle": "off",
+    "func-names": ["error", "never"],
+    "jsx-a11y/href-no-hash": "off",
+    "jsx-a11y/anchor-is-valid": ["warn", { "aspects": ["invalidHref"] }],
+    "camelcase": "off",
+    "quotes": "off",
+    "object-curly-spacing": "off",
+    "no-else-return": "off",
+    "indent": ["error", 2],
+    "linebreak-style": "off",
+    "no-param-reassign": "off",
+    "no-loop-func": "off",
+    "no-trailing-spaces": "off",
+    "new-cap": "off"
+  },
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "jquery": true,
+    "jasmine": true
+  },
+  "globals": {
+    "angular": false,
+    "google": false,
+    "moment": false
+  }
+}
