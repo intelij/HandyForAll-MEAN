@@ -14,7 +14,14 @@
     "no-param-reassign": "off",
     "no-loop-func": "off",
     "no-trailing-spaces": "off",
-    "new-cap": "off"
+    "new-cap": "off",
+    "comma-dangle": ["error", {
+      "arrays": "ignore",
+      "objects": "ignore",
+      "imports": "never",
+      "exports": "never",
+      "functions": "ignore"
+    }]
   },
   "env": {
     "browser": true,
