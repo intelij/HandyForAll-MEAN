@@ -23,7 +23,7 @@ function TaskersService($http, $q, Upload) {
     getTravelArrangement: getTravelArrangement,
     gettaskercategory: gettaskercategory,
     addCategory: addCategory,
-    addNewCategory: addNewCategory,
+    // addNewCategory: addNewCategory,
     saveAvailability: saveAvailability,
     addTasker: addTasker,
     saveProf: saveProf,
@@ -385,19 +385,19 @@ function TaskersService($http, $q, Upload) {
     return deferred.promise;
   }
 
-  function addNewCategory(data) {
-    var deferred = $q.defer();
-    $http({
-      method: 'POST',
-      url: '/taskers/addNewCategory',
-      data: data
-    }).success(function (response) {
-      deferred.resolve(response);
-    }).error(function (err) {
-      deferred.reject(err);
-    });
-    return deferred.promise;
-  }
+  // function addNewCategory(data) {
+  //   var deferred = $q.defer();
+  //   $http({
+  //     method: 'POST',
+  //     url: '/taskers/addNewCategory',
+  //     data: data
+  //   }).success(function (response) {
+  //     deferred.resolve(response);
+  //   }).error(function (err) {
+  //     deferred.reject(err);
+  //   });
+  //   return deferred.promise;
+  // }
 
   function deleteCategory(data) {
     var deferred = $q.defer();

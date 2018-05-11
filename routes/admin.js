@@ -99,7 +99,7 @@ module.exports = function(app, io) {
     app.post('/taskers/getcategories', ensureAuthorized, taskers.getCategories);
     app.post('/taskers/addcategory', ensureAuthorized, taskers.addcategory);
 
-    app.post('/taskers/addNewCategory', ensureAuthorized, taskers.addNewCategory);
+    // app.post('/taskers/addNewCategory', ensureAuthorized, taskers.addNewCategory);
     app.post('/taskers/getexperience', ensureAuthorized, taskers.getExperience);
     app.get('/taskers/travel_arrangement', ensureAuthorized, taskers.getTravelArrangementList);
     app.post('/taskers/category', ensureAuthorized, taskers.category);
