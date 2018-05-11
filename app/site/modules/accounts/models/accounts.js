@@ -56,7 +56,8 @@ function accountService($http, $q, Upload) {
     getUserWalletTransaction: getUserWalletTransaction,
     checkphoneno:checkphoneno,
     getPaymentdetails:getPaymentdetails,
-    saveCurrentLocation:saveCurrentLocation
+    saveCurrentLocation:saveCurrentLocation,
+    getSecondFlowCagetories: getSecondFlowCagetories
 
   };
   return accountService;
@@ -879,5 +880,8 @@ function accountService($http, $q, Upload) {
       deferred.reject(err);
     });
     return deferred.promise;
+  }
+  function getSecondFlowCagetories() {
+    return ['Motorbike', 'Cargo Car', 'Truck', 'Car', 'Mini Bus', 'Bus'];
   }
 }

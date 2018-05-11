@@ -2080,7 +2080,7 @@ angular.module('handyforall.accounts').controller('AvailabilityModalInstanceCtrl
   $scope.days = DaysData;
 
   $scope.ok = function () {
-    if ($scope.WorkingDays.hour.morning == true || $scope.WorkingDays.hour.afternoon == true || $scope.WorkingDays.hour.evening == true) {
+    if ($scope.WorkingDays.hour.morning === true || $scope.WorkingDays.hour.afternoon === true || $scope.WorkingDays.hour.evening === true) {
       $scope.WorkingDays.not_working = false;
     } else {
       $scope.WorkingDays.not_working = true;
@@ -2093,12 +2093,23 @@ angular.module('handyforall.accounts').controller('AvailabilityModalInstanceCtrl
   };
 });
 
-angular.module('handyforall.accounts').controller('TaskInviteViewModalInstanceCtrl', function ($uibModalInstance, TaskInvite, DefaultCurrency, getsettings) {
+angular.module('handyforall.accounts').controller('TaskInviteViewModalInstanceCtrl', function ($uibModalInstance, TaskInvite, DefaultCurrency, getsettings, accountService) {
   var tvmi = this;
   tvmi.TaskInvite = TaskInvite;
   tvmi.DefaultCurrency = DefaultCurrency;
   tvmi.getsettings = getsettings;
   tvmi.timeline = tvmi.TaskInvite.history;
+  tvmi.checkWorkflow = function (_index) {
+    var flowIndex = 1;
+    if (_index === 2) {
+      const secondFlowCategories = accountService.getSecondFlowCagetories();
+      const categoryName = tvmi.TaskInvite.category.name;
+      if (secondFlowCategories.includes(categoryName)) {
+        flowIndex = 2;
+      }
+    }
+    return flowIndex === _index;
+  };
 
   tvmi.ok = function (working_day, index) {
     var data = {};
@@ -2169,7 +2180,7 @@ angular.module('handyforall.accounts').controller('TaskerExtraViewModalInstanceC
         tevmi.newdata = newdata;
         $uibModalInstance.close(tevmi);
       } else {
-        var data = {}
+        var data = {};
         data.taskid = test.taskid;
         data.status = test.status;
         $uibModalInstance.close(data);
@@ -2183,13 +2194,24 @@ angular.module('handyforall.accounts').controller('TaskerExtraViewModalInstanceC
 
 });
 
-angular.module('handyforall.accounts').controller('TaskDetailsViewModalInstanceCtrl', function ($uibModalInstance, TaskDetails, DefaultCurrency) {
+angular.module('handyforall.accounts').controller('TaskDetailsViewModalInstanceCtrl', function ($uibModalInstance, TaskDetails, DefaultCurrency, accountService) {
   var tdvmi = this;
   tdvmi.TaskDetails = TaskDetails;
   tdvmi.DefaultCurrency = DefaultCurrency;
 
   tdvmi.taskdescription = TaskDetails.task_description;
-  tdvmi.timeline = tdvmi.TaskDetails.history
+  tdvmi.timeline = tdvmi.TaskDetails.history;
+  tdvmi.checkWorkflow = function (_index) {
+    var flowIndex = 1;
+    if (_index === 2) {
+      const secondFlowCategories = accountService.getSecondFlowCagetories();
+      const categoryName = tdvmi.TaskDetails.category.name;
+      if (secondFlowCategories.includes(categoryName)) {
+        flowIndex = 2;
+      }
+    }
+    return flowIndex === _index;
+  };
   tdvmi.ok = function () {
     $uibModalInstance.close();
   };

@@ -128,16 +128,16 @@
                 <!--<label class="col-md-6">{{USER_REMARKS | 'translate'}}:</label>-->
                 <!--<rating class="col-md-6" ng-model="(TVMI.TaskInvite.reviews)/(TVMI.TaskInvite.total_reviews)" readonly="true"></rating>-->
               <!--</li>-->
-              <li>
+              <li ng-if="TVMI.checkWorkflow(1)">
                 <h1 class="project-name">TIMELINE</h1>
                 <div id="timeline">
                   <div class="timeline-item">
                     <div class="timeline-icon">
-                      <i  ng-if="TVMI.TaskDetails.booking_information.booking_date" class="fa fa-check" aria-hidden="true"></i>
+                      <i  ng-if="TVMI.TaskInvite.booking_information.booking_date" class="fa fa-check" aria-hidden="true"></i>
                     </div>
-                    <div class="timeline-content left" ng-if="TVMI.TaskDetails.booking_information.booking_date">
-                      <p style="margin-bottom: 0;">{{TVMI.TaskDetails.booking_information.booking_date | date:'MM/dd/yyyy'}}</p>
-                      <p>{{TVMI.TaskDetails.booking_information.booking_date | date:'H/mm'}}</p>
+                    <div class="timeline-content left" ng-if="TVMI.TaskInvite.booking_information.booking_date">
+                      <p style="margin-bottom: 0;">{{TVMI.TaskInvite.booking_information.booking_date | date:'MM/dd/yyyy'}}</p>
+                      <p>{{TVMI.TaskInvite.booking_information.booking_date | date:'H/mm'}}</p>
                     </div>
                     <div class="timeline-content right">
                       <p>Demand has been booked</p>
@@ -237,6 +237,95 @@
                     </div>
                     <div class="timeline-content right">
                       <p>Payment has been completed</p>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li ng-if="TVMI.checkWorkflow(2)">
+                <h1 class="project-name">TIMELINE</h1>
+                <div id="timeline">
+                  <div class="timeline-item">
+                    <div class="timeline-icon">
+                      <i  ng-if="TVMI.TaskDetails.booking_information.booking_date" class="fa fa-check" aria-hidden="true"></i>
+                    </div>
+                    <div class="timeline-content left" ng-if="TVMI.TaskDetails.booking_information.booking_date">
+                      <p style="margin-bottom: 0;">{{TVMI.TaskDetails.booking_information.booking_date | date:'MM/dd/yyyy'}}</p>
+                      <p>{{TVMI.TaskDetails.booking_information.booking_date | date:'H/mm'}}</p>
+                    </div>
+                    <div class="timeline-content right">
+                      <p>Delivery has been booked</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-icon">
+                      <i  ng-if="TVMI.timeline.job_started_time" class="fa fa-check" aria-hidden="true"></i>
+                    </div>
+                    <div class="timeline-content left" ng-if="TVMI.timeline.job_started_time">
+                      <p style="margin-bottom: 0;">{{TVMI.timeline.job_started_time | date:'MM/dd/yyyy'}}</p>
+                      <p>{{TVMI.timeline.job_started_time | date:'H/mm'}}</p>
+                    </div>
+                    <div class="timeline-content right">
+                      <p>Provider has accepted the demand</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-icon">
+                      <i  ng-if="TVMI.timeline.est_reach_date" class="fa fa-check" aria-hidden="true"></i>
+                    </div>
+                    <div class="timeline-content left" ng-if="TVMI.timeline.est_reach_date">
+                      <p style="margin-bottom: 0;">{{TVMI.timeline.est_reach_date | date:'MM/dd/yyyy'}}</p>
+                      <p>{{TVMI.timeline.est_reach_date | date:'H/mm'}}</p>
+                    </div>
+                    <div class="timeline-content right">
+                      <p>Provider has picked up the parcel or load</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-icon">
+                      <i  ng-if="TVMI.timeline.est_reach_date" class="fa fa-check" aria-hidden="true"></i>
+                    </div>
+                    <div class="timeline-content left" ng-if="TVMI.timeline.est_reach_date">
+                      <p style="margin-bottom: 0;">{{TVMI.timeline.est_reach_date | date:'MM/dd/yyyy'}}</p>
+                      <p>{{TVMI.timeline.est_reach_date | date:'H/mm'}}</p>
+                    </div>
+                    <div class="timeline-content right">
+                      <p>Provider has arrived at drop-off location</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-icon">
+                      <i  ng-if="TVMI.timeline.est_reach_date" class="fa fa-check" aria-hidden="true"></i>
+                    </div>
+                    <div class="timeline-content left" ng-if="TVMI.timeline.est_reach_date">
+                      <p style="margin-bottom: 0;">{{TVMI.timeline.est_reach_date | date:'MM/dd/yyyy'}}</p>
+                      <p>{{TVMI.timeline.est_reach_date | date:'H/mm'}}</p>
+                    </div>
+                    <div class="timeline-content right">
+                      <p>Off-loading has started</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-icon">
+                      <i  ng-if="TVMI.timeline.est_reach_date" class="fa fa-check" aria-hidden="true"></i>
+                    </div>
+                    <div class="timeline-content left" ng-if="TVMI.timeline.est_reach_date">
+                      <p style="margin-bottom: 0;">{{TVMI.timeline.est_reach_date | date:'MM/dd/yyyy'}}</p>
+                      <p>{{TVMI.timeline.est_reach_date | date:'H/mm'}}</p>
+                    </div>
+                    <div class="timeline-content right">
+                      <p>Delivery has been completed</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-icon">
+                      <i  ng-if="TVMI.timeline.est_reach_date" class="fa fa-check" aria-hidden="true"></i>
+                    </div>
+                    <div class="timeline-content left" ng-if="TVMI.timeline.est_reach_date">
+                      <p style="margin-bottom: 0;">{{TVMI.timeline.est_reach_date | date:'MM/dd/yyyy'}}</p>
+                      <p>{{TVMI.timeline.est_reach_date | date:'H/mm'}}</p>
+                    </div>
+                    <div class="timeline-content right">
+                      <p>Payment has been made</p>
                     </div>
                   </div>
                 </div>
