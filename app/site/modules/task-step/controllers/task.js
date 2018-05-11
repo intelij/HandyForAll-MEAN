@@ -352,9 +352,11 @@ function taskCtrl($scope, $rootScope, $location, $stateParams, $uibModal, TaskSe
         'line1': objAddress.line1 || ""
       };
     }
+
     data.userid = tac.currentuserid;
     data.categoryid = tac.taskbaseinfo.SubCategoryInfo._id;
     data.task_description = tac.filter.description;
+
     data.location = { 'lat': objAddress.location.lat, 'log': objAddress.location.lng };
     data.task_address = {
       'zipcode': objAddress.zipcode || "",

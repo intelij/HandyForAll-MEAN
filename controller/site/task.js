@@ -348,7 +348,8 @@ module.exports = function (io) {
 									"phone": 1,
 									"taskerskills": 1,
 									"avatar": 1,
-                                    "location": 1,
+                  "location": 1,
+                  "address": 1,
 									"tasker_area": 1,
 									"tasks": 1,
 									"booked":
@@ -367,7 +368,8 @@ module.exports = function (io) {
 									"phone": { $first: "$phone" },
 									"taskerskills": { $first: "$taskerskills" },
 									"avatar": { $first: "$avatar" },
-                                    "location": { $first: "$location" },
+                  "location": { $first: "$location" },
+                  "address": { $first: "$address" },
 									"tasker_area": { $first: "$tasker_area" },
 									"booked": { $sum: "$booked" },
 									//"tasks": { "$push": "$tasks" }

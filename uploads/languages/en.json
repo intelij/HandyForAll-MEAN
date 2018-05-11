@@ -666,6 +666,9 @@
   "NO SUB CATEGORY FOUND FOR THIS CATEGORY": "No sub-category found for this category",
   "NEWS_LETTER_SUBSCRIPTION_UPDATE_DESCRIPTION": "Subscribe to our newsletter to get all updates, news and events from Spinac StuffOnDemand",
   "Are You Sure Want To Confirm This Task": "Are You Sure Want To Confirm This Task.",
+  "Where do you want your demand to be provisioned": "Where do you want your demand to be provisioned?",
+  "Deliver at my selected location": "Deliver at my selected location",
+  "Deliver at Provider location": "Deliver at Provider's location",
   "Copyright": "Copyright",
   "All rights reserved": "All Rights Reserved"
 }

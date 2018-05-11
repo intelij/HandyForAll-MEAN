@@ -892,7 +892,6 @@ angular.module('handyforall.site', ['Authentication',
         },
         resolve: {
           SearchResolve: function (TaskService, $stateParams) {
-
             return TaskService.searchTasker($stateParams.task);
           },
           TaskserviceResolve: function (TaskService, $stateParams) {

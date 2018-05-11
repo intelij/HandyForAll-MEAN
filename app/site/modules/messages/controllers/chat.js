@@ -247,11 +247,15 @@ function chatCtrl(ChatServiceResolve, $state, toastr, $filter, AuthenticationSer
 
 }
 
-angular.module('handyforall.messages').controller('ConfirmtaskModel', function ($uibModalInstance) {
+angular.module('handyforall.messages').controller('ConfirmtaskModel', function ($uibModalInstance, shouldSelectLocation) {
 	var ccm = this;
+	ccm.shouldSelectLocation = shouldSelectLocation;
+	ccm.bDeliverAtProviderLocation = "0";
+
 	ccm.ok = function () {
-		$uibModalInstance.close('ok');
+		$uibModalInstance.close(ccm.bDeliverAtProviderLocation === "1");
 	};
+
 	ccm.cancel = function () {
 		$uibModalInstance.dismiss('cancel');
 	};

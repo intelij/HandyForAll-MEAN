@@ -2,15 +2,22 @@
   <div class="modal-header">
     <h3 class="modal-title">{{'CONFIRM&BOOKING' | translate}}</h3>
   </div>
-    <div class="modal-body add-addr">
-      {{'Are You Sure Want To Confirm This Task' | translate}}
-    </div>
 
+  <div class="modal-body add-addr" ng-show="CTM.shouldSelectLocation">
+    {{'Where do you want your demand to be provisioned' | translate}}
+    <br/>
+    <select name="levels" class="form-control" id="experience" ng-model="CTM.bDeliverAtProviderLocation" on-blur-validation required>
+      <option value='0'>{{'Deliver at my selected location' | translate}}</option>
+      <option value='1'>{{'Deliver at Provider location' | translate}}</option>
+    </select>
+  </div>
 
-<div class="modal-footer">
-  <button type="submit" class="btn btn-primary" ng-click="CTM.ok('done')">{{'OK' | translate}}</button>
-  <button class="btn btn-warning" type="button" ng-click="CTM.cancel()">{{'CANCEL' | translate}}</button>
-</div>
+  <div class="modal-body add-addr" ng-show="!CTM.shouldSelectLocation">
+    {{'Are You Sure Want To Confirm This Task' | translate}}
+  </div>
 
-
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary" ng-click="CTM.ok()">{{'OK' | translate}}</button>
+    <button class="btn btn-warning" type="button" ng-click="CTM.cancel()">{{'CANCEL' | translate}}</button>
+  </div>
 </div>
