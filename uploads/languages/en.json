@@ -221,6 +221,7 @@
   "HOURLY_RATE": "Hourly Rate",
   "WORKING_HOURS": "Working Hours",
   "ADDRESS": "Address",
+  "DELIVERY_ADDRESS": "Delivery Address",
   "TOTAL_AMOUNT": "Total Amount",
   "COUPON_DISCOUNT": "Coupon Discount",
   "STATUS": "Status",
