@@ -42,25 +42,25 @@
                 <p ng-if= " TVMI.TaskInvite.status == 7 " class="col-md-5" readonly="">{{'PAYMENT_COMPLETED'| translate}}</p>
                 <p ng-if= " TVMI.TaskInvite.status == 8 " class="col-md-5" readonly="">{{'TASK_CANCELLED'| translate}}</p>
               </li>
-              <li ng-if="TVMI.TaskInvite.booking_information.booking_date">
-                <label class="col-md-5">{{'BOOKING DATE' | translate}}:</label>
-                <p  class="col-md-6" readonly="">{{TVMI.TaskInvite.booking_information.booking_date | date:'medium' }}</p>
-                <!-- <p  class="col-md-6" value="" readonly="">{{TVMI.TaskInvite.history.booking_date | date:'medium' }}</p> -->
-              </li>
-              <!-- <li ng-if="TVMI.TaskInvite.booking_information.booking_date">
+              <!--<li ng-if="TVMI.TaskInvite.booking_information.booking_date">-->
+                <!--<label class="col-md-5">{{'BOOKING DATE' | translate}}:</label>-->
+                <!--<p  class="col-md-6" readonly="">{{TVMI.TaskInvite.booking_information.booking_date | date:'medium' }}</p>-->
+                <!--&lt;!&ndash; <p  class="col-md-6" value="" readonly="">{{TVMI.TaskInvite.history.booking_date | date:'medium' }}</p> &ndash;&gt;-->
+              <!--</li>-->
+              <!--&lt;!&ndash; <li ng-if="TVMI.TaskInvite.booking_information.booking_date">-->
 
-                  <label class="col-md-5">{{'JOB START DATE' | translate}}:</label>
-                  <p  class="col-md-6" value="" readonly="">{{TVMI.TaskInvite.booking_information.booking_date | date:'medium' }}</p>
-              </li> -->
-              <li ng-if="TVMI.TaskInvite.history.job_started_time">
+                  <!--<label class="col-md-5">{{'JOB START DATE' | translate}}:</label>-->
+                  <!--<p  class="col-md-6" value="" readonly="">{{TVMI.TaskInvite.booking_information.booking_date | date:'medium' }}</p>-->
+              <!--</li> &ndash;&gt;-->
+              <!--<li ng-if="TVMI.TaskInvite.history.job_started_time">-->
 
-                <label class="col-md-5">{{'JOB STARTED AT' | translate}}:</label>
-                <p  class="col-md-6" readonly="">{{TVMI.TaskInvite.history.job_started_time | date:'medium' }}</p>
-              </li>
-              <li ng-if="TVMI.TaskInvite.history.job_completed_time">
-                <label class="col-md-5">{{'JOB COMPLETED AT' | translate}}:</label>
-                <p  class="col-md-6" readonly="">{{TVMI.TaskInvite.history.job_completed_time | date:'medium' }}</p>
-              </li>
+                <!--<label class="col-md-5">{{'JOB STARTED AT' | translate}}:</label>-->
+                <!--<p  class="col-md-6" readonly="">{{TVMI.TaskInvite.history.job_started_time | date:'medium' }}</p>-->
+              <!--</li>-->
+              <!--<li ng-if="TVMI.TaskInvite.history.job_completed_time">-->
+                <!--<label class="col-md-5">{{'JOB COMPLETED AT' | translate}}:</label>-->
+                <!--<p  class="col-md-6" readonly="">{{TVMI.TaskInvite.history.job_completed_time | date:'medium' }}</p>-->
+              <!--</li>-->
               <li ng-if="TVMI.TaskInvite.hourly_rate">
                 <label class="col-md-5">{{'HOURLY_RATE' | translate}}:</label>
                 <p class="col-md-6" readonly="">{{TVMI.DefaultCurrency[0].symbol}}{{TVMI.TaskInvite.hourly_rate * TVMI.DefaultCurrency[0].value | number:2 }} {{'PER_HOURS' | translate}}</p>
