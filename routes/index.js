@@ -253,4 +253,4 @@ module.exports = function (app, passport, io) {
   } catch (e) {
     console.log('Error in Router', e);
   }
-}
+};

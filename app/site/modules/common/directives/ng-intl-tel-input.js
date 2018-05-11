@@ -46,7 +46,7 @@ angular.module('ngIntlTelInput')
             }
           };
           // Set model value to valid, formatted version.
-          ctrl.$parsers.push(function (value) {
+          ctrl.$parsers.push(function () {
             var phone = {};
             phone.code = '+' + elm.intlTelInput('getSelectedCountryData').dialCode;
             phone.number = elm.intlTelInput('getNumber');
@@ -63,7 +63,17 @@ angular.module('ngIntlTelInput')
                 elm.intlTelInput('setNumber', phone.code + phone.number);
                 return phone.number;
               } else {
-                return;
+                return "";
+              }
+            }).catch(function () {
+              var countryCode = "us";
+              ngIntlTelInput.set({ defaultCountry: countryCode });
+              ngIntlTelInput.init(elm);
+              if (phone) {
+                elm.intlTelInput('setNumber', phone.code + phone.number);
+                return phone.number;
+              } else {
+                return "";
               }
             }));
           });

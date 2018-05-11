@@ -21,7 +21,8 @@
       "imports": "never",
       "exports": "never",
       "functions": "ignore"
-    }]
+    }],
+    "guard-for-in": "off"
   },
   "env": {
     "browser": true,

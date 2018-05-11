@@ -456,7 +456,7 @@ https://github.com/Bluefieldscom/intl-tel-input.git
         _ensurePlus: function() {
             if (!this.options.nationalMode) {
                 var val = this.telInput.val(), input = this.telInput[0];
-                if (val.charAt(0) != "+") {
+                if (!val || val.charAt(0) != "+") {
                     // newCursorPos is current pos + 1 to account for the plus we are about to add
                     var newCursorPos = this.isGoodBrowser ? input.selectionStart + 1 : 0;
                     this.telInput.val("+" + val);
@@ -740,12 +740,12 @@ https://github.com/Bluefieldscom/intl-tel-input.git
                 if (typeof format == "number" && intlTelInputUtils.isValidNumber(val, this.selectedCountryData.iso2)) {
                     // if user specified a format, and it's a valid number, then format it accordingly
                     formatted = intlTelInputUtils.formatNumberByType(val, this.selectedCountryData.iso2, format);
-                } else if (!preventConversion && this.options.nationalMode && val.charAt(0) == "+" && intlTelInputUtils.isValidNumber(val, this.selectedCountryData.iso2)) {
+                } else if (!preventConversion && this.options.nationalMode && val && val.charAt(0) == "+" && intlTelInputUtils.isValidNumber(val, this.selectedCountryData.iso2)) {
                     // if nationalMode and we have a valid intl number, convert it to ntl
                     formatted = intlTelInputUtils.formatNumberByType(val, this.selectedCountryData.iso2, intlTelInputUtils.numberFormat.NATIONAL);
                 } else {
                     // else do the regular AsYouType formatting
-                    formatted = intlTelInputUtils.formatNumber(val, this.selectedCountryData.iso2, addSuffix, this.options.allowExtensions, isAllowedKey);
+                    formatted = intlTelInputUtils.formatNumber(!val ? "" : val, this.selectedCountryData.iso2, addSuffix, this.options.allowExtensions, isAllowedKey);
                 }
                 // ensure we dont go over maxlength. we must do this here to truncate any formatting suffix, and also handle paste events
                 var max = this.telInput.attr("maxlength");
@@ -783,7 +783,7 @@ https://github.com/Bluefieldscom/intl-tel-input.git
                         }
                     }
                 }
-            } else if (number.charAt(0) == "+" && this._getNumeric(number).length) {
+            } else if (number && number.charAt(0) == "+" && this._getNumeric(number).length) {
                 // invalid dial code, so empty
                 // Note: use getNumeric here because the number has not been formatted yet, so could contain bad shit
                 countryCode = "";
@@ -932,7 +932,7 @@ https://github.com/Bluefieldscom/intl-tel-input.git
         _getDialCode: function(number) {
             var dialCode = "";
             // only interested in international numbers (starting with a plus)
-            if (number.charAt(0) == "+") {
+            if (number && number.charAt(0) == "+") {
                 var numericChars = "";
                 // iterate over chars
                 for (var i = 0; i < number.length; i++) {
@@ -1060,7 +1060,7 @@ https://github.com/Bluefieldscom/intl-tel-input.git
         // set the input value and update the flag
         setNumber: function(number, format, addSuffix, preventConversion, isAllowedKey) {
             // ensure starts with plus
-            if (!this.options.nationalMode && number.charAt(0) != "+") {
+            if (!this.options.nationalMode && number && number.charAt(0) != "+") {
                 number = "+" + number;
             }
             // we must update the flag first, which updates this.selectedCountryData, which is used later for formatting the number before displaying it

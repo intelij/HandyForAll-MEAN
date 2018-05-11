@@ -927,22 +927,26 @@ module.exports = function (app, io) {
   };
 
   router.addcategory = function (req, res) {
-    var data = {};
-    data.taskerskills = {};
+    var data = {
+      taskerskills: {}
+    };
     var userid = req.body.userid;
+
     if (req.file) {
       data.taskerskills.file = req.file.destination + req.file.filename;
     }
+
     data.taskerskills.experience = req.body.experience;
+    data.taskerskills.travel_arrangement = req.body.travel_arrangement;
     data.taskerskills.hour_rate = req.body.hour_rate;
+    data.taskerskills.km_rate = req.body.km_rate;
     data.taskerskills.quick_pitch = req.body.quick_pitch;
     data.taskerskills.categoryid = req.body.categoryid;
     data.taskerskills.childid = req.body.childid;
     data.taskerskills.skills = req.body.skills;
     data.taskerskills.terms = req.body.terms;
     data.taskerskills.status = req.body.status;
-    var options = {};
-    options.populate = 'taskerskills.childid';
+
     db.GetOneDocument('tasker', {
       _id: userid,
       'taskerskills.childid': data.taskerskills.childid
@@ -970,12 +974,15 @@ module.exports = function (app, io) {
     });
   };
 
+  /**
   router.addNewCategory = function (req, res) {
     var data = {};
     data.taskerskills = {};
     var userid = req.body.userid;
     data.taskerskills.experience = req.body.experience;
+    data.taskerskills.travel_arrangement = req.body.travel_arrangement;
     data.taskerskills.hour_rate = req.body.hour_rate;
+    data.taskerskills.km_rate = req.body.km_rate;
     data.taskerskills.quick_pitch = req.body.quick_pitch;
     data.taskerskills.categoryid = req.body.categoryid;
     data.taskerskills.childid = req.body.childid;
@@ -1009,6 +1016,7 @@ module.exports = function (app, io) {
       }
     });
   };
+   //*/
 
   router.category = function (req, res) {
     var options = {};
