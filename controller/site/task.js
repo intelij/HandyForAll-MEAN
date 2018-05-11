@@ -1073,53 +1073,69 @@ module.exports = function (io) {
 
 			}
 		});
-	}
+	};
 
 
-	router.addressStatus = function (req, res) {
-		db.UpdateDocument('users', { '_id': req.body.userid, 'addressList.status': 3 }, { "addressList.$.status": 1 }, { multi: true }, function (err, docdata) {
-			if (err) {
-				res.send(err);
-			} else {
-				db.UpdateDocument('users', { '_id': req.body.userid, 'addressList._id': req.body.add_id }, { "addressList.$.status": 3 }, {}, function (err, docdata) {
-					if (err) {
-						res.send(err);
-					} else {
-						res.send(docdata);
-					}
-				});
-			}
-		});
+	router.updateAddressStatus = function (req, res) {
+	  if (!req.body.isDeliveryAddress) {
+      db.UpdateDocument('users', { '_id': req.body.userid, 'addressList.status': 3 }, { "addressList.$.status": 1 }, { multi: true }, function (err) {
+        if (err) {
+          res.send(err);
+        } else {
+          db.UpdateDocument('users', { '_id': req.body.userid, 'addressList._id': req.body.add_id }, { "addressList.$.status": 3 }, {}, function (error, objUpdatedUser) {
+            if (error) {
+              res.send(error);
+            } else {
+              res.send(objUpdatedUser);
+            }
+          });
+        }
+      });
+    } else {
+      db.UpdateDocument('users', { '_id': req.body.userid, 'deliveryAddressList.status': 3 }, { "deliveryAddressList.$.status": 1 }, { multi: true }, function (err) {
+        if (err) {
+          res.send(err);
+        } else {
+          db.UpdateDocument('users', { '_id': req.body.userid, 'deliveryAddressList._id': req.body.add_id }, { "deliveryAddressList.$.status": 3 }, {}, function (error, objUpdatedUser) {
+            if (error) {
+              res.send(error);
+            } else {
+              res.send(objUpdatedUser);
+            }
+          });
+        }
+      });
+    }
 	};
 
 	router.deleteaddress = function deleteaddress(req, res) {
 
-		db.GetDocument('users', { '_id': req.body.userid }, {}, {}, function (addErr, addRespo) {
-			if (addErr || addRespo.length == 0) {
+		db.GetDocument('users', { '_id': req.body.userid }, {}, {}, function (err, users) {
+			if (err || !users || !users.length) {
 				res.send({
 					"status": "0",
-					"response": "address not updated"
+					"response": "User Not Found"
 				});
 			} else {
-				addRespo[0].addressList.splice(parseInt(req.body.id), 1);
+				if (!req.body.isDeliveryAddress)
+          users[0].addressList.splice(parseInt(req.body.id), 1);
+				else
+          users[0].deliveryAddressList.splice(parseInt(req.body.id), 1);
 
-				db.UpdateDocument('users', { _id: req.body.userid }, addRespo[0], { multi: true }, function (addUErr, addURespo) {
-					if (addUErr) {
+				db.UpdateDocument('users', { _id: req.body.userid }, users[0], { multi: true }, function (error, objUpdatedUser) {
+					if (error) {
 						res.send({
 							"status": "0",
-							"response": "address not updated"
+							"response": "Address Not Updated"
 						});
 					} else {
-
-						res.send(addURespo);
+						res.send(objUpdatedUser);
 					}
-
 				});
-
 			}
 		});
-
 	};
+
 	router.addaddress = function addaddress(req, res) {
 		if (req.body.data.editaddressdata.sat == 1) {
 			db.UpdateDocument('users', { _id: req.body.userid, 'addressList._id': req.body.data.editaddressdata._id },
@@ -1195,6 +1211,81 @@ module.exports = function (io) {
 			});
 		}
 	};
+
+  router.addDeliveryAddress = function addaddress(req, res) {
+    if (req.body.data.editaddressdata.sat == 1) {
+      db.UpdateDocument('users', { _id: req.body.userid, 'deliveryAddressList._id': req.body.data.editaddressdata._id },
+        {
+          "deliveryAddressList.$.line1": req.body.data.editaddressdata.line1, "deliveryAddressList.$.country": req.body.data.editaddressdata.country, "deliveryAddressList.$.street": req.body.data.editaddressdata.street,
+          "deliveryAddressList.$.city": req.body.data.editaddressdata.city, "deliveryAddressList.$.landmark": req.body.data.editaddressdata.landmark, "deliveryAddressList.$.status": req.body.data.editaddressdata.status, "deliveryAddressList.$.state": req.body.data.editaddressdata.state, "deliveryAddressList.$.locality": req.body.data.editaddressdata.locality,
+          "deliveryAddressList.$.zipcode": req.body.data.editaddressdata.zipcode
+        }, {}, function (err, docdata) {
+          if (err) {
+            res.send(err);
+          }
+          else {
+            res.send(docdata);
+          }
+        });
+    } else {
+      db.GetOneDocument('users', { '_id': req.body.userid, deliveryAddressList: { $elemMatch: { "location.lng": req.body.data.addressList.location.lng, "location.lat": req.body.data.addressList.location.lat } } }, {}, {}, function (addErr, addRespo) {
+        if (addErr || addRespo) {
+          res.send({ status: 0, message: 'Address already added on the list' });
+        } else {
+          var address = {
+            'line1': req.body.data.editaddressdata.line1 || "",
+            'country': req.body.data.editaddressdata.country || "",
+            'street': req.body.data.editaddressdata.street || "",
+            'landmark': req.body.data.editaddressdata.landmark || "",
+            'state': req.body.data.editaddressdata.state || "",
+            'status': req.body.data.editaddressdata.status || 1,
+            'city': req.body.data.editaddressdata.city || "",
+            'zipcode': req.body.data.editaddressdata.zipcode || "",
+            'location': req.body.data.addressList.location || ""
+          };
+          if (req.body.data.editaddressdata._id) {
+            if (req.body.data.addressList.location.lng == '' || req.body.data.addressList.location.lat == '') {
+              db.UpdateDocument('users', { _id: req.body.userid, 'deliveryAddressList._id': req.body.data.editaddressdata._id },
+                {
+                  "deliveryAddressList.$.line1": req.body.data.editaddressdata.line1, "deliveryAddressList.$.country": req.body.data.editaddressdata.country, "deliveryAddressList.$.street": req.body.data.editaddressdata.street,
+                  "deliveryAddressList.$.city": req.body.data.editaddressdata.city, "deliveryAddressList.$.landmark": req.body.data.editaddressdata.landmark, "deliveryAddressList.$.status": req.body.data.editaddressdata.status, "deliveryAddressList.$.state": req.body.data.editaddressdata.state, "deliveryAddressList.$.locality": req.body.data.editaddressdata.locality,
+                  "deliveryAddressList.$.zipcode": req.body.data.editaddressdata.zipcode
+                }, {}, function (err, docdata) {
+                  if (err) {
+                    res.send(err);
+                  } else {
+                    res.send(docdata);
+                  }
+                });
+            } else {
+              db.UpdateDocument('users', { _id: req.body.userid, 'deliveryAddressList._id': req.body.data.editaddressdata._id },
+                {
+                  "deliveryAddressList.$.line1": req.body.data.editaddressdata.line1, "deliveryAddressList.$.country": req.body.data.editaddressdata.country, "deliveryAddressList.$.street": req.body.data.editaddressdata.street,
+                  "deliveryAddressList.$.city": req.body.data.editaddressdata.city, "deliveryAddressList.$.landmark": req.body.data.editaddressdata.landmark, "deliveryAddressList.$.status": req.body.data.editaddressdata.status, "deliveryAddressList.$.locality": req.body.data.editaddressdata.locality,
+                  "deliveryAddressList.$.zipcode": req.body.data.editaddressdata.zipcode, "deliveryAddressList.$.location.lat": req.body.data.addressList.location.lat, "deliveryAddressList.$.location.lng": req.body.data.addressList.location.lng
+                }, { multi: true }, function (err, docdata) {
+                  if (err) {
+                    res.send(err);
+                  } else {
+                    res.send(docdata);
+                  }
+                });
+            }
+          } else {
+
+            db.UpdateDocument('users', { _id: req.body.userid }, { "$push": { 'deliveryAddressList': address } }, {}, function (err, docdata) {
+              if (err) {
+                res.send(err);
+              } else {
+                res.send(docdata);
+              }
+            });
+          }
+        }
+
+      });
+    }
+  };
 
 	router.addnewtask = function addnewtask(req, res) {
 		var data = {};

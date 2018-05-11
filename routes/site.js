@@ -111,12 +111,13 @@ module.exports = function (app, io) {
     app.post('/site/task/search-tasker', task.searchTasker);
     app.post('/site/task/addnewtask', task.addnewtask);
     app.post('/site/task/gettaskdetailsbyid', task.gettaskdetailsbyid);
-    app.post('/site/task/confirmtask', task.confirmtask)
+    app.post('/site/task/confirmtask', task.confirmtask);
     app.post('/site/task/deleteaddress', task.deleteaddress);
     app.post('/site/task/addaddress', task.addaddress);
+    app.post('/site/task/add_delivery_address', task.addDeliveryAddress);
     app.post('/site/task/getaddressdata', task.getaddressdata);
     app.post('/site/task/getuserdata', task.getuserdata);
-    app.post('/site/task/addressStatus', task.addressStatus);
+    app.put('/site/task/addressStatus', task.updateAddressStatus);
     app.get('/site/task/taskerCount', task.taskerCount);
 
     /** Account Page  **/
