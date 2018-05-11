@@ -1,183 +1,349 @@
-<div class="availabilities-day-form adminweekmodal" id="viewdetails">
-    <div class="availabilities-day-form adminweekmodal" id="viewdetails">
-        <div class="">
-            <div class="">
-                <div class="modal-header">
-                    <button type="button" class="close" ng-click="TVMI.ok()" data-dismiss="modal">×</button>
-                    <h1 class="day-text">{{'VIEW_TASK_DETAILS'| translate}}</h1>
-                </div>
-             <div class="modal-body">
-                    <form method="post" action="savenewrate" id="addnewrate">
-                        <ul class="view-detail-pop">
-                            <li ng-if="TVMI.TaskInvite.user.avatar">
-                                <div class="logo-container prof-image" id="taskerimage"><img id="theImg" class="img-circle" ng-src="{{TVMI.TaskInvite.user.avatar}}"></div>
-                            </li>
-                            <div class="text-danger" align="center">
-                                <h3 ng-if="TVMI.TaskInvite.usertaskcancellationreason"> {{'TASK_CANCELLED'|translate }} </h3>
-                            </div>
-                            <li ng-if="TVMI.TaskInvite._id">
-                                <label class="col-md-5">{{'BOOKING_ID'|translate }}:</label>
-                                <p class="col-md-6" value="" readonly="">{{TVMI.TaskInvite.booking_id}}</p>
-                            </li>
-                            <li ng-if="TVMI.TaskInvite.user.username">
-                                <label class="col-md-5">{{'USER_NAME'|translate }}:</label>
-                                <p class="col-md-6" value="" readonly="">{{TVMI.TaskInvite.user.username}} </p>
-                            </li>
-                            <li ng-if="TVMI.TaskInvite.user.email">
-                                <label class="col-md-5">{{'EMAIL'|translate }}:</label>
-                                <p class="col-md-6" value="" readonly="">{{TVMI.TaskInvite.user.email}}</p>
-                            </li>
-                            <li ng-if="TVMI.TaskInvite.category.name">
-                                <label class="col-md-5">{{'CATEGORY'|translate }}:</label>
-                                <p class="col-md-6" value="" readonly="">{{TVMI.TaskInvite.category.name}}</p>
-                            </li>
-                            <li ng-if="TVMI.TaskInvite.status">
-                                <label class="col-md-5">{{'TASK' | translate}} {{'STATUS' | translate}}:</label>
-                                <p ng-if= " TVMI.TaskInvite.status == 1 " class="col-md-5" value="" readonly="">{{'PENDING'| translate}}</p>
-                                <p ng-if= " TVMI.TaskInvite.status == 2 " class="col-md-5" value="" readonly="">{{'ACCEPTED'| translate}}</p>
-                                <p ng-if= " TVMI.TaskInvite.status == 3 " class="col-md-5" value="" readonly="">{{'START_OFF'| translate}}</p>
-                                <p ng-if= " TVMI.TaskInvite.status == 4 " class="col-md-5" value="" readonly="">{{'ARRIVED'| translate}}</p>
-                                <p ng-if= " TVMI.TaskInvite.status == 5 " class="col-md-5" value="" readonly="">{{'TASK_STARTED'| translate}}</p>
-                                <p ng-if= " TVMI.TaskInvite.status == 6 " class="col-md-5" value="" readonly="">{{'TASK_COMPLETED'| translate}}</p>
-                                <p ng-if= " TVMI.TaskInvite.status == 7 " class="col-md-5" value="" readonly="">{{'PAYMENT_COMPLETED'| translate}}</p>
-                                <p ng-if= " TVMI.TaskInvite.status == 8 " class="col-md-5" value="" readonly="">{{'TASK_CANCELLED'| translate}}</p>
-                            </li>
-                            <li ng-if="TVMI.TaskInvite.booking_information.booking_date">
-                                <label class="col-md-5">{{'BOOKING DATE' | translate}}:</label>
-                                <p  class="col-md-6" value="" readonly="">{{TVMI.TaskInvite.booking_information.booking_date | date:'medium' }}</p>
-                                <!-- <p  class="col-md-6" value="" readonly="">{{TVMI.TaskInvite.history.booking_date | date:'medium' }}</p> -->
-                            </li>
-                            <!-- <li ng-if="TVMI.TaskInvite.booking_information.booking_date">
-
-                                <label class="col-md-5">{{'JOB START DATE' | translate}}:</label>
-                                <p  class="col-md-6" value="" readonly="">{{TVMI.TaskInvite.booking_information.booking_date | date:'medium' }}</p>
-                            </li> -->
-                            <li ng-if="TVMI.TaskInvite.history.job_started_time">
-
-                                <label class="col-md-5">{{'JOB STARTED AT' | translate}}:</label>
-                                <p  class="col-md-6" value="" readonly="">{{TVMI.TaskInvite.history.job_started_time | date:'medium' }}</p>
-                            </li>
-                            <li ng-if="TVMI.TaskInvite.history.job_completed_time">
-                                  <label class="col-md-5">{{'JOB COMPLETED AT' | translate}}:</label>
-                                  <p  class="col-md-6" value="" readonly="">{{TVMI.TaskInvite.history.job_completed_time | date:'medium' }}</p>
-                              </li>
-                              <li ng-if="TVMI.TaskInvite.hourly_rate">
-                                <label class="col-md-5">{{'HOURLY_RATE' | translate}}:</label>
-                                <p class="col-md-6" value="" readonly="">{{TVMI.DefaultCurrency[0].symbol}}{{TVMI.TaskInvite.hourly_rate * TVMI.DefaultCurrency[0].value | number:2 }} {{'PER_HOURS' | translate}}</p>
-                            </li>
-                          </li>
-                          <li ng-if="TVMI.TaskInvite.category.commision">
-                            <label class="col-md-5">{{'MINIMUM_HOURLY_RATE' | translate}} :</label>
-                            <p class="col-md-6" value="" readonly="">{{TVMI.DefaultCurrency[0].symbol}}{{TVMI.TaskInvite.category.commision * TVMI.DefaultCurrency[0].value | number:2 }} {{'PER_HOURS' | translate}}</p>
-                        </li>
-                        <li ng-if="TVMI.TaskInvite.status == 7 || TVMI.TaskInvite.status == 6">
-                             <label class="col-md-5">{{'TASKER_EARNINIG'|translate }}:</label>
-                             <p class="col-md-6" value="" readonly="">{{TVMI.DefaultCurrency[0].symbol }}{{((TVMI.TaskInvite.invoice.amount.grand_total - TVMI.TaskInvite.invoice.amount.service_tax))- TVMI.TaskInvite.invoice.amount.admin_commission * TVMI.DefaultCurrency[0].value | number:2}}</p>
-                         </li>
-						           <li ng-if="TVMI.TaskInvite.invoice.amount.extra_amount">
-                                <label class="col-md-5">{{'MISCELLANEOUS_AMOUMT'|translate }}:</label>
-                                <p class="col-md-6" value="" readonly="">{{TVMI.DefaultCurrency[0].symbol }}{{TVMI.TaskInvite.invoice.amount.extra_amount * TVMI.DefaultCurrency[0].value | number:2}}</p>
-                        </li>
-
-                            <li ng-if="TVMI.TaskInvite.status == 7 || TVMI.TaskInvite.status == 6">
-                                 <label class="col-md-5">{{'ADMIN_COMMISSION'|translate }}:</label>
-                                 <p class="col-md-6" value="" readonly="">{{TVMI.DefaultCurrency[0].symbol }}{{TVMI.TaskInvite.invoice.amount.admin_commission | number:2}}</p>
-                             </li>
-
-                            <li ng-if="TVMI.TaskInvite.status == 7 || TVMI.TaskInvite.status == 6">
-                                <label class="col-md-5">{{'TOTAL_AMOUNT'|translate }}:</label>
-                                <p class="col-md-6" value="" readonly="">{{TVMI.DefaultCurrency[0].symbol }}{{(TVMI.TaskInvite.invoice.amount.grand_total - TVMI.TaskInvite.invoice.amount.service_tax) * TVMI.DefaultCurrency[0].value | number:2}}</p>
-                            </li>
-                             <li ng-if="TVMI.TaskInvite.status == 7 || TVMI.TaskInvite.status == 6">
-                                <label class="col-md-5">{{'HOURS WORKED'|translate }}:</label>
-                                <p class="col-md-6" value="" readonly=""> {{TVMI.TaskInvite.invoice.worked_hours_human}}</p>
-                            </li>
-							              <!-- <li ng-if="TVMI.TaskInvite.invoice.amount.coupon">
-                                <label class="col-md-5">{{'COUPON_DISCOUNT'|translate }}:</label>
-                                <p class="col-md-6" value="" readonly="">{{TVMI.DefaultCurrency[0].symbol }}{{TVMI.TaskInvite.invoice.amount.coupon | number:2}}</p>
-                            </li>-->
-                            <li ng-if="TVMI.TaskInvite.task_description">
-                                <label class="col-md-5">{{'TASK_DESCRIPTION'|translate }}:</label>
-                                <p  class="col-md-6" style="word-break: break-all;" ng-bind="TVMI.TaskInvite.task_description"></p>
-                            </li>
-
-                            <li ng-if="TVMI.TaskInvite.usertaskcancellationreason">
-                                <label class="col-md-4">{{'REASON_FOR_TASK_CANCELLATION'|translate }}:</label>
-                                <p  class="col-md-6" value="" readonly="">{{TVMI.TaskInvite.usertaskcancellationreason}}</p>
-                            </li>
-                             <li ng-if="TVMI.TaskInvite.task_address">
-                                <label class="col-md-4">{{'TASK_ADDRESS'|translate }}:</label>
-                                <span class="col-md-6" value="" readonly="" class="addr-info" style="word-break: break-all;">
-                                  {{TVMI.TaskInvite.task_address.line1}}<br>
-                                 <span ng-if="TVMI.TaskInvite.task_address.line2">{{TVMI.TaskInvite.task_address.line2}},<br> </span>
-                                  <span ng-if="TVMI.TaskInvite.task_address.city">{{TVMI.TaskInvite.task_address.city}},<br> </span>
-                                  <span ng-if="TVMI.TaskInvite.task_address.landmark">{{TVMI.TaskInvite.task_address.landmark}},<br> </span>
-                                  <span ng-if="TVMI.TaskInvite.task_address.state">{{TVMI.TaskInvite.task_address.state}},<br> </span>
-                                  <span ng-if="TVMI.TaskInvite.task_address.country">{{TVMI.TaskInvite.task_address.country}},</span>
-                                  <span ng-if="TVMI.TaskInvite.task_address.zipcode">{{TVMI.TaskInvite.task_address.zipcode}}</span>
-                            </li>
-                            <li ng-if="TVMI.TaskInvite.billing_address">
-                                <label class="col-md-4">{{'BILLING ADDRESS'|translate }}:</label>
-                                <span class="col-md-6" value="" readonly="" class="addr-info" style="word-break: break-all;">
-                                  {{TVMI.TaskInvite.billing_address.line1}}<br>
-                                  <span ng-if="TVMI.TaskInvite.billing_address.line2">{{TVMI.TaskInvite.billing_address.line2}},<br> </span>
-                                  <span ng-if="TVMI.TaskInvite.billing_address.city">{{TVMI.TaskInvite.billing_address.city}},<br> </span>
-                                  <span ng-if="TVMI.TaskInvite.billing_address.state">{{TVMI.TaskInvite.billing_address.state}},<br> </span>
-                                  <span ng-if="TVMI.TaskInvite.billing_address.country">{{TVMI.TaskInvite.billing_address.country}},</span>
-                                  <span ng-if="TVMI.TaskInvite.billing_address.zipcode">{{TVMI.TaskInvite.billing_address.zipcode}}</span>
-                            </li>
-							<!--<li>
-                                <label class="col-md-6">{{USER_REMARKS | 'translate'}}:</label>
-            					<rating class="col-md-6" ng-model="(TVMI.TaskInvite.reviews)/(TVMI.TaskInvite.total_reviews)" readonly="true">
-								</rating>
-                            </li>-->
-                        </ul>
-                    </form>
-                </div>
-                <!-- /.modal-content -->
-                <div class="modal-footer">
-                    <button type="button" class="bluebtn" data-dismiss="modal" ng-click="TVMI.ok()">{{'CANCEL'|translate }}</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
+<div class="availabilities-day-form adminweekmodal">
+  <div class="availabilities-day-form adminweekmodal" id="viewdetails">
+    <div class="">
+      <div class="">
+        <div class="modal-header">
+          <button type="button" class="close" ng-click="TVMI.ok()" data-dismiss="modal">×</button>
+          <h1 class="day-text">{{'VIEW_TASK_DETAILS'| translate}}</h1>
         </div>
-        <!-- /.modal-dialog -->
+        <div class="modal-body">
+          <form method="post" action="savenewrate" id="addnewrate">
+            <ul class="view-detail-pop">
+              <li ng-if="TVMI.TaskInvite.user.avatar">
+                <div class="logo-container prof-image" id="taskerimage"><img id="theImg" class="img-circle" ng-src="{{TVMI.TaskInvite.user.avatar}}"></div>
+              </li>
+              <div class="text-danger" align="center">
+                <h3 ng-if="TVMI.TaskInvite.usertaskcancellationreason"> {{'TASK_CANCELLED'|translate }} </h3>
+              </div>
+              <li ng-if="TVMI.TaskInvite._id">
+                <label class="col-md-5">{{'BOOKING_ID'|translate }}:</label>
+                <p class="col-md-6" readonly="">{{TVMI.TaskInvite.booking_id}}</p>
+              </li>
+              <li ng-if="TVMI.TaskInvite.user.username">
+                <label class="col-md-5">{{'USER_NAME'|translate }}:</label>
+                <p class="col-md-6" readonly="">{{TVMI.TaskInvite.user.username}} </p>
+              </li>
+              <li ng-if="TVMI.TaskInvite.user.email">
+                <label class="col-md-5">{{'EMAIL'|translate }}:</label>
+                <p class="col-md-6" readonly="">{{TVMI.TaskInvite.user.email}}</p>
+              </li>
+              <li ng-if="TVMI.TaskInvite.category.name">
+                <label class="col-md-5">{{'CATEGORY'|translate }}:</label>
+                <p class="col-md-6" readonly="">{{TVMI.TaskInvite.category.name}}</p>
+              </li>
+              <li ng-if="TVMI.TaskInvite.status">
+                <label class="col-md-5">{{'TASK' | translate}} {{'STATUS' | translate}}:</label>
+                <p ng-if= " TVMI.TaskInvite.status == 1 " class="col-md-5" readonly="">{{'PENDING'| translate}}</p>
+                <p ng-if= " TVMI.TaskInvite.status == 2 " class="col-md-5" readonly="">{{'ACCEPTED'| translate}}</p>
+                <p ng-if= " TVMI.TaskInvite.status == 3 " class="col-md-5" readonly="">{{'START_OFF'| translate}}</p>
+                <p ng-if= " TVMI.TaskInvite.status == 4 " class="col-md-5" readonly="">{{'ARRIVED'| translate}}</p>
+                <p ng-if= " TVMI.TaskInvite.status == 5 " class="col-md-5" readonly="">{{'TASK_STARTED'| translate}}</p>
+                <p ng-if= " TVMI.TaskInvite.status == 6 " class="col-md-5" readonly="">{{'TASK_COMPLETED'| translate}}</p>
+                <p ng-if= " TVMI.TaskInvite.status == 7 " class="col-md-5" readonly="">{{'PAYMENT_COMPLETED'| translate}}</p>
+                <p ng-if= " TVMI.TaskInvite.status == 8 " class="col-md-5" readonly="">{{'TASK_CANCELLED'| translate}}</p>
+              </li>
+              <li ng-if="TVMI.TaskInvite.booking_information.booking_date">
+                <label class="col-md-5">{{'BOOKING DATE' | translate}}:</label>
+                <p  class="col-md-6" readonly="">{{TVMI.TaskInvite.booking_information.booking_date | date:'medium' }}</p>
+                <!-- <p  class="col-md-6" value="" readonly="">{{TVMI.TaskInvite.history.booking_date | date:'medium' }}</p> -->
+              </li>
+              <!-- <li ng-if="TVMI.TaskInvite.booking_information.booking_date">
+
+                  <label class="col-md-5">{{'JOB START DATE' | translate}}:</label>
+                  <p  class="col-md-6" value="" readonly="">{{TVMI.TaskInvite.booking_information.booking_date | date:'medium' }}</p>
+              </li> -->
+              <li ng-if="TVMI.TaskInvite.history.job_started_time">
+
+                <label class="col-md-5">{{'JOB STARTED AT' | translate}}:</label>
+                <p  class="col-md-6" readonly="">{{TVMI.TaskInvite.history.job_started_time | date:'medium' }}</p>
+              </li>
+              <li ng-if="TVMI.TaskInvite.history.job_completed_time">
+                <label class="col-md-5">{{'JOB COMPLETED AT' | translate}}:</label>
+                <p  class="col-md-6" readonly="">{{TVMI.TaskInvite.history.job_completed_time | date:'medium' }}</p>
+              </li>
+              <li ng-if="TVMI.TaskInvite.hourly_rate">
+                <label class="col-md-5">{{'HOURLY_RATE' | translate}}:</label>
+                <p class="col-md-6" readonly="">{{TVMI.DefaultCurrency[0].symbol}}{{TVMI.TaskInvite.hourly_rate * TVMI.DefaultCurrency[0].value | number:2 }} {{'PER_HOURS' | translate}}</p>
+              </li>
+              </li>
+              <li ng-if="TVMI.TaskInvite.category.commision">
+                <label class="col-md-5">{{'MINIMUM_HOURLY_RATE' | translate}} :</label>
+                <p class="col-md-6" readonly="">{{TVMI.DefaultCurrency[0].symbol}}{{TVMI.TaskInvite.category.commision * TVMI.DefaultCurrency[0].value | number:2 }} {{'PER_HOURS' | translate}}</p>
+              </li>
+              <li ng-if="TVMI.TaskInvite.status == 7 || TVMI.TaskInvite.status == 6">
+                <label class="col-md-5">{{'TASKER_EARNINIG'|translate }}:</label>
+                <p class="col-md-6" readonly="">{{TVMI.DefaultCurrency[0].symbol }}{{((TVMI.TaskInvite.invoice.amount.grand_total - TVMI.TaskInvite.invoice.amount.service_tax))- TVMI.TaskInvite.invoice.amount.admin_commission * TVMI.DefaultCurrency[0].value | number:2}}</p>
+              </li>
+              <li ng-if="TVMI.TaskInvite.invoice.amount.extra_amount">
+                <label class="col-md-5">{{'MISCELLANEOUS_AMOUMT'|translate }}:</label>
+                <p class="col-md-6" readonly="">{{TVMI.DefaultCurrency[0].symbol }}{{TVMI.TaskInvite.invoice.amount.extra_amount * TVMI.DefaultCurrency[0].value | number:2}}</p>
+              </li>
+
+              <li ng-if="TVMI.TaskInvite.status == 7 || TVMI.TaskInvite.status == 6">
+                <label class="col-md-5">{{'ADMIN_COMMISSION'|translate }}:</label>
+                <p class="col-md-6" readonly="">{{TVMI.DefaultCurrency[0].symbol }}{{TVMI.TaskInvite.invoice.amount.admin_commission | number:2}}</p>
+              </li>
+
+              <li ng-if="TVMI.TaskInvite.status == 7 || TVMI.TaskInvite.status == 6">
+                <label class="col-md-5">{{'TOTAL_AMOUNT'|translate }}:</label>
+                <p class="col-md-6" readonly="">{{TVMI.DefaultCurrency[0].symbol }}{{(TVMI.TaskInvite.invoice.amount.grand_total - TVMI.TaskInvite.invoice.amount.service_tax) * TVMI.DefaultCurrency[0].value | number:2}}</p>
+              </li>
+              <li ng-if="TVMI.TaskInvite.status == 7 || TVMI.TaskInvite.status == 6">
+                <label class="col-md-5">{{'HOURS WORKED'|translate }}:</label>
+                <p class="col-md-6" readonly=""> {{TVMI.TaskInvite.invoice.worked_hours_human}}</p>
+              </li>
+              <!-- <li ng-if="TVMI.TaskInvite.invoice.amount.coupon">
+                  <label class="col-md-5">{{'COUPON_DISCOUNT'|translate }}:</label>
+                  <p class="col-md-6" readonly="">{{TVMI.DefaultCurrency[0].symbol }}{{TVMI.TaskInvite.invoice.amount.coupon | number:2}}</p>
+              </li>-->
+              <li ng-if="TVMI.TaskInvite.task_description">
+                <label class="col-md-5">{{'TASK_DESCRIPTION'|translate }}:</label>
+                <p  class="col-md-6" style="word-break: break-all;" ng-bind="TVMI.TaskInvite.task_description"></p>
+              </li>
+
+              <li ng-if="TVMI.TaskInvite.usertaskcancellationreason">
+                <label class="col-md-4">{{'REASON_FOR_TASK_CANCELLATION'|translate }}:</label>
+                <p  class="col-md-6" readonly="">{{TVMI.TaskInvite.usertaskcancellationreason}}</p>
+              </li>
+              <li ng-if="TVMI.TaskInvite.task_address">
+                <label class="col-md-4">{{'TASK_ADDRESS'|translate }}:</label>
+                <span class="col-md-6 addr-info" readonly="" style="word-break: break-all;">{{TVMI.TaskInvite.task_address.line1}}<br></span>
+                <span ng-if="TVMI.TaskInvite.task_address.line2">{{TVMI.TaskInvite.task_address.line2}},<br> </span>
+                <span ng-if="TVMI.TaskInvite.task_address.city">{{TVMI.TaskInvite.task_address.city}},<br> </span>
+                <span ng-if="TVMI.TaskInvite.task_address.landmark">{{TVMI.TaskInvite.task_address.landmark}},<br> </span>
+                <span ng-if="TVMI.TaskInvite.task_address.state">{{TVMI.TaskInvite.task_address.state}},<br> </span>
+                <span ng-if="TVMI.TaskInvite.task_address.country">{{TVMI.TaskInvite.task_address.country}},</span>
+                <span ng-if="TVMI.TaskInvite.task_address.zipcode">{{TVMI.TaskInvite.task_address.zipcode}}</span>
+              </li>
+              <li ng-if="TVMI.TaskInvite.billing_address">
+                <label class="col-md-4">{{'BILLING ADDRESS'|translate }}:</label>
+                <span class="col-md-6 addr-info" readonly="" style="word-break: break-all;">{{TVMI.TaskInvite.billing_address.line1}}<br></span>
+                <span ng-if="TVMI.TaskInvite.billing_address.line2">{{TVMI.TaskInvite.billing_address.line2}},<br> </span>
+                <span ng-if="TVMI.TaskInvite.billing_address.city">{{TVMI.TaskInvite.billing_address.city}},<br> </span>
+                <span ng-if="TVMI.TaskInvite.billing_address.state">{{TVMI.TaskInvite.billing_address.state}},<br> </span>
+                <span ng-if="TVMI.TaskInvite.billing_address.country">{{TVMI.TaskInvite.billing_address.country}},</span>
+                <span ng-if="TVMI.TaskInvite.billing_address.zipcode">{{TVMI.TaskInvite.billing_address.zipcode}}</span>
+              </li>
+              <!--<li>-->
+                <!--<label class="col-md-6">{{USER_REMARKS | 'translate'}}:</label>-->
+                <!--<rating class="col-md-6" ng-model="(TVMI.TaskInvite.reviews)/(TVMI.TaskInvite.total_reviews)" readonly="true"></rating>-->
+              <!--</li>-->
+              <li>
+                <h1 class="project-name">TIMELINE</h1>
+                <div id="timeline">
+                  <div class="timeline-item">
+                    <div class="timeline-icon">
+                      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                           xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                           width="21px" height="20px" viewBox="0 0 21 20"
+                           enable-background="new 0 0 21 20" xml:space="preserve">
+                        <path fill="#FFFFFF" d="M19.998,6.766l-5.759-0.544c-0.362-0.032-0.676-0.264-0.822-0.61l-2.064-4.999
+                          c-0.329-0.825-1.5-0.825-1.83,0L7.476,5.611c-0.132,0.346-0.462,0.578-0.824,0.61L0.894,6.766C0.035,6.848-0.312,7.921,0.333,8.499
+                          l4.338,3.811c0.279,0.246,0.395,0.609,0.314,0.975l-1.304,5.345c-0.199,0.842,0.708,1.534,1.468,1.089l4.801-2.822
+                          c0.313-0.181,0.695-0.181,1.006,0l4.803,2.822c0.759,0.445,1.666-0.23,1.468-1.089l-1.288-5.345
+                          c-0.081-0.365,0.035-0.729,0.313-0.975l4.34-3.811C21.219,7.921,20.855,6.848,19.998,6.766z"/>
+                        </svg>
+                    </div>
+                    <div class="timeline-content left">
+                      <p>Lorem ipsum</p>
+                    </div>
+                    <div class="timeline-content right">
+                      <p>Lorem ipsum</p>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </form>
+        </div>
+        <!-- /.modal-content -->
+        <div class="modal-footer">
+          <button type="button" class="bluebtn" data-dismiss="modal" ng-click="TVMI.ok()">{{'CANCEL'|translate }}</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
     </div>
+    <!-- /.modal-dialog -->
+  </div>
 
-    <style>
-        .availabilities-day-form .modal-header {
-            background-color: #545454;
-        }
+  <style>
+    .availabilities-day-form .modal-header {
+      background-color: #545454;
+    }
 
-        #viewdetails .modal-body {
-            float: left;
-            text-align: left;
-            width: 100%;
-            background: #fff;
-        }
+    #viewdetails .modal-body {
+      float: left;
+      text-align: left;
+      width: 100%;
+      background: #fff;
+    }
 
-        #viewdetails .modal-body {
-            float: left;
-            text-align: left;
-            width: 100%;
-            background: #fff;
-        }
+    #viewdetails .modal-body {
+      float: left;
+      text-align: left;
+      width: 100%;
+      background: #fff;
+    }
 
-        #viewdetails .view-detail-pop>li label {
-            font-weight: normal;
-        }
+    #viewdetails .view-detail-pop>li label {
+      font-weight: normal;
+    }
 
-        #viewdetails .view-detail-pop input {
-            padding: 5px;
-        }
+    #viewdetails .view-detail-pop input {
+      padding: 5px;
+    }
 
-        .modal-body {
-            position: relative;
-            padding: 20px;
-        }
+    .modal-body {
+      position: relative;
+      padding: 20px;
+    }
 
-        #viewdetails .logo-container#taskerimage img.img-circle {
-            width: 100px;
-            height: 100px;
-        }
-    </style>
+    #viewdetails .logo-container#taskerimage img.img-circle {
+      width: 100px;
+      height: 100px;
+    }
+    /* time line */
+    #timeline .timeline-item:before {
+      content: '';
+      display: block;
+      width: 100%;
+      clear: both;
+    }
+
+    .project-name {
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    #timeline {
+      width: 100%;
+      margin: 30px auto;
+      position: relative;
+      padding: 0 10px;
+      -webkit-transition: all 0.4s ease;
+      -moz-transition: all 0.4s ease;
+      -ms-transition: all 0.4s ease;
+      transition: all 0.4s ease;
+      display: inline-block;
+    }
+    #timeline:before {
+      content: "";
+      width: 3px;
+      height: 100%;
+      background: #ee4d4d;
+      left: 50%;
+      top: 0;
+      position: absolute;
+    }
+    #timeline:after {
+      content: "";
+      clear: both;
+      display: table;
+      width: 100%;
+    }
+    #timeline .timeline-item {
+      margin-bottom: 100px;
+      position: relative;
+    }
+    #timeline .timeline-item .timeline-icon {
+      background: #ee4d4d;
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      overflow: hidden;
+      margin-left: -23px;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      -ms-border-radius: 50%;
+      border-radius: 50%;
+    }
+    #timeline .timeline-item .timeline-icon svg {
+      position: relative;
+      top: 14px;
+      left: 14px;
+    }
+    #timeline .timeline-item .timeline-content {
+      width: 40%;
+      background: #fff;
+      padding: 20px;
+      -webkit-box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
+      -moz-box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
+      -ms-box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
+      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      -ms-border-radius: 5px;
+      border-radius: 5px;
+      -webkit-transition: all 0.3s ease;
+      -moz-transition: all 0.3s ease;
+      -ms-transition: all 0.3s ease;
+      transition: all 0.3s ease;
+      position: absolute;
+      top: 0;
+      padding-top: 10px;
+    }
+    #timeline .timeline-item .timeline-content h2 {
+      padding: 15px;
+      background: #ee4d4d;
+      color: #fff;
+      margin: -20px -20px 0 -20px;
+      font-weight: 300;
+      -webkit-border-radius: 3px 3px 0 0;
+      -moz-border-radius: 3px 3px 0 0;
+      -ms-border-radius: 3px 3px 0 0;
+      border-radius: 3px 3px 0 0;
+    }
+    /*#timeline .timeline-item .timeline-content:before {*/
+      /*content: '';*/
+      /*position: absolute;*/
+      /*left: 45%;*/
+      /*top: 20px;*/
+      /*width: 0;*/
+      /*height: 0;*/
+      /*border-top: 7px solid transparent;*/
+      /*border-bottom: 7px solid transparent;*/
+      /*border-left: 7px solid #ee4d4d;*/
+    /*}*/
+    #timeline .timeline-item .timeline-content.left {
+      left: 0;
+    }
+    #timeline .timeline-item .timeline-content.right {
+      right: 0;
+    }
+    /*#timeline .timeline-item .timeline-content.right:before {*/
+      /*content: '';*/
+      /*right: 45%;*/
+      /*left: inherit;*/
+      /*border-left: 0;*/
+      /*border-right: 7px solid #ee4d4d;*/
+    /*}*/
+
+
+    @media screen and (max-width: 768px) {
+      #timeline {
+        margin: 30px;
+        padding: 0px;
+        width: 90%;
+      }
+      #timeline:before {
+        left: 0;
+      }
+      #timeline .timeline-item .timeline-content {
+        width: 90%;
+        float: right;
+      }
+      #timeline .timeline-item .timeline-content:before, #timeline .timeline-item .timeline-content.right:before {
+        left: 10%;
+        margin-left: -6px;
+        border-left: 0;
+        border-right: 7px solid #ee4d4d;
+      }
+      #timeline .timeline-item .timeline-icon {
+        left: 0;
+      }
+    }
+
+  </style>
+</div>
