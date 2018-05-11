@@ -7,7 +7,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
   var user = AuthenticationService.GetCredentials();
 
   acc.radiusby = $rootScope.settings ? $rootScope.settings.distanceby : "";
-  acc.radiusval = acc.radiusby == "km" ? 1000 : 1609.34;
+  acc.radiusval = acc.radiusby === "km" ? 1000 : 1609.34;
   acc.taskervariable = user;
 
   if (accountServiceResolve[0]) {
@@ -237,19 +237,19 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 
   acc.SettingsTab = acc.accountMenu.filter(function (menu) {
     if (acc.user) {
-      if (acc.user.role == 'user') {
-        if (acc.user.type == 'facebook') {
-          if ((menu.type == 'common') || (menu.type == 'user')) {
-            if (menu.heading != 'PASSWORD') {
-              if (account_status == undefined) {
-                if (menu.heading == 'TASK DETAILS') {
+      if (acc.user.role === 'user') {
+        if (acc.user.type === 'facebook') {
+          if ((menu.type === 'common') || (menu.type === 'user')) {
+            if (menu.heading !== 'PASSWORD') {
+              if (account_status === undefined) {
+                if (menu.heading === 'TASK DETAILS') {
                   menu.active = false;
                 }
-                if (menu.heading == 'ACCOUNT') {
+                if (menu.heading === 'ACCOUNT') {
                   menu.active = true;
                 }
               } else {
-                if (menu.heading == 'ACCOUNT') {
+                if (menu.heading === 'ACCOUNT') {
                   menu.active = true;
                 }
               }
@@ -257,16 +257,16 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
             }
           }
         } else {
-          if ((menu.type == 'common') || (menu.type == 'user')) {
-            if (account_status == undefined) {
-              if (menu.heading == 'TASK DETAILS') {
+          if ((menu.type === 'common') || (menu.type === 'user')) {
+            if (account_status === undefined) {
+              if (menu.heading === 'TASK DETAILS') {
                 menu.active = false;
               }
-              if (menu.heading == 'ACCOUNT') {
+              if (menu.heading === 'ACCOUNT') {
                 menu.active = true;
               }
             } else {
-              if (menu.heading == 'ACCOUNT') {
+              if (menu.heading === 'ACCOUNT') {
                 menu.active = true;
               }
             }
@@ -275,16 +275,16 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
         }
       }
       else {
-        if ((menu.type == 'common') || (menu.type == 'tasker')) {
-          if (account_status == undefined) {
-            if (menu.heading == 'JOB DETAILS') {
+        if ((menu.type === 'common') || (menu.type === 'tasker')) {
+          if (account_status === undefined) {
+            if (menu.heading === 'JOB DETAILS') {
               menu.active = false;
             }
-            if (menu.heading == 'ACCOUNT') {
+            if (menu.heading === 'ACCOUNT') {
               menu.active = true;
             }
           } else {
-            if (menu.heading == 'JOB DETAILS') {
+            if (menu.heading === 'JOB DETAILS') {
               menu.active = true;
             }
           }
@@ -301,7 +301,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 
   acc.accountMode = true;
   acc.saveAccount = function saveAccount(isValid) {
-    if ($scope.imageChangeValue == true) {
+    if ($scope.imageChangeValue === true) {
       if (isValid) {
         acc.user.avatarBase64 = acc.myCroppedImage;
         accountService.saveAccount(acc.user).then(function (response) {
@@ -313,7 +313,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
           $location.url($location.path());
           var user = AuthenticationService.GetCredentials();
           if (user.currentUser.username) {
-            if (user.currentUser.user_type == 'user') {
+            if (user.currentUser.user_type === 'user') {
               MainService.getCurrentUsers(user.currentUser.username).then(function (response) {
                 acc.user = response[0];
                 $scope.visibleValue = false;
@@ -2098,6 +2098,8 @@ angular.module('handyforall.accounts').controller('TaskInviteViewModalInstanceCt
   tvmi.TaskInvite = TaskInvite;
   tvmi.DefaultCurrency = DefaultCurrency;
   tvmi.getsettings = getsettings;
+  tvmi.timeline = tvmi.TaskInvite.history;
+
   tvmi.ok = function (working_day, index) {
     var data = {};
     $uibModalInstance.close(data);
@@ -2187,6 +2189,7 @@ angular.module('handyforall.accounts').controller('TaskDetailsViewModalInstanceC
   tdvmi.DefaultCurrency = DefaultCurrency;
 
   tdvmi.taskdescription = TaskDetails.task_description;
+  tdvmi.timeline = tdvmi.TaskDetails.history
   tdvmi.ok = function () {
     $uibModalInstance.close();
   };

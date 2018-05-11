@@ -6,7 +6,7 @@
   "license": "ISC",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon --watch app app.js",
+    "dev": "nodemon  app.js",
     "test": "mocha"
   },
   "dependencies": {
