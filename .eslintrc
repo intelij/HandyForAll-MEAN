@@ -14,7 +14,8 @@
     "no-param-reassign": "off",
     "no-loop-func": "off",
     "no-trailing-spaces": "off",
-    "new-cap": "off"
+    "new-cap": "off",
+    "guard-for-in": "off"
   },
   "env": {
     "browser": true,
