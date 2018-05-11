@@ -15,6 +15,13 @@
     "no-loop-func": "off",
     "no-trailing-spaces": "off",
     "new-cap": "off",
+    "comma-dangle": ["error", {
+      "arrays": "ignore",
+      "objects": "ignore",
+      "imports": "never",
+      "exports": "never",
+      "functions": "ignore"
+    }],
     "guard-for-in": "off"
   },
   "env": {
