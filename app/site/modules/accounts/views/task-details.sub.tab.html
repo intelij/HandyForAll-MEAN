@@ -9,13 +9,13 @@
         <th style="width: 21%;">{{'DELIVERY_ADDRESS' | translate}}</th>
         <th>{{'TASKER_NAME' | translate}}</th>
         <th ng-if="ACC.taskList[0].status == 6 || ACC.taskList[0].status == 7">{{'TOTAL_AMOUNT' | translate}}</th>
-        <th   ng-if="ACC.taskList[0].status == 1 || ACC.taskList[0].status == 2 || ACC.taskList[0].status == 3 || ACC.taskList[0].status == 4 || ACC.taskList[0].status == 5 || ACC.taskList[0].status == 6 || ACC.taskList[0].status == 7 || ACC.taskList[0].status == 8">{{'STATUS' | translate}}</th>
+        <th ng-if="ACC.taskList[0].status > 0">{{'STATUS' | translate}}</th>
         <th style="text-align:center; width: 20%;">{{'ACTIONS' | translate}}</th>
       </tr>
       </thead>
       <tbody>
       <tr ng-repeat="taskDetails in ACC.taskList">
-        <td>{{ACC.taskListitemsPerPage * (ACC.taskListCurrentPage - 1)+$index+1}}</td>
+        <td>{{ACC.taskListitemsPerPage * (ACC.taskListCurrentPage - 1) + $index + 1}}</td>
         <td>{{taskDetails.booking_id}}</td>
         <td>{{taskDetails.category.name}}</td>
         <td><span ng-if="taskDetails.task_address.line1">{{taskDetails.task_address.line1}},</span> <span ng-if="taskDetails.task_address.line2">{{taskDetails.task_address.line2}},</span><span ng-if="taskDetails.task_address.city">{{taskDetails.task_address.city}},</span><span ng-if="taskDetails.task_address.landmark">{{taskDetails.task_address.landmark}},</span><span ng-if="taskDetails.task_address.state">{{taskDetails.task_address.state}},</span><span ng-if="taskDetails.task_address.country">{{taskDetails.task_address.country}},</span><span ng-if="taskDetails.task_address.zipcode">{{taskDetails.task_address.zipcode}}</span></td>
@@ -30,7 +30,30 @@
             <div> <label style="color:green">{{'ACCEPTED' | translate}}</label></div>
           </li>
           <li ng-if="taskDetails.status == 3">
-            <div> <label style="color:orange">{{'START_OFF' | translate}}</label></div>
+            <div>
+              <label style="color:orange">{{'START_OFF' | translate}}</label>
+              <br/>
+              <label style="color:orange">({{'PROVIDER' | translate}})</label>
+            </div>
+          </li>
+          <li ng-if="taskDetails.status == 3.1">
+            <div>
+              <label style="color:orange">{{'START_OFF' | translate}}</label>
+              <br/>
+              <label style="color:orange">({{'USER' | translate}})</label>
+            </div>
+          </li>
+          <li ng-if="taskDetails.status == 3.2">
+            <div>
+              <label style="color:orange">{{'START_OFF' | translate}}</label>
+              <br/>
+              <label style="color:orange">({{'PROVIDER' | translate}})</label>
+            </div>
+            <div>
+              <label style="color:orange">{{'START_OFF' | translate}}</label>
+              <br/>
+              <label style="color:orange">({{'USER' | translate}})</label>
+            </div>
           </li>
           <li ng-if="taskDetails.status == 4">
             <div> <label style="color:orange">{{'ARRIVED' | translate}}</label></div>
@@ -49,37 +72,77 @@
           </li>
         </td>
         <td ng-if="taskDetails.status == 1" class="slidetd mob-actions pay-status" >
-          <span ng-if="taskDetails.status == 1 || taskDetails.status == 2 || taskDetails.status == 3 || taskDetails.status == 4 || taskDetails.status == 5" style="float: left; "><a href="javascript:void(0)" ng-click="ACC.TaskDetailsViewModal($index)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px;">{{'VIEW' | translate}}</a></span>
-          <span ng-if="taskDetails.status == 1" style="float: left; "> <a ng-click="ACC.TaskDetailsIgnoreModal(taskDetails._id,8)" class="btn btn-secondary js-deactivate-trigger confrm conform"
-                                                                          style="width:80px; margin-bottom: 7px">{{'CANCEL' | translate}} </a></span>
-          <span ng-if="taskDetails.status == 1" style="float: left; "> <a ui-sref="chat({ task: taskDetails._id,user:taskDetails.user,tasker: taskDetails.tasker._id })" class="btn btn-secondary js-deactivate-trigger confrm conform"
-                                                                          style="width:80px; margin-bottom: 7px;">{{'CHAT' | translate}} </a></span>
+          <span ng-if="taskDetails.status == 1 || taskDetails.status == 2 || taskDetails.status == 3 || taskDetails.status == 4 || taskDetails.status == 5" style="float: left; ">
+            <a href="javascript:void(0)" ng-click="ACC.TaskDetailsViewModal($index)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px;">
+              {{'VIEW' | translate}}
+            </a>
+          </span>
+          <span ng-if="taskDetails.status == 1" style="float: left; ">
+            <a ng-click="ACC.TaskDetailsIgnoreModal(taskDetails._id, 8)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px">
+              {{'CANCEL' | translate}}
+            </a>
+          </span>
+          <span ng-if="taskDetails.status == 1" style="float: left; ">
+            <a ui-sref="chat({ task: taskDetails._id, user: taskDetails.user, tasker: taskDetails.tasker._id })" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px;">
+              {{'CHAT' | translate}}
+            </a>
+          </span>
         </td>
 
         <td ng-if="taskDetails.status == 6 || taskDetails.status == 7 " class="pay-status" >
-                        <span ng-if="taskDetails.status == 6 " style="float: left; ">
-                            <a  ng-disabled="taskDetails.invoice.status == 1" ui-sref="carddeatil({slug:taskDetails._id})"  class="btn btn-secondary js-deactivate-trigger confrm conform"
-                                style="width:80px;  margin-bottom: 7px;">{{'PROCEED_TO_PAY' | translate}}</a>
-                        </span>
+          <span ng-if="taskDetails.status == 6 " style="float: left; ">
+            <a ng-disabled="taskDetails.invoice.status == 1" ui-sref="carddeatil({slug:taskDetails._id})" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px;  margin-bottom: 7px;">
+              {{'PROCEED_TO_PAY' | translate}}
+            </a>
+          </span>
           <span ng-if="taskDetails.status == 7 " style="float: left; ">
-                            <a  ng-click="ACC.addReview(taskDetails)" ng-disabled="taskDetails.rating.length != 0 && taskDetails.rating[0].type == 'user' || taskDetails.rating[1].type == 'user' " href="javascript:void(0)"  class="btn btn-secondary js-deactivate-trigger confrm conform"
-                                style="width:80px;  margin-bottom: 7px;">{{'Review Tasker' | translate}}</a>
-                        </span>
+            <a ng-click="ACC.addReview(taskDetails)" ng-disabled="taskDetails.rating.length != 0 && taskDetails.rating[0].type == 'user' || taskDetails.rating[1].type == 'user' " href="javascript:void(0)"  class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px;  margin-bottom: 7px;">
+              {{'Review Tasker' | translate}}
+            </a>
+          </span>
           <span ng-if="taskDetails.status == 6 || taskDetails.status == 7" style="float: right;">
-                        <a href="javascript:void(0)" ng-click="ACC.TaskDetailsViewModalforstatus($index)" class="btn btn-secondary js-deactivate-trigger confrm conform"
-                           style="width:80px; margin-bottom: 7px">{{'VIEW' | translate}}</a>
-                     </span>
+            <a ng-click="ACC.TaskDetailsViewModalforstatus($index)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px">
+              {{'VIEW' | translate}}
+            </a>
+          </span>
           <span ng-if="taskDetails.status == 6 || taskDetails.status == 7" style="float: right;">
-                        <a ui-sref="chat({ task: taskDetails._id,user:taskDetails.user,tasker: taskDetails.tasker._id })" class="btn btn-secondary js-deactivate-trigger confrm conform"
-                           style="width:80px; margin-bottom: 7px">{{'CHAT' | translate}} </a>
-                        </span>
+            <a ui-sref="chat({ task: taskDetails._id, user:taskDetails.user, tasker: taskDetails.tasker._id })" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px">
+              {{'CHAT' | translate}}
+            </a>
+          </span>
         </td>
 
-        <td ng-if="taskDetails.status == 2 || taskDetails.status == 3 || taskDetails.status == 4 || taskDetails.status == 5 || taskDetails.status == 8" class="pay-status">
-          <span><a href="javascript:void(0)" ng-click="ACC.TaskDetailsViewModal($index)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px;">{{'VIEW' | translate}}</a></span>
-          <span ng-if="taskDetails.status == 2 "> <a ng-click="ACC.TaskDetailsIgnoreModal(taskDetails._id,8)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px">{{'CANCEL' | translate}} </a></span>
-          <span> <a ui-sref="chat({ task: taskDetails._id,user:taskDetails.user,tasker: taskDetails.tasker._id })" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px;">{{'CHAT' | translate}} </a></span>
-          <span ng-if="taskDetails.status <= 6" style="float: left; "> <a ng-click="ACC.livetracking(taskDetails)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px;">{{'Track' | translate}} </a></span>
+        <td ng-if="taskDetails.status == 2 || taskDetails.status == 3 || taskDetails.status == 3.1 || taskDetails.status == 3.2 || taskDetails.status == 4 || taskDetails.status == 5 || taskDetails.status == 8" class="pay-status">
+          <span>
+            <a href="javascript:void(0)" ng-click="ACC.TaskDetailsViewModal($index)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px;">
+              {{'VIEW' | translate}}
+            </a>
+          </span>
+          <span ng-if="taskDetails.status == 2">
+            <a ng-click="ACC.TaskDetailsIgnoreModal(taskDetails._id, 8)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px">
+              {{'CANCEL' | translate}}
+            </a>
+          </span>
+          <span>
+            <a ui-sref="chat({ task: taskDetails._id, user:taskDetails.user, tasker: taskDetails.tasker._id })" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px;">
+              {{'CHAT' | translate}}
+            </a>
+          </span>
+          <span ng-if="taskDetails.status == 2">
+            <a ng-click="ACC.updatetaskstatus(taskDetails._id, 3.1)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px">
+              {{'START_OFF' | translate}}
+            </a>
+          </span>
+          <span ng-if="taskDetails.status == 3">
+            <a ng-click="ACC.updatetaskstatus(taskDetails._id, 3.2)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px">
+              {{'START_OFF' | translate}}
+            </a>
+          </span>
+          <span ng-if="taskDetails.status <= 6" style="float: left; ">
+            <a ng-click="ACC.livetracking(taskDetails)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px;">
+              {{'Track' | translate}}
+            </a>
+          </span>
         </td>
       </tr>
       </tbody>

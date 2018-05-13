@@ -305,7 +305,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
       if (isValid) {
         acc.user.avatarBase64 = acc.myCroppedImage;
         accountService.saveAccount(acc.user).then(function (response) {
-          $translate('SAVED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+          $translate('SAVED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
           $scope.imageChangeValue = false;
           acc.accountMode = false;
           $location.hash('editaccountdiv');
@@ -336,7 +336,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
       if (acc.temp_address) {
         acc.user.avatarBase64 = acc.myCroppedImage;
         accountService.saveAccount(acc.user).then(function (response) {
-          $translate('SAVED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+          $translate('SAVED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
           acc.accountMode = false;
           $scope.imageChangeValue = false;
           $location.hash('editaccountdiv');
@@ -454,7 +454,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
     if (isvalid) {
       if (data.newpassword == data.new_confirmed) {
         accountService.savePassword(data).then(function (response) {
-          $translate('SAVED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+          $translate('SAVED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
           $state.go('account');
         }, function (err) {
           if (err.message) {
@@ -590,7 +590,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
             if (response.statusCode == 402) {
               toastr.error(response.message);
             } else {
-              $translate('WALLET MONEY HAS BEEN UPDATED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+              $translate('WALLET MONEY HAS BEEN UPDATED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
               acc.getwalletdetails = response.wallet;
               wallet.amount = "";
             }
@@ -659,7 +659,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
   acc.payment = function payment(isValid, formdata) {
     if (isValid) {
       accountService.confirmtask(acc.taskPayment).then(function (err, response) {
-        $translate('SAVED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+        $translate('SAVED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
       }, function (err) {
         if (err.msg) {
           toastr.error(err.msg);
@@ -707,7 +707,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
     modalInstance.result.then(function (selectedCategoryData, isValid) {
       selectedCategoryData.hour_rate = selectedCategoryData.hour_rate / $scope.DefaultCurrency[0].value;
       accountService.updateCategory(selectedCategoryData).then(function (response) {
-        $translate('UPDATED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+        $translate('UPDATED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
         acc.updatecat();
       }, function (err) {
         if (err.msg) {
@@ -740,7 +740,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 
     modalInstance.result.then(function (deletecategorydata) {
       accountService.deleteCategory(deletecategorydata).then(function (response) {
-        $translate('CATEGORY DELETED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+        $translate('CATEGORY DELETED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
         acc.updatecat();
       }, function () {
       });
@@ -774,7 +774,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
       i++;
     }
     accountService.saveProfile(acc.user).then(function (response) {
-      $translate('UPDATED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+      $translate('UPDATED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
     }, function (err) {
       if (err.msg) {
         $scope.addAlert(err.msg);
@@ -953,26 +953,29 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
     data.status = status;
     accountService.updatetaskstatus(data).then(function (response) {
       if (response.error) {
-        $translate(response.error).then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
+        $translate(response.error).then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
       } else {
-        if (response.status == 3) {
-          $translate('YOU START-OFF THE TASK').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
-        }
-        else if (response.status == 4) {
-          $translate('YOU ARRIVED TO THE TASK LOCATION').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
-        }
-        else if (response.status == 6) {
-          $translate('YOUR REQUEST FOR CASH').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
-        }
-        else {
-          $translate('YOU STARTED TASK').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+        if (response.status == 3 || response.status == 3.1 || response.status == 3.2) {
+          $translate('YOU START-OFF THE TASK').then(function (headline) { toastr.info(headline); }, function (error) { console.error(error); });
+        } else if (response.status == 4) {
+          $translate('YOU ARRIVED TO THE TASK LOCATION').then(function (headline) { toastr.info(headline); }, function (error) { console.error(error); });
+        } else if (response.status == 6) {
+          $translate('YOUR REQUEST FOR CASH').then(function (headline) { toastr.info(headline); }, function (error) { console.error(error); });
+        } else {
+          $translate('YOU STARTED TASK').then(function (headline) { toastr.info(headline); }, function (error) { console.error(error); });
         }
       }
-      acc.getTaskDetailsByStaus("ongoing", currentpage);
-      if (response.status == 6) {
-        acc.getTaskDetailsByStaus("completed");
+
+      if (!currentpage ) {
+        acc.taskCurrentPage = 1;
+        acc.GetTaskList('ongoing');
+      } else {
+        acc.getTaskDetailsByStaus("ongoing", currentpage);
+        if (response.status == 6) {
+          acc.getTaskDetailsByStaus("completed");
+        }
+        acc.currentPage = currentpage;
       }
-      acc.currentPage = currentpage;
     });
   }
 
@@ -984,7 +987,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
       if (response.error) {
         $translate(response.error).then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
       } else {
-        $translate('PAYMENT_COMPLETED').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+        $translate('PAYMENT_COMPLETED').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
       }
       acc.getTaskDetailsByStaus("completed");
     });
@@ -1125,7 +1128,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
     data.status = status;
     accountService.updateTaskcompletion(data).then(function (response) {
       if (response.status == 6) {
-        $translate('TASK_COMPLETED').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+        $translate('TASK_COMPLETED').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
       }
       else {
         $translate('UNABLE TO SAVE YOUR DATA').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
@@ -1311,7 +1314,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
     modalInstance.result.then(function (data) {
       accountService.updateTaskcompletion(data).then(function (response) {
         if (response.status == 6) {
-          $translate('TASK_COMPLETED').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+          $translate('TASK_COMPLETED').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
         }
         else {
           $translate('UNABLE TO SAVE YOUR DATA').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
@@ -1681,7 +1684,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
         return;
       } else {
         accountService.saveAvailability(acc.user).then(function (response) {
-          $translate('UPDATED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+          $translate('UPDATED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
         }, function (err) {
           if (err.msg) {
             toastr.error(err.msg);
@@ -1704,7 +1707,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
     }
     acc.data._id = acc.user._id;
     accountService.updateAvailability(acc.data).then(function (response) {
-      $translate('TASKER AVAILABILITY UPDATED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+      $translate('TASKER AVAILABILITY UPDATED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
     }, function (err) {
       if (err.msg) {
         toastr.error(err.msg);
@@ -1729,7 +1732,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 
     modalInstance.result.then(function (userid) {
       accountService.deactivateAccount(userid).then(function (response) {
-        $translate('YOUR ACCOUNT DEACTIVATED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+        $translate('YOUR ACCOUNT DEACTIVATED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
       }, function () {
         if (err.msg) {
           toastr.error(err.msg);
@@ -1799,7 +1802,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
         } else {
           acc.user.address.line1 = acc.temp_address;
           accountService.saveTaskerAccount(acc.user).then(function (response) {
-            $translate('UPDATED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+            $translate('UPDATED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
             $scope.imageChangeValue = false;
             $location.hash('editaccountdiv');
             $anchorScroll();
@@ -1836,7 +1839,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
         } else {
           acc.user.address.line1 = acc.temp_address;
           accountService.saveTaskerAccount(acc.user).then(function (response) {
-            $translate('UPDATED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+            $translate('UPDATED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
             $scope.imageChangeValue = false;
             $location.hash('editaccountdiv');
             $anchorScroll();
@@ -1872,7 +1875,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
   acc.saveTaskerPassword = function saveTaskerPassword(isvalid) {
     if (isvalid) {
       accountService.saveTaskerPassword(acc.password).then(function (response) {
-        $translate('UPDATED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+        $translate('UPDATED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
         $state.go('account');
       }, function (err) {
         if (err.msg) {
@@ -1901,7 +1904,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 
     modalInstance.result.then(function (userid) {
       accountService.deactivateTaskerAccount(userid).then(function (response) {
-        $translate('YOUR ACCOUNT DEACTIVATED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+        $translate('YOUR ACCOUNT DEACTIVATED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
       }, function () {
         if (err.msg) {
           toastr.error(err.msg);
@@ -2301,7 +2304,7 @@ angular.module('handyforall.accounts').controller('DeleteCategoriesModalInstance
   categoryinfo.categoryname = categoryname;
   dacm.ok = function () {
     $uibModalInstance.close(categoryinfo);
-    $translate('CATEGORY DELETED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+    $translate('CATEGORY DELETED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
   };
   dacm.cancel = function () {
     $uibModalInstance.dismiss('cancel');

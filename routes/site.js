@@ -125,7 +125,7 @@ module.exports = function (app, io) {
     app.post('/site/account/password/save', ensureAuthorized, account.savePassword);
     app.post('/site/account/availability/save', ensureAuthorized, account.saveAvailability);
     app.post('/site/account/availability/update', ensureAuthorized, account.updateAvailability);
-    app.post('/site/account/updatetaskstatus', ensureAuthorized, account.updatetaskstatus);
+    app.post('/site/account/updatetaskstatus', ensureAuthorized, account.updatetaskstatus);/////
     app.post('/site/account/updatetaskstatuscash', account.updatetaskstatuscash);
     app.post('/site/account/categories/get', account.getCategories);
     app.post('/site/account/categories/getchild', account.getchild);
@@ -138,8 +138,8 @@ module.exports = function (app, io) {
     app.get('/site/account/question/getQuestion', account.getQuestion);
     app.post('/site/account/getsettings', account.getsettings);
     app.post('/site/account/updateprofiledetails', ensureAuthorized, account.updateprofiledetails);
-    app.post('/site/account/getTaskList', account.getTaskList);
-    app.post('/site/account/getTaskDetailsByStaus', account.getTaskDetailsByStaus);
+    app.post('/site/account/getTaskList', account.getTaskList);/////
+    app.post('/site/account/getTaskDetailsByStaus', account.getTaskDetailsByStaus);/////
     app.post('/site/account/getUserTaskDetailsByStaus', account.getUserTaskDetailsByStaus);
     app.post('/site/account/getTaskDetailsBytaskid', account.getTaskDetailsBytaskid);
     app.post('/site/account/getcategoriesofuser', account.getusercategories);

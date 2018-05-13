@@ -1531,7 +1531,7 @@ module.exports = function (io) {
           status = [1];
           break;
         case 'ongoing':
-          status = [2, 3, 4, 5];
+          status = [2, 3, 3.1, 3.2, 4, 5];
           break;
         case 'completed':
           status = [6, 7];
@@ -1608,7 +1608,7 @@ module.exports = function (io) {
           status = [1];
           break;
         case 'ongoing':
-          status = [2, 3, 4, 5];
+          status = [2, 3, 3.1, 3.2, 4, 5];
           break;
         case 'completed':
           status = [6, 7];
@@ -2185,101 +2185,125 @@ module.exports = function (io) {
         //var time = timezone.tz(formatedDate, settings.settings.time_zone);
         if (req.body.data.status == 3) {
           dateupdate = { 'status': 3, 'history.provider_start_off_time': new Date() }
-        }
-        else if (req.body.data.status == 4) {
+        } else if (req.body.data.status == 3.1) {
+          dateupdate = { 'status': 3.1, 'history.user_start_off_time': new Date() }
+        } else if (req.body.data.status == 3.2) {
+          dateupdate = { 'status': 3.2, 'history.provider_start_off_time': new Date(), 'history.user_start_off_time': new Date() }
+        } else if (req.body.data.status == 4) {
           dateupdate = { 'status': 4, 'history.location_arrived_time': new Date() }
-        }
-        else if (req.body.data.status == 5) {
+        } else if (req.body.data.status == 5) {
           dateupdate = { 'status': 5, 'history.job_started_time': new Date() }
-        }
-        else if (req.body.data.status == 6) {
+        } else if (req.body.data.status == 6) {
           dateupdate = { 'history.request_payment': new Date() }
         }
-        var statusCheck = req.body.data.status - 1;
+
+        var arr_status = [req.body.data.status - 1];
+
         if (req.body.data.status == 6) {
-          statusCheck = req.body.data.status;
+          arr_status = [req.body.data.status];
+        } else if (req.body.data.status == 3.1) {
+          arr_status = [2];
+        } else if (req.body.data.status == 3.2) {
+          arr_status = [3, 3.1];
         }
 
-        db.GetOneDocument('task', { _id: req.body.data.taskid }, {}, {}, function (err, task) {
-          if (err || !task) {
+        db.GetOneDocument('task', { _id: req.body.data.taskid, status: { "$in": arr_status } }, {}, {}, function (err, task) {
+          console.log('arr_status', task);
+
+          if (err) {
             res.send(err);
+          } else if (!task) {
+            db.GetOneDocument('task', { _id: req.body.data.taskid }, {}, {}, function (err, task) {
+              if (err) {
+                res.send(err);
+              } else if (!task) {
+                res.send({ 'error': 'Task Not Found' });
+              } else {
+                res.send({ 'error': 'Job Expired' });
+              }
+            });
           } else {
-            if (task.status == statusCheck) {
-              db.UpdateDocument('task', { _id: req.body.data.taskid }, dateupdate, function (err, updatedata) {
-                if (err) {
-                  res.send(err);
-                } else {
-                  var extension = {};
-                  extension.populate = { path: 'user tasker' };
-                  db.GetOneDocument('task', { _id: req.body.data.taskid }, {}, extension, function (err, task) {
-                    if (err || !task) {
-                      res.send(err);
-                    } else {
-                      var message = ''
-                      var job_date = timezone.tz(task.booking_information.booking_date, settings.settings.time_zone).format(settings.settings.date_format);
-                      var mail_job_time = timezone.tz(task.booking_information.booking_date, settings.settings.time_zone).format(settings.settings.time_format);
-                      var mailData = {};
-                      if (task.status == 3) {
-                        mailData.template = 'Start_off';
-                        mailData.to = task.user.email;
-                        mailData.html = [];
-                        mailData.html.push({ name: 'username', value: task.user.name.first_name + "(" + task.user.username + ")" || "" });
-                        mailData.html.push({ name: 'taskername', value: task.tasker.name.first_name + "(" + task.tasker.username + ")" || "" });
-                        mailData.html.push({ name: 'taskname', value: task.booking_information.service_type || "" });
-                        mailData.html.push({ name: 'startdate', value: job_date || "" });
-                        mailData.html.push({ name: 'workingtime', value: mail_job_time || "" });
-                        mailData.html.push({ name: 'site_url', value: settings.settings.site_url || "" });
-                        mailData.html.push({ name: 'site_title', value: settings.settings.site_title || "" });
-                        mailData.html.push({ name: 'logo', value: settings.settings.logo || "" });
-                        mailcontent.sendmail(mailData, function (err, response) {
-                          console.log("mail start", err, response);
-                        });
-                        message = CONFIG.NOTIFICATION.PROVIDER_START_OFF_YOUR_JOB;
-                        var options = { 'job_id': task.booking_id, 'user_id': task.user._id };
-                        push.sendPushnotification(task.user._id, message, 'start_off', 'ANDROID', options, 'USER', function (err, response, body) { });
-                      } else if (task.status == 4) {
-                        mailData.template = 'Tasker_Arrived';
-                        mailData.to = task.user.email;
-                        mailData.html = [];
-                        mailData.html.push({ name: 'username', value: task.user.name.first_name + "(" + task.user.username + ")" || "" });
-                        mailData.html.push({ name: 'taskername', value: task.tasker.name.first_name + "(" + task.tasker.username + ")" || "" });
-                        mailData.html.push({ name: 'site_url', value: settings.settings.site_url || "" });
-                        mailData.html.push({ name: 'site_title', value: settings.settings.site_title || "" });
-                        mailData.html.push({ name: 'logo', value: settings.settings.logo || "" });
-                        mailcontent.sendmail(mailData, function (err, response) { console.log("mail arrive", err, response) });
-                        message = CONFIG.NOTIFICATION.PROVIDER_ARRIVED_ON_YOUR_PLACE;
-                        var options = { 'job_id': task.booking_id, 'user_id': task.user._id };
-                        push.sendPushnotification(task.user._id, message, 'provider_reached', 'ANDROID', options, 'USER', function (err, response, body) { });
-                      } else if (task.status == 5) {
-                        mailData.template = 'Task_started';
-                        mailData.to = task.user.email;
-                        mailData.html = [];
-                        mailData.html.push({ name: 'username', value: task.user.name.first_name + "(" + task.user.username + ")" || "" });
-                        mailData.html.push({ name: 'taskername', value: task.tasker.name.first_name + "(" + task.tasker.username + ")" || "" });
-                        mailData.html.push({ name: 'taskname', value: task.booking_information.service_type || "" });
-                        mailData.html.push({ name: 'data', value: job_date || "" });
-                        mailData.html.push({ name: 'time', value: mail_job_time || "" });
-                        mailData.html.push({ name: 'site_url', value: settings.settings.site_url || "" });
-                        mailData.html.push({ name: 'site_title', value: settings.settings.site_title || "" });
-                        mailData.html.push({ name: 'logo', value: settings.settings.logo || "" });
-                        mailcontent.sendmail(mailData, function (err, response) { });
-                        message = CONFIG.NOTIFICATION.PROVIDER_STARTED_YOUR_JOB;
-                        var options = { 'job_id': task.booking_id, 'user_id': task.user._id };
-                        push.sendPushnotification(task.user._id, message, 'job_started', 'ANDROID', options, 'USER', function (err, response, body) { });
-                      }
-                      else if (task.status == 6) {
-                        message = CONFIG.NOTIFICATION.PROVIDER_SENT_REQUEST_FOR_PAYMENT;
-                        var options = { 'job_id': task.booking_id, 'user_id': task.user._id };
-                        push.sendPushnotification(task.user._id, message, 'job_started', 'ANDROID', options, 'USER', function (err, response, body) { });
-                      }
-                      res.send(task);
-                    }
-                  });
-                }
-              });
-            } else {
-              res.send({ 'error': 'Job Expired' });
+            if (req.body.data.status == 3.2) {
+              if (task.history.hasOwnProperty("user_start_off_time")) {
+                delete dateupdate['history.user_start_off_time'];
+              }
+              if (task.history.hasOwnProperty("provider_start_off_time")) {
+                delete dateupdate['history.provider_start_off_time'];
+              }
             }
+
+            db.UpdateDocument('task', { _id: req.body.data.taskid }, dateupdate, function (err, updatedata) {
+              if (err) {
+                res.send(err);
+              } else {
+                var extension = {};
+                extension.populate = { path: 'user tasker' };
+                db.GetOneDocument('task', { _id: req.body.data.taskid }, {}, extension, function (err, task) {
+                  if (err || !task) {
+                    res.send(err);
+                  } else {
+                    var message = ''
+                    var job_date = timezone.tz(task.booking_information.booking_date, settings.settings.time_zone).format(settings.settings.date_format);
+                    var mail_job_time = timezone.tz(task.booking_information.booking_date, settings.settings.time_zone).format(settings.settings.time_format);
+                    var mailData = {};
+                    if (task.status == 3) {
+                      mailData.template = 'Start_off';
+                      mailData.to = task.user.email;
+                      mailData.html = [];
+                      mailData.html.push({ name: 'username', value: task.user.name.first_name + "(" + task.user.username + ")" || "" });
+                      mailData.html.push({ name: 'taskername', value: task.tasker.name.first_name + "(" + task.tasker.username + ")" || "" });
+                      mailData.html.push({ name: 'taskname', value: task.booking_information.service_type || "" });
+                      mailData.html.push({ name: 'startdate', value: job_date || "" });
+                      mailData.html.push({ name: 'workingtime', value: mail_job_time || "" });
+                      mailData.html.push({ name: 'site_url', value: settings.settings.site_url || "" });
+                      mailData.html.push({ name: 'site_title', value: settings.settings.site_title || "" });
+                      mailData.html.push({ name: 'logo', value: settings.settings.logo || "" });
+                      mailcontent.sendmail(mailData, function (err, response) {
+                        console.log("mail start", err, response);
+                      });
+                      message = CONFIG.NOTIFICATION.PROVIDER_START_OFF_YOUR_JOB;
+                      var options = { 'job_id': task.booking_id, 'user_id': task.user._id };
+                      push.sendPushnotification(task.user._id, message, 'start_off', 'ANDROID', options, 'USER', function (err, response, body) { });
+                    } else if (task.status == 4) {
+                      mailData.template = 'Tasker_Arrived';
+                      mailData.to = task.user.email;
+                      mailData.html = [];
+                      mailData.html.push({ name: 'username', value: task.user.name.first_name + "(" + task.user.username + ")" || "" });
+                      mailData.html.push({ name: 'taskername', value: task.tasker.name.first_name + "(" + task.tasker.username + ")" || "" });
+                      mailData.html.push({ name: 'site_url', value: settings.settings.site_url || "" });
+                      mailData.html.push({ name: 'site_title', value: settings.settings.site_title || "" });
+                      mailData.html.push({ name: 'logo', value: settings.settings.logo || "" });
+                      mailcontent.sendmail(mailData, function (err, response) { console.log("mail arrive", err, response) });
+                      message = CONFIG.NOTIFICATION.PROVIDER_ARRIVED_ON_YOUR_PLACE;
+                      var options = { 'job_id': task.booking_id, 'user_id': task.user._id };
+                      push.sendPushnotification(task.user._id, message, 'provider_reached', 'ANDROID', options, 'USER', function (err, response, body) { });
+                    } else if (task.status == 5) {
+                      mailData.template = 'Task_started';
+                      mailData.to = task.user.email;
+                      mailData.html = [];
+                      mailData.html.push({ name: 'username', value: task.user.name.first_name + "(" + task.user.username + ")" || "" });
+                      mailData.html.push({ name: 'taskername', value: task.tasker.name.first_name + "(" + task.tasker.username + ")" || "" });
+                      mailData.html.push({ name: 'taskname', value: task.booking_information.service_type || "" });
+                      mailData.html.push({ name: 'data', value: job_date || "" });
+                      mailData.html.push({ name: 'time', value: mail_job_time || "" });
+                      mailData.html.push({ name: 'site_url', value: settings.settings.site_url || "" });
+                      mailData.html.push({ name: 'site_title', value: settings.settings.site_title || "" });
+                      mailData.html.push({ name: 'logo', value: settings.settings.logo || "" });
+                      mailcontent.sendmail(mailData, function (err, response) { });
+                      message = CONFIG.NOTIFICATION.PROVIDER_STARTED_YOUR_JOB;
+                      var options = { 'job_id': task.booking_id, 'user_id': task.user._id };
+                      push.sendPushnotification(task.user._id, message, 'job_started', 'ANDROID', options, 'USER', function (err, response, body) { });
+                    }
+                    else if (task.status == 6) {
+                      message = CONFIG.NOTIFICATION.PROVIDER_SENT_REQUEST_FOR_PAYMENT;
+                      var options = { 'job_id': task.booking_id, 'user_id': task.user._id };
+                      push.sendPushnotification(task.user._id, message, 'job_started', 'ANDROID', options, 'USER', function (err, response, body) { });
+                    }
+                    res.send(task);
+                  }
+                });
+              }
+            });
           }
         });
       }

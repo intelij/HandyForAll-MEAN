@@ -671,5 +671,7 @@
   "Deliver at my selected location": "Deliver at my selected location",
   "Deliver at Provider location": "Deliver at Provider's location",
   "Copyright": "Copyright",
-  "All rights reserved": "All Rights Reserved"
+  "All rights reserved": "All Rights Reserved",
+  "PROVIDER": "Provider",
+  "USER": "User"
 }
