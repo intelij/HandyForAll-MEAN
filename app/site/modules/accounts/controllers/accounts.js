@@ -2102,17 +2102,38 @@ angular.module('handyforall.accounts').controller('TaskInviteViewModalInstanceCt
   tvmi.DefaultCurrency = DefaultCurrency;
   tvmi.getsettings = getsettings;
   tvmi.timeline = tvmi.TaskInvite.history;
-  tvmi.checkWorkflow = function (_index) {
-    var flowIndex = 1;
-    if (_index === 2) {
-      const secondFlowCategories = accountService.getSecondFlowCagetories();
-      const categoryName = tvmi.TaskInvite.category.name;
-      if (secondFlowCategories.includes(categoryName)) {
-        flowIndex = 2;
-      }
+  tvmi.flow = [];
+  function init() {
+    let flowIndex = 1;
+    const flow = [];
+    const secondFlowCategories = accountService.getSecondFlowCagetories();
+    const categoryName = tvmi.TaskInvite.category.name;
+    if (secondFlowCategories.includes(categoryName)) {
+      flowIndex = 2;
     }
-    return flowIndex === _index;
-  };
+    switch(flowIndex) {
+      case 1:
+      {
+        const flowList = accountService.getFirstFlowList();
+        for (const item of flowList) {
+          flow.push({name: `first_provider_${item}`, value: tvmi.timeline[item]});
+        }
+      }
+        break;
+      case 2:
+      {
+        const flowList = accountService.getSecondFlowList();
+        for (const item of flowList) {
+          flow.push({name: `second_provider_${item}`, value: tvmi.timeline[item]});
+        }
+      }
+        break;
+    }
+
+    flow.sort((a, b) => b.value - a.value);
+    tvmi.flow = flow;
+  }
+  init();
 
   tvmi.ok = function (working_day, index) {
     var data = {};
@@ -2204,17 +2225,38 @@ angular.module('handyforall.accounts').controller('TaskDetailsViewModalInstanceC
 
   tdvmi.taskdescription = TaskDetails.task_description;
   tdvmi.timeline = tdvmi.TaskDetails.history;
-  tdvmi.checkWorkflow = function (_index) {
-    var flowIndex = 1;
-    if (_index === 2) {
-      const secondFlowCategories = accountService.getSecondFlowCagetories();
-      const categoryName = tdvmi.TaskDetails.category.name;
-      if (secondFlowCategories.includes(categoryName)) {
-        flowIndex = 2;
-      }
+  tdvmi.flow = [];
+  function init() {
+    let flowIndex = 1;
+    const flow = [];
+    const secondFlowCategories = accountService.getSecondFlowCagetories();
+    const categoryName = tdvmi.TaskDetails.category.name;
+    if (secondFlowCategories.includes(categoryName)) {
+      flowIndex = 2;
     }
-    return flowIndex === _index;
-  };
+    switch(flowIndex) {
+      case 1:
+      {
+        const flowList = accountService.getFirstFlowList();
+        for (const item of flowList) {
+          flow.push({name: `first_user_${item}`, value: tdvmi.timeline[item]});
+        }
+      }
+      break;
+      case 2:
+      {
+        const flowList = accountService.getSecondFlowList();
+        for (const item of flowList) {
+          flow.push({name: `second_user_${item}`, value: tdvmi.timeline[item]});
+        }
+      }
+      break;
+    }
+
+    flow.sort((a, b) => b.value - a.value);
+    tdvmi.flow = flow;
+  }
+  init();
   tdvmi.ok = function () {
     $uibModalInstance.close();
   };

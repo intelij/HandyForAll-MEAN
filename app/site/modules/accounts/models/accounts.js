@@ -54,10 +54,12 @@ function accountService($http, $q, Upload) {
     getseosetting: getseosetting,
     updatewalletdatapaypal: updatewalletdatapaypal,
     getUserWalletTransaction: getUserWalletTransaction,
-    checkphoneno:checkphoneno,
-    getPaymentdetails:getPaymentdetails,
-    saveCurrentLocation:saveCurrentLocation,
-    getSecondFlowCagetories: getSecondFlowCagetories
+    checkphoneno: checkphoneno,
+    getPaymentdetails: getPaymentdetails,
+    saveCurrentLocation: saveCurrentLocation,
+    getSecondFlowCagetories: getSecondFlowCagetories,
+    getFirstFlowList: getFirstFlowList,
+    getSecondFlowList: getSecondFlowList
 
   };
   return accountService;
@@ -842,7 +844,7 @@ function accountService($http, $q, Upload) {
     return deferred.promise;
   }
   function checkphoneno(data) {
-    console.log("data",data)
+    console.log("data",data);
     var deferred = $q.defer();
     $http({
       method: 'POST',
@@ -883,5 +885,13 @@ function accountService($http, $q, Upload) {
   }
   function getSecondFlowCagetories() {
     return ['Motorbike', 'Cargo Car', 'Truck', 'Car', 'Mini Bus', 'Bus'];
+  }
+  function getFirstFlowList() {
+    return ['job_booking_time', 'provider_assigned', 'provider_start_off_time', 'user_start_off_time',
+      'job_started_time', 'location_arrived_time', 'job_closed_time', 'job_completed_time', 'request_payment'];
+  }
+  function getSecondFlowList() {
+    return ['job_booking_time', 'provider_assigned','job_started_time', 'location_arrived_time',
+      'job_closed_time', 'job_completed_time', 'request_payment'];
   }
 }
