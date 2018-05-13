@@ -477,10 +477,13 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
       tfc.taskinfo.status = 1;
 
       angular.forEach(message.tasker.taskerskills, function (value, key) {
-        if (value.childid == tfc.taskinfo.category._id)
+        if (value.childid == tfc.taskinfo.category._id) {
           tfc.hour_rate = value.hour_rate;
+          tfc.km_rate = value.km_rate;
+        }
       });
       tfc.taskinfo.hourly_rate = tfc.hour_rate || ""
+      tfc.taskinfo.km_rate = tfc.km_rate || ""
       tfc.taskinfo.task_hour = tfc.filter.hour;
 
       if (bDeliverAtProviderLocation) {

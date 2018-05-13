@@ -87,6 +87,7 @@ TASK_SCHEMA.TASK = {
 	mobile_status: Number,
 	otp: String,
 	hourly_rate: Number,
+  km_rate: Number,
 };
 module.exports = TASK_SCHEMA;
 
