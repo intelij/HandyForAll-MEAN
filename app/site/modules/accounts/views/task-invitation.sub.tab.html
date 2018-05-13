@@ -10,7 +10,7 @@
           <th>{{'DELIVERY_ADDRESS' | translate}}</th>
           <th>{{'USER_NAME' | translate}}</th>
           <th ng-if="ACC.taskInvitation[0].status == 6 || ACC.taskInvitation[0].status == 7">{{'TOTAL_AMOUNT' | translate}}</th>
-          <th ng-if="ACC.taskInvitation[0].status == 1 || ACC.taskInvitation[0].status == 2 || ACC.taskInvitation[0].status  == 8 || ACC.taskInvitation[0].status == 3 || ACC.taskInvitation[0].status == 4 || ACC.taskInvitation[0].status == 5">{{'STATUS' | translate}}</th>
+          <th ng-if="ACC.taskInvitation[0].status == 1 || ACC.taskInvitation[0].status == 2 || ACC.taskInvitation[0].status  == 8 || ACC.taskInvitation[0].status == 3 || ACC.taskInvitation[0].status == 3.1 || ACC.taskInvitation[0].status == 3.2 || ACC.taskInvitation[0].status == 4 || ACC.taskInvitation[0].status == 4.1 || ACC.taskInvitation[0].status == 4.2 || ACC.taskInvitation[0].status == 5">{{'STATUS' | translate}}</th>
           <th>{{'ACTIONS' | translate}}</th>
           <th ng-if="ACC.taskInvitation[0].status == 6 || ACC.taskInvitation[0].status == 7">{{'PAYMENT_STATUS' | translate}}</th>
         </tr>
@@ -23,7 +23,7 @@
           <td><span ng-if="taskDetails.task_address.line1">{{taskDetails.task_address.line1}},</span><span ng-if="taskDetails.task_address.line2">{{taskDetails.task_address.line2}},</span><span ng-if="taskDetails.task_address.city">{{taskDetails.task_address.city}},</span><span ng-if="taskDetails.task_address.state">{{taskDetails.task_address.state}},</span><span ng-if="taskDetails.task_address.zipcode">{{taskDetails.task_address.zipcode}}</span></td>
           <td>{{taskDetails.user.name.first_name}}({{taskDetails.user.username}})</td>
           <td ng-if="ACC.taskInvitation[0].status == 6 || ACC.taskInvitation[0].status == 7">{{rc.DefaultCurrency[0].symbol}}{{(taskDetails.invoice.amount.grand_total - taskDetails.invoice.amount.service_tax) * rc.DefaultCurrency[0].value | number:2}}</td>
-          <td ng-if="ACC.taskInvitation[0].status == 1 || ACC.taskInvitation[0].status == 2 || ACC.taskInvitation[0].status  == 8 || ACC.taskInvitation[0].status == 3 || ACC.taskInvitation[0].status == 4 || ACC.taskInvitation[0].status == 5">
+          <td ng-if="ACC.taskInvitation[0].status >= 1 && ACC.taskInvitation[0].status <= 5">
             <li ng-if="taskDetails.status == 1">
               <div> <label style="color:red">{{'PENDING' | translate}}</label></div>
             </li>
@@ -50,14 +50,37 @@
                 <br/>
                 <label style="color:orange">({{'PROVIDER' | translate}})</label>
               </div>
-              <div>
+              <div class="mt-10">
                 <label style="color:orange">{{'START_OFF' | translate}}</label>
                 <br/>
                 <label style="color:orange">({{'USER' | translate}})</label>
               </div>
             </li>
             <li ng-if="taskDetails.status == 4">
-              <div> <label style="color:orange">{{'ARRIVED' | translate}}</label></div>
+              <div>
+                <label style="color:orange">{{'ARRIVED' | translate}}</label>
+                <br/>
+                <label style="color:orange">({{'PROVIDER' | translate}})</label>
+              </div>
+            </li>
+            <li ng-if="taskDetails.status == 4.1">
+              <div>
+                <label style="color:orange">{{'ARRIVED' | translate}}</label>
+                <br/>
+                <label style="color:orange">({{'USER' | translate}})</label>
+              </div>
+            </li>
+            <li ng-if="taskDetails.status == 4.2">
+              <div>
+                <label style="color:orange">{{'ARRIVED' | translate}}</label>
+                <br/>
+                <label style="color:orange">({{'PROVIDER' | translate}})</label>
+              </div>
+              <div class="mt-10">
+                <label style="color:orange">{{'ARRIVED' | translate}}</label>
+                <br/>
+                <label style="color:orange">({{'USER' | translate}})</label>
+              </div>
             </li>
             <li ng-if="taskDetails.status == 5">
               <div> <label style="color:orange">{{'TASK_STARTED' | translate}}</label></div>
@@ -70,7 +93,7 @@
             <!--<a task-action href="" uib-dropdown-toggle> <i  class="fa fa-pencil-square-o actionclick"></i></a>-->
             <ul >
 
-              <li ng-if="taskDetails.status == 1 || taskDetails.status == 2 || taskDetails.status == 3 || taskDetails.status == 3.1 || taskDetails.status == 3.2 || taskDetails.status == 4 || taskDetails.status == 5 || taskDetails.status == 8">
+              <li ng-if="taskDetails.status == 1 || taskDetails.status == 2 || taskDetails.status == 3 || taskDetails.status == 3.1 || taskDetails.status == 3.2 || taskDetails.status == 4 || taskDetails.status == 4.1 || taskDetails.status == 4.2 || taskDetails.status == 5 || taskDetails.status == 8">
                 <a ng-click="ACC.TaskInviteViewModal($index)" href="javascript:void(0)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; width: 100% !important; padding: 0 12px;margin-bottom: 7px;">
                   {{'VIEW' | translate}}
                 </a>
@@ -105,7 +128,12 @@
                   {{'ARRIVED' | translate}}
                 </a>
               </li>
-              <li ng-if="taskDetails.status == 4">
+              <li ng-if="taskDetails.status == 4.1">
+                <a ng-click="ACC.updatetaskstatus(taskDetails._id, 4.2, ACC.currentPage)" class="btn btn-secondary js-deactivate-trigger confrm conform" style=" padding: 0 12px; margin-bottom: 7px;width:100%!important;">
+                  {{'ARRIVED' | translate}}
+                </a>
+              </li>
+              <li ng-if="taskDetails.status == 4 || taskDetails.status == 4.1 || taskDetails.status == 4.2">
                 <a ng-click="ACC.updatetaskstatus(taskDetails._id, 5, ACC.currentPage)" class="btn btn-secondary js-deactivate-trigger confrm conform" style=" padding: 0 12px; margin-bottom: 7px; width:100%!important;">
                   {{'START_JOB' | translate}}
                 </a>
