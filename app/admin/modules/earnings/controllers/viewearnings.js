@@ -1,13 +1,13 @@
 angular.module('handyforall.earnings').controller('viewearningsCtrl', viewearningsCtrl);
 
-viewearningsCtrl.$inject = ['$scope', 'TaskerEarningReslove', 'toastr', 'EarningService', 'PaidEarningsServiceResolve', '$stateParams','$rootScope'];
-function viewearningsCtrl($scope, TaskerEarningReslove, toastr, EarningService, PaidEarningsServiceResolve, $stateParams, $rootScope) {
+viewearningsCtrl.$inject = ['$scope', 'TaskerEarningResolve', 'toastr', 'EarningService', 'PaidEarningsServiceResolve', '$stateParams','$rootScope'];
+function viewearningsCtrl($scope, TaskerEarningResolve, toastr, EarningService, PaidEarningsServiceResolve, $stateParams, $rootScope) {
     var encc = this;
     $scope.taskerId = $stateParams.id;
 
     encc.billingCycle = $stateParams.cycle;
 
-    encc.eraninglist = TaskerEarningReslove[0];
+    encc.eraninglist = TaskerEarningResolve[0];
     encc.payDetails = PaidEarningsServiceResolve;
     if (encc.payDetails.total.extra_amount) {
         encc.payDetails.tasker_extra_amount = encc.payDetails.total.extra_amount;
@@ -83,8 +83,8 @@ function viewearningsCtrl($scope, TaskerEarningReslove, toastr, EarningService, 
     encc.table = {};
     encc.table.module = 'earnings';
     encc.table.layout = layout;
-    encc.table.data = TaskerEarningReslove[0];
-    encc.table.count = TaskerEarningReslove[1] || 0;
+    encc.table.data = TaskerEarningResolve[0];
+    encc.table.count = TaskerEarningResolve[1] || 0;
     encc.table.delete = {
         'date': $scope.date,
         'permission': encc.permission,

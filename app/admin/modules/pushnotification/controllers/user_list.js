@@ -1,7 +1,7 @@
 angular.module('handyforall.pushnotification').controller('UserListCtrl', UserListCtrl);
-UserListCtrl.$inject = ['UsernotificationServiceResolve', 'UsernotificationService', 'emailEditReslove', 'emailService', 'messageEditReslove', '$window', '$modal', '$scope','$rootScope'];
+UserListCtrl.$inject = ['UsernotificationServiceResolve', 'UsernotificationService', 'emailEditResolve', 'emailService', 'messageEditResolve', '$window', '$modal', '$scope','$rootScope'];
 
-function UserListCtrl(UsernotificationServiceResolve, UsernotificationService, emailEditReslove, emailService, messageEditReslove, $window, $modal, $scope, $rootScope) {
+function UserListCtrl(UsernotificationServiceResolve, UsernotificationService, emailEditResolve, emailService, messageEditResolve, $window, $modal, $scope, $rootScope) {
 
     var ulc = this;
     ulc.permission = $scope.privileges.filter(function (menu) {
@@ -24,8 +24,8 @@ function UserListCtrl(UsernotificationServiceResolve, UsernotificationService, e
     ulc.table.name = 'User';
     ulc.table.layout = layout;
     ulc.table.module = 'earnings';
-    ulc.table.maildata = emailEditReslove[0];
-    ulc.table.messagedata = messageEditReslove[0];
+    ulc.table.maildata = emailEditResolve[0];
+    ulc.table.messagedata = messageEditResolve[0];
     ulc.table.data = UsernotificationServiceResolve[0];
     ulc.table.count = UsernotificationServiceResolve[1] || 0;
     ulc.table.delete = {

@@ -1,9 +1,9 @@
 angular.module('handyforall.reviews').controller('editReviewsCtrl', editReviewsCtrl);
 
-editReviewsCtrl.$inject = ['ReviewsEditReslove', 'ReviewsService', 'toastr', '$state'];
-function editReviewsCtrl(ReviewsEditReslove, ReviewsService, toastr, $state) {
+editReviewsCtrl.$inject = ['ReviewsEditResolve', 'ReviewsService', 'toastr', '$state'];
+function editReviewsCtrl(ReviewsEditResolve, ReviewsService, toastr, $state) {
     var edrc = this;
-    edrc.editReviewData = ReviewsEditReslove[0];
+    edrc.editReviewData = ReviewsEditResolve[0];
 
     edrc.submit = function submit(isValid) {
         

@@ -1,13 +1,13 @@
 angular.module('handyforall.peoplecmd').controller('editPeoplecmdCtrl', editPeoplecmdCtrl);
 
-editPeoplecmdCtrl.$inject = ['PeoplecmdEditReslove', 'PeoplecmdService', 'toastr', '$state', '$stateParams', 'Slug'];
+editPeoplecmdCtrl.$inject = ['PeoplecmdEditResolve', 'PeoplecmdService', 'toastr', '$state', '$stateParams', 'Slug'];
 
-function editPeoplecmdCtrl(PeoplecmdEditReslove, PeoplecmdService, toastr, $state, $stateParams, Slug) {
+function editPeoplecmdCtrl(PeoplecmdEditResolve, PeoplecmdService, toastr, $state, $stateParams, Slug) {
     var epcc = this;
 
-    epcc.editpeopletData = PeoplecmdEditReslove[0];
+    epcc.editpeopletData = PeoplecmdEditResolve[0];
     epcc.editpeopletData = {};
-    epcc.editpeopletData = PeoplecmdEditReslove[1];
+    epcc.editpeopletData = PeoplecmdEditResolve[1];
 
     if ($stateParams.id) {
         epcc.action = 'edit';

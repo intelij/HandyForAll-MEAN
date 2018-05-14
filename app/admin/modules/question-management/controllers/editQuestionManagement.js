@@ -1,10 +1,10 @@
 angular.module('handyforall.question').controller('editQuestionerCtrl', editQuestionerCtrl);
 
-editQuestionerCtrl.$inject = ['QuestionEditReslove', 'QuestionService', 'toastr', '$state', '$stateParams'];
+editQuestionerCtrl.$inject = ['QuestionEditResolve', 'QuestionService', 'toastr', '$state', '$stateParams'];
 
-function editQuestionerCtrl(QuestionEditReslove, QuestionService, toastr, $state, $stateParams) {
+function editQuestionerCtrl(QuestionEditResolve, QuestionService, toastr, $state, $stateParams) {
     var edqc = this;
-    edqc.editQuestionData = QuestionEditReslove[0];
+    edqc.editQuestionData = QuestionEditResolve[0];
 
     if ($stateParams.id) {
         edqc.action = 'edit';

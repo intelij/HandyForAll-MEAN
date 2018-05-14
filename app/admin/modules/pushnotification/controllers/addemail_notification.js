@@ -1,10 +1,10 @@
 angular.module('handyforall.pushnotification').controller('NotificationemailCtrl', NotificationemailCtrl);
 
-NotificationemailCtrl.$inject = ['emailEditReslove', 'toastr', 'emailService', '$state', '$stateParams'];
+NotificationemailCtrl.$inject = ['emailEditResolve', 'toastr', 'emailService', '$state', '$stateParams'];
 
-function NotificationemailCtrl(emailEditReslove, toastr, emailService, $state, $stateParams) {
+function NotificationemailCtrl(emailEditResolve, toastr, emailService, $state, $stateParams) {
     var nelc = this;
-    nelc.templateData = emailEditReslove[0];
+    nelc.templateData = emailEditResolve[0];
 
     if ($stateParams.id) {
         nelc.action = 'edit';

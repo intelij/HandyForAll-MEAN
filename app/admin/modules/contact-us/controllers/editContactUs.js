@@ -1,10 +1,10 @@
 angular.module('handyforall.contactus').controller('editContactCtrl', editContactCtrl);
 
-editContactCtrl.$inject = ['contactEditReslove', 'ContactService', 'toastr', '$state', '$filter'];
+editContactCtrl.$inject = ['contactEditResolve', 'ContactService', 'toastr', '$state', '$filter'];
 
-function editContactCtrl(contactEditReslove, ContactService, toastr, $state, $filter) {
+function editContactCtrl(contactEditResolve, ContactService, toastr, $state, $filter) {
     var edcc = this;
-    edcc.editContactData = contactEditReslove[0];
+    edcc.editContactData = contactEditResolve[0];
 
     edcc.Sendmail = function Sendmail(data) {
         if (data) {

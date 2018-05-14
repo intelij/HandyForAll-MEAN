@@ -1,10 +1,10 @@
 angular.module('handyforall.tasks').controller('editTasksCtrl', editTasksCtrl);
 
-editTasksCtrl.$inject = ['TasksEditReslove', 'TasksService', 'toastr', '$state', '$filter', '$scope'];
+editTasksCtrl.$inject = ['TasksEditResolve', 'TasksService', 'toastr', '$state', '$filter', '$scope'];
 
-function editTasksCtrl(TasksEditReslove, TasksService, toastr, $state, $filter, $scope) {
+function editTasksCtrl(TasksEditResolve, TasksService, toastr, $state, $filter, $scope) {
     var edttc = this;
-    edttc.editTasksData = TasksEditReslove[0];
+    edttc.editTasksData = TasksEditResolve[0];
      console.log('EDTTC.editTasksData/*/*/*/',edttc.editTasksData);
     if(edttc.editTasksData.billing_address) {
       var addressline1 = edttc.editTasksData.billing_address.line1;

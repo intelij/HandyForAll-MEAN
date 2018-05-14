@@ -1,10 +1,10 @@
 angular.module('handyforall.sliders').controller('editSliderCtrl', editSliderCtrl);
 
-editSliderCtrl.$inject = ['sliderEditReslove', 'SliderService', 'toastr', '$state', '$stateParams'];
+editSliderCtrl.$inject = ['sliderEditResolve', 'SliderService', 'toastr', '$state', '$stateParams'];
 
-function editSliderCtrl(sliderEditReslove, SliderService, toastr, $state, $stateParams) {
+function editSliderCtrl(sliderEditResolve, SliderService, toastr, $state, $stateParams) {
     var edsc = this;
-    edsc.editSliderData = sliderEditReslove[0];
+    edsc.editSliderData = sliderEditResolve[0];
     edsc.requiredValue = true;
     if ($stateParams.id) {
         edsc.action = 'edit';
