@@ -1,15 +1,15 @@
 angular.module('handyforall.task').controller('taskFilterCtrl', taskFilterCtrl);
 
 taskFilterCtrl.$inject = ['$scope', '$rootScope', '$location', '$stateParams', 'SearchResolve', 'TaskService', 'TaskserviceResolve', 'toastr', '$state', '$filter', 'AuthenticationService', '$modal', 'MainService', 'TaskServiceNewResolve', '$translate', 'ngMeta', 'TaskerCountResolve', 'NgMap', '$scope', '$q', '$log', '$uibModal'];
-function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResolve, TaskService, TaskserviceResolve, toastr, $state, $filter, AuthenticationService, $modal, MainService, TaskServiceNewResolve, $translate, ngMeta, TaskerCountResolve, NgMap, $scope, $q, $log, $uibModal) {
+function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResolve, TaskService, TaskserviceResolve, toastr, $state, $filter, AuthenticationService, $modal, MainService, TaskServiceNewResolve, $translate, ngMeta, TaskerCountResolve, NgMap, $q, $log, $uibModal) {
 
-  var tfc = this;
-  var option = {};
+  const tfc = this;
+  const option = {};
 
   tfc.viewType = 'list'; // list or map
   tfc.radiusby = $rootScope.settings.distanceby;
 
-  if (tfc.radiusby == 'km') {
+  if (tfc.radiusby === 'km') {
     tfc.radiusval = 1000;
   } else {
     tfc.radiusval = 1609.34;
@@ -29,7 +29,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
     ngMeta.setTitle(TaskserviceResolve[0].SubCategoryInfo.name);
   }
 
-  var user = AuthenticationService.GetCredentials();
+  const user = AuthenticationService.GetCredentials();
   MainService.getCurrentUsers(user.currentUser.username).then(function (result) {
     tfc.currentUserData = result[0];
   }, function (error) {
@@ -40,7 +40,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
     tfc.DefaultCurrency = response;
   });
 
-  var stateParams = angular.copy($rootScope.currentparams);
+  const stateParams = angular.copy($rootScope.currentparams);
   if (angular.isDefined(stateParams.categoryid)) {
     option.category = stateParams.category;
   }
@@ -62,7 +62,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
   tfc.format = 'MM/dd/yyyy';
   tfc.logincheck = AuthenticationService.isAuthenticated();
 
-  if (angular.isDefined($stateParams.date && $stateParams.date != 'undefined')) {
+  if (angular.isDefined($stateParams.date && $stateParams.date !== 'undefined')) {
     tfc.filter.date = $stateParams.date;
   }
 
@@ -73,9 +73,9 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
     $state.go('landing', {}, { reload: false });
   }
 
-  if (angular.isDefined(tfc.filter.date) && tfc.filter.date != '') {
+  if (angular.isDefined(tfc.filter.date) && tfc.filter.date !== '') {
     tfc.WorkingDate = new Date(tfc.filter.date);
-    if (tfc.WorkingDate == 'Invalid Date') {
+    if (tfc.WorkingDate === 'Invalid Date') {
       tfc.WorkingDate = new Date();
       console.log(tfc.WorkingDate,"qqqqqqqqqq");
     }
@@ -94,11 +94,11 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
   };
 
   if (angular.isDefined(tfc.filter.hour)) {
-    if (tfc.filter.hour == "morning") {
+    if (tfc.filter.hour === "morning") {
       tfc.hours.morning = true;
-    } else if (tfc.filter.hour == "afternoon") {
+    } else if (tfc.filter.hour === "afternoon") {
       tfc.hours.afternoon = true;
-    } else if (tfc.filter.hour == "evening") {
+    } else if (tfc.filter.hour === "evening") {
       tfc.hours.evening = true;
     } else {
       tfc.filter.hour = 'morning';
@@ -116,7 +116,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
   tfc.filter.categoryid = tfc.taskbaseinfo.SubCategoryInfo._id;
   tfc.getTaskerDetailsResponse = false;
 
-  if (tfc.search.minRate == tfc.search.maxRate) {
+  if (tfc.search.minRate === tfc.search.maxRate) {
     tfc.min = tfc.filter.minvalue = tfc.search.minRate || 0;
     tfc.max = tfc.filter.maxvalue = tfc.min + 200;
   } else {
@@ -124,7 +124,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
     tfc.max = tfc.filter.maxvalue = tfc.search.maxRate || 500;
   }
 
-  if (tfc.search.kmminRate == tfc.search.kmmaxRate) {
+  if (tfc.search.kmminRate === tfc.search.kmmaxRate) {
     tfc.kmmin = tfc.filter.kmminvalue = tfc.search.kmminRate || 0;
     tfc.kmmax = tfc.filter.kmmaxvalue = tfc.kmmin + 200;
     // tfc.kmmin = 0;
@@ -168,13 +168,13 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
     tfc.getTaskerDetailsResponse = false;
 
     tfc.dummyarrayValue = [];
-    if ($rootScope.currentState.name != 'search') {
+    if ($rootScope.currentState.name !== 'search') {
       $state.go($rootScope.currentState, $rootScope.currentparams, { reload: false, inherit: true, notify: true });
     } else {
       // console.log("adfasdfasdfasdfad",tfc.filter, tfc.currentPage, tfc.itemsPerPage)
 
       //console.log(">>>>>",tfc.viewType);
-      if (tfc.viewType == 'list') {
+      if (tfc.viewType === 'list') {
         TaskService.getTaskerByGeoFilter(tfc.filter, tfc.currentPage, tfc.itemsPerPage).then(function (response) {
           //console.log("response*/*/*/",response);
           if (angular.isDefined(response.countall)) {
@@ -188,7 +188,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
             console.log("TFC.TaskerDetails/*/*/*/*/*/*",tfc.TaskerDetails);
             angular.forEach(tfc.TaskerDetails, function (value, key) {
               angular.forEach(value.taskerskills, function (value1, key1) {
-                if (value1.childid == tfc.filter.categoryid) {
+                if (value1.childid === tfc.filter.categoryid) {
                   tfc.dummyarrayValue.push(value1);
                 }
               });
@@ -203,7 +203,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
           }
           angular.forEach(tfc.TaskerDetails, function (value, key) {
             angular.forEach(tfc.avgtasker, function (value1, key1) {
-              if (value._id == value1._id) {
+              if (value._id === value1._id) {
                 tfc.TaskerDetails[key].avarating = parseInt(value1.avg);
                 //console.log("tfc.TaskerDetails[key].avarating",tfc.TaskerDetails[key].avarating)
                 tfc.TaskerDetails[key].taskCount = parseInt(value1.datacount);
@@ -217,7 +217,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
 
           angular.forEach(tfc.TaskerDetails, function (value, key) {
             angular.forEach(tfc.taskercount, function (value1, key1) {
-              if (value._id == value1._id) {
+              if (value._id === value1._id) {
                 tfc.TaskerDetails[key].taskercount = value1.induvidualcount;
 
               }
@@ -232,7 +232,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
             // console.log("tfc.TaskerDetails******",tfc.TaskerDetails);
             angular.forEach(tfc.TaskerDetails, function (value, key) {
               angular.forEach(value.taskerskills, function (value1, key1) {
-                if (value1.childid == tfc.filter.categoryid) {
+                if (value1.childid === tfc.filter.categoryid) {
                   tfc.dummyarrayValue.push(value1);
                 }
               });
@@ -245,9 +245,9 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
             $scope.cityMetaData = [];
 
             $scope.getCityInfo = function () {
-              var TaskerData = [];
-              for (var i = 0; i < tfc.TaskerDetails.length; i++) {
-                var id = tfc.TaskerDetails[i];
+              let TaskerData = [];
+              for (let i = 0; i < tfc.TaskerDetails.length; i++) {
+                let id = tfc.TaskerDetails[i];
                 TaskerData.push({
                   'id': i,
                   'cityName': tfc.TaskerDetails[i].address.line1 + "," + tfc.TaskerDetails[i].address.state + "," + tfc.TaskerDetails[i].address.country,
@@ -262,13 +262,13 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
               });
             }
             tfc.addressMarker = function (cityItem) {
-              var deferred = $q.defer();
-              var address = cityItem.TaskerName.availability_address;
-              var geocoder = new google.maps.Geocoder();
+              const deferred = $q.defer();
+              const address = cityItem.TaskerName.availability_address;
+              const geocoder = new google.maps.Geocoder();
               geocoder.geocode({
                 'address': address
               }, function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
+                if (status === google.maps.GeocoderStatus.OK) {
                   $scope.$apply(function () {
                     $scope.markerData.push({
                       "id": cityItem.id,
@@ -302,7 +302,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
           }
           angular.forEach(tfc.TaskerDetails, function (value, key) {
             angular.forEach(tfc.avgtasker, function (value1, key1) {
-              if (value._id == value1._id) {
+              if (value._id === value1._id) {
                 tfc.TaskerDetails[key].avarating = parseInt(value1.avg);
                 //console.log("tfc.TaskerDetails[key].avarating",tfc.TaskerDetails[key].avarating)
                 tfc.TaskerDetails[key].taskCount = parseInt(value1.datacount);
@@ -316,7 +316,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
 
           angular.forEach(tfc.TaskerDetails, function (value, key) {
             angular.forEach(tfc.taskercount, function (value1, key1) {
-              if (value._id == value1._id) {
+              if (value._id === value1._id) {
                 tfc.TaskerDetails[key].taskercount = value1.induvidualcount;
 
               }
@@ -357,8 +357,8 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
     tfc.selectedDate = tfc.WorkingDate.getDate();
     tfc.selectedMonth = tfc.WorkingDate.getMonth();
     tfc.filterTiming = "";
-    if ((tfc.selectedDate == tfc.thisDate)) {
-      if (tfc.selectedMonth == tfc.thisMonth) {
+    if ((tfc.selectedDate === tfc.thisDate)) {
+      if (tfc.selectedMonth === tfc.thisMonth) {
         tfc.filterTiming = [];
         for (var i = 0; i < tfc.timinglist.length; i++) {
           if (tfc.timinglist[i].data > tfc.timeDisabledValue) {
@@ -374,7 +374,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
     }
 
     if (tfc.filterTiming.length) {
-      if (angular.isDefined($stateParams.time && $stateParams.time !='undefined')) {
+      if (angular.isDefined($stateParams.time && $stateParams.time !== 'undefined')) {
         tfc.dafaulttime = $stateParams.time;
       }
       else{
@@ -384,7 +384,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
     else {
       tfc.WorkingDate.setDate(tfc.WorkingDate.getDate() + 1);
       tfc.filterTiming = tfc.timinglist;
-      if (angular.isDefined($stateParams.time && $stateParams.time !='undefined')) {
+      if (angular.isDefined($stateParams.time && $stateParams.time !== 'undefined')) {
         tfc.dafaulttime = $stateParams.time;
       }
       else{
@@ -397,29 +397,25 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
   tfc.hourfilter = function (hour) {
 
     tfc.filter.time = hour;
-    if (hour == "08:00" || hour == "09:00" || hour == "10:00" || hour == "11:00") {
+    if (hour === "08:00" || hour === "09:00" || hour === "10:00" || hour === "11:00") {
       value = 'morning';
-    } else if (hour == "12:00" || hour == "13:00" || hour == "14:00" || hour == "15:00") {
+    } else if (hour === "12:00" || hour === "13:00" || hour === "14:00" || hour === "15:00") {
       value = 'afternoon';
-    } else if (hour == "16:00" || hour == "17:00" || hour == "18:00" || hour == "19:00") {
+    } else if (hour === "16:00" || hour === "17:00" || hour === "18:00" || hour === "19:00") {
       value = 'evening';
     }
-    for (var i in tfc.hours) {
-      if (value != i) {
-        tfc.hours[i] = false;
-      } else {
-        tfc.hours[i] = true;
-      }
+    for (const i in tfc.hours) {
+      tfc.hours[i] = value !== i;
     }
-    if (tfc.filter.hour != value) {
+    if (tfc.filter.hour !== value) {
       tfc.filter.hour = value;
       tfc.filter.time = hour;  // -- hour
     }
     tfc.getTaskerDetails();
-  }
+  };
 
   tfc.registermodal = function (category) {
-    var modalInstance = $modal.open({
+    const modalInstance = $modal.open({
       animation: true,
       templateUrl: 'app/site/modules/task-step/views/register.modal.tab.html',
       controller: 'RegisterModalInstanceCtrl',
@@ -432,7 +428,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
 
   tfc.confirmatask = function confirmatask(message) {
     //
-    var modalInstance = $uibModal.open({
+    const modalInstance = $uibModal.open({
       animation: true,
       templateUrl: 'app/site/modules/task-step/views/ConfirmtaskModel.html',
       controller: 'ConfirmtaskModel',
@@ -445,7 +441,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
     });
 
     modalInstance.result.then(function (bDeliverAtProviderLocation) {
-      var date = {};
+      const date = {};
 
       date.currectdate = tfc.filter.date;
       date.time = tfc.filter.time;
@@ -477,13 +473,13 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
       tfc.taskinfo.status = 1;
 
       angular.forEach(message.tasker.taskerskills, function (value, key) {
-        if (value.childid == tfc.taskinfo.category._id) {
+        if (`${value.childid}` === `${tfc.taskinfo.category._id}`) {
           tfc.hour_rate = value.hour_rate;
           tfc.km_rate = value.km_rate;
         }
       });
-      tfc.taskinfo.hourly_rate = tfc.hour_rate || ""
-      tfc.taskinfo.km_rate = tfc.km_rate || ""
+      tfc.taskinfo.hourly_rate = tfc.hour_rate || "";
+      tfc.taskinfo.km_rate = tfc.km_rate || "";
       tfc.taskinfo.task_hour = tfc.filter.hour;
 
       if (bDeliverAtProviderLocation) {
@@ -514,7 +510,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
 }
 
 angular.module('handyforall.task').controller('changeCategoryModalInstanceCtrl', function ($uibModalInstance) {
-  var ccm = this;
+  const ccm = this;
   ccm.ok = function () {
     $uibModalInstance.close('ok');
   };
@@ -616,7 +612,7 @@ angular.module('handyforall.task').controller('changeCategoryModalInstanceCtrl',
 });*/
 
 angular.module('handyforall.task').controller('DeleteAddress', function ($uibModalInstance, user, $state) {
-  var data = this;
+  const data = this;
   data.ok = function () {
     $uibModalInstance.close();
   };
@@ -627,11 +623,11 @@ angular.module('handyforall.task').controller('DeleteAddress', function ($uibMod
 
 
 angular.module('handyforall.task').directive('setClassWhenAtTop', function ($window) {
-  var $win = angular.element($window);
+  const $win = angular.element($window);
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {
-      var topClass = attrs.setClassWhenAtTop,
+      const topClass = attrs.setClassWhenAtTop,
         offsetTop = element.offset().top;
 
       $win.on('scroll', function (e) {
@@ -643,10 +639,10 @@ angular.module('handyforall.task').directive('setClassWhenAtTop', function ($win
       });
     }
   };
-})
+});
 
 angular.module('handyforall.task').controller('ConfirmtaskModel', function ($uibModalInstance) {
-  var ccm = this;
+  const ccm = this;
   ccm.ok = function () {
     $uibModalInstance.close('ok');
   };
