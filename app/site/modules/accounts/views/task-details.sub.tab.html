@@ -49,14 +49,37 @@
               <br/>
               <label style="color:orange">({{'PROVIDER' | translate}})</label>
             </div>
-            <div>
+            <div class="mt-10">
               <label style="color:orange">{{'START_OFF' | translate}}</label>
               <br/>
               <label style="color:orange">({{'USER' | translate}})</label>
             </div>
           </li>
           <li ng-if="taskDetails.status == 4">
-            <div> <label style="color:orange">{{'ARRIVED' | translate}}</label></div>
+            <div>
+              <label style="color:orange">{{'ARRIVED' | translate}}</label>
+              <br/>
+              <label style="color:orange">({{'PROVIDER' | translate}})</label>
+            </div>
+          </li>
+          <li ng-if="taskDetails.status == 4.1">
+            <div>
+              <label style="color:orange">{{'ARRIVED' | translate}}</label>
+              <br/>
+              <label style="color:orange">({{'USER' | translate}})</label>
+            </div>
+          </li>
+          <li ng-if="taskDetails.status == 4.2">
+            <div>
+              <label style="color:orange">{{'ARRIVED' | translate}}</label>
+              <br/>
+              <label style="color:orange">({{'PROVIDER' | translate}})</label>
+            </div>
+            <div class="mt-10">
+              <label style="color:orange">{{'ARRIVED' | translate}}</label>
+              <br/>
+              <label style="color:orange">({{'USER' | translate}})</label>
+            </div>
           </li>
           <li ng-if="taskDetails.status == 5">
             <div> <label style="color:orange">{{'TASK_STARTED' | translate}}</label></div>
@@ -72,7 +95,7 @@
           </li>
         </td>
         <td ng-if="taskDetails.status == 1" class="slidetd mob-actions pay-status" >
-          <span ng-if="taskDetails.status == 1 || taskDetails.status == 2 || taskDetails.status == 3 || taskDetails.status == 4 || taskDetails.status == 5" style="float: left; ">
+          <span ng-if="taskDetails.status >= 1 && taskDetails.status <= 5" style="float: left; ">
             <a href="javascript:void(0)" ng-click="ACC.TaskDetailsViewModal($index)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px;">
               {{'VIEW' | translate}}
             </a>
@@ -112,7 +135,7 @@
           </span>
         </td>
 
-        <td ng-if="taskDetails.status == 2 || taskDetails.status == 3 || taskDetails.status == 3.1 || taskDetails.status == 3.2 || taskDetails.status == 4 || taskDetails.status == 5 || taskDetails.status == 8" class="pay-status">
+        <td ng-if="taskDetails.status == 2 || taskDetails.status == 3 || taskDetails.status == 3.1 || taskDetails.status == 3.2 || taskDetails.status == 4 || taskDetails.status == 4.1 || taskDetails.status == 4.2 || taskDetails.status == 5 || taskDetails.status == 8" class="pay-status">
           <span>
             <a href="javascript:void(0)" ng-click="ACC.TaskDetailsViewModal($index)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px;">
               {{'VIEW' | translate}}
@@ -136,6 +159,16 @@
           <span ng-if="taskDetails.status == 3">
             <a ng-click="ACC.updatetaskstatus(taskDetails._id, 3.2)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px">
               {{'START_OFF' | translate}}
+            </a>
+          </span>
+          <span ng-if="taskDetails.status == 3.1 || taskDetails.status == 3.2">
+            <a ng-click="ACC.updatetaskstatus(taskDetails._id, 4.1)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px">
+              {{'ARRIVE' | translate}}
+            </a>
+          </span>
+          <span ng-if="taskDetails.status == 4">
+            <a ng-click="ACC.updatetaskstatus(taskDetails._id, 4.2)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; margin-bottom: 7px">
+              {{'ARRIVE' | translate}}
             </a>
           </span>
           <span ng-if="taskDetails.status <= 6" style="float: left; ">

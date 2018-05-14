@@ -202,6 +202,27 @@
     "view": ""
   }
 }, {
+  "name": "Menu.BRANDS",
+  "alias": "brands",
+  "action": "list",
+  "state": "app.brands",
+  "icon": "tag",
+  "childs": [ {
+    "name": "SubMenu.BRANDS_LIST",
+    "action": "all",
+    "state": "app.brands.list"
+  }, {
+    "name": "SubMenu.ADD_BRANDS",
+    "action": "add",
+    "state": "app.brands.edit"
+  } ],
+  "status": {
+    "delete": "",
+    "edit": "",
+    "add": "",
+    "view": ""
+  }
+}, {
   "name": "Menu.COUPONS",
   "alias": "coupons",
   "action": "list",

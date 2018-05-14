@@ -13,6 +13,7 @@ app/site/public/scripts/minified/main.min.js
 uploads/images/tasker/*
 uploads/images/users/*
 uploads/images/others/*
+uploads/images/brands/*
 
 .idea/
 package-lock.json

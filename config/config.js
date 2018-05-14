@@ -17,6 +17,7 @@ CONFIG.USER = 'User';
 CONFIG.DIRECTORY_USERS = './uploads/images/users/';
 CONFIG.DIRECTORY_TASKERS = './uploads/images/tasker/';
 CONFIG.DIRECTORY_CATEGORIES = './uploads/images/categories/';
+CONFIG.DIRECTORY_BRANDS = './uploads/images/brands/';
 CONFIG.DIRECTORY_PAYMENTPRICE = './uploads/images/paymentprice/';
 CONFIG.DIRECTORY_PEOPLECMD = './uploads/images/peoplecmd/';
 CONFIG.DIRECTORY_SLIDERS = './uploads/images/sliders/';

@@ -7,6 +7,7 @@ angular.module('handyforall.dashboard', []);
 angular.module('handyforall.pages', []);
 angular.module('handyforall.sliders', []);
 angular.module('handyforall.coupons', []);
+angular.module('handyforall.brands', []);
 angular.module('handyforall.emailTemplate', []);
 angular.module('handyforall.categories', []);
 angular.module('handyforall.faq', []);
@@ -62,6 +63,7 @@ angular.module('handyforall.admin', [
   'handyforall.pages',
   'handyforall.sliders',
   'handyforall.coupons',
+  'handyforall.brands',
   'handyforall.emailTemplate',
   'handyforall.categories',
   'handyforall.faq',
@@ -218,44 +220,38 @@ angular.module('handyforall.admin')
                 $rootScope.earningsVisiblevalue = true;
                 $rootScope.categoriesVisiblevalue = true;
                 $rootScope.couponsVisiblevalue = true;
+                $rootScope.brandsVisiblevalue = true;
                 $rootScope.newsletterVisiblevalue = true;
               }
 
               if (user.privileges && user.role !== 'admin') {
                 user.privileges.filter(function (privilege) {
-                  if (privilege.alias === "users") {
-                    if (privilege.status.view === true) {
-                      $rootScope.userVisiblevalue = true;
-                    }
-                  }
-                  if (privilege.alias === "tasker") {
-                    if (privilege.status.view === true) {
-                      $rootScope.taskerVisiblevalue = true;
-                    }
-                  }
-                  if (privilege.alias === "tasks") {
-                    if (privilege.status.view === true) {
-                      $rootScope.taskVisiblevalue = true;
-                    }
-                  }
-                  if (privilege.alias === "earnings") {
-                    if (privilege.status.view === true) {
-                      $rootScope.earningsVisiblevalue = true;
-                    }
-                  }
-                  if (privilege.alias === "categories") {
-                    if (privilege.status.view === true) {
-                      $rootScope.categoriesVisiblevalue = true;
-                    }
-                  }
-                  if (privilege.alias === "coupons") {
-                    if (privilege.status.view === true) {
-                      $rootScope.couponsVisiblevalue = true;
-                    }
-                  }
-                  if (privilege.alias === "newsletter") {
-                    if (privilege.status.view === true) {
-                      $rootScope.newsletterVisiblevalue = true;
+                  if (privilege.status.view) {
+                    switch (privilege.alias) {
+                      case "users":
+                        $rootScope.userVisiblevalue = true;
+                        break;
+                      case "tasker":
+                        $rootScope.taskerVisiblevalue = true;
+                        break;
+                      case "tasks":
+                        $rootScope.taskVisiblevalue = true;
+                        break;
+                      case "earnings":
+                        $rootScope.earningsVisiblevalue = true;
+                        break;
+                      case "categories":
+                        $rootScope.categoriesVisiblevalue = true;
+                        break;
+                      case "coupons":
+                        $rootScope.couponsVisiblevalue = true;
+                        break;
+                      case "brands":
+                        $rootScope.brandssVisiblevalue = true;
+                        break;
+                      case "newsletter":
+                        $rootScope.newsletterVisiblevalue = true;
+                        break;
                     }
                   }
                 });
@@ -848,7 +844,7 @@ angular.module('handyforall.admin')
         controllerAs: 'VCL',
         templateUrl: '/app/admin/modules/categories/views/categoryList.html',
         resolve: {
-          CategoryServiceResolve: function (MainService, CategoryService, $stateParams) {
+          CategoryServiceResolve: function (CategoryService, $stateParams) {
             var items = 10;
             var skip = 0;
 
@@ -1723,6 +1719,52 @@ angular.module('handyforall.admin')
           }
         }
       })
+
+      .state('app.brands', {
+        url: '/brands',
+        action: 'all',
+        template: '<div ui-view></div>'
+      })
+      .state('app.brands.list', {
+        url: '/brand-list',
+        action: 'all',
+        controller: 'brandListCtrl',
+        controllerAs: 'ctrl',
+        templateUrl: 'app/admin/modules/brands/views/brand_list.html',
+        resolve: {
+          BrandServiceResolve: function (BrandService, $stateParams) {
+            var items = 10;
+            var skip = 0;
+
+            if ($stateParams.items !== '') {
+              items = $stateParams.items;
+            }
+
+            if ($stateParams.page) {
+              skip = (parseInt($stateParams.page, 10) - 1) * items;
+            }
+
+            return BrandService.getBrandList(items, skip);
+          }
+        }
+      })
+      .state('app.brands.edit', {
+        url: '/edit/:id',
+        action: 'add',
+        controller: 'editBrandCtrl',
+        controllerAs: 'ctrl',
+        templateUrl: 'app/admin/modules/brands/views/add_brand.html',
+        resolve: {
+          brandEditReslove: function (BrandService, $stateParams) {
+            if ($stateParams.id) {
+              return BrandService.getBrand($stateParams.id);
+            } else {
+              return BrandService.getBrand();
+            }
+          }
+        }
+      })
+
       .state('app.coupons', {
         url: '/coupons',
         action: 'all',

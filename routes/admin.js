@@ -29,6 +29,7 @@ module.exports = function(app, io) {
     var pages = require('../controller/admin/pages.js')(app);
     var coupon = require('../controller/admin/coupon.js')();
     var categories = require('../controller/admin/categories.js')();
+    var brands = require('../controller/admin/brands.js')();
     var faq = require('../controller/admin/faq.js')(app);
     var postheader = require('../controller/admin/postheader.js')(app);
     var experience = require('../controller/admin/experience.js')(app);
@@ -149,6 +150,12 @@ module.exports = function(app, io) {
     app.post('/category/deleteMaincategory', ensureAuthorized, categories.deleteMaincategory);
 
     app.get('/subcategories/getSetting', ensureAuthorized, categories.getSetting);
+
+    app.get('/brands/list', ensureAuthorized, brands.list);
+    app.post('/admin/brands/lists', ensureAuthorized, brands.allBrands);
+    app.post('/brands/edit', ensureAuthorized, brands.edit);
+    app.post('/brands/savebrand', ensureAuthorized, middlewares.commonUpload(CONFIG.DIRECTORY_BRANDS).fields([{ name: 'image', maxCount: 1 }]), brands.savebrand);
+    app.post('/brands/deletebrand', ensureAuthorized, brands.deletebrand);
 
     app.post('/pages/submitmainpage', ensureAuthorized, pages.submitmainpage);
     app.post('/pages/getlist', ensureAuthorized, pages.getlist);

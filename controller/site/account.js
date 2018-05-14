@@ -1531,7 +1531,7 @@ module.exports = function (io) {
           status = [1];
           break;
         case 'ongoing':
-          status = [2, 3, 3.1, 3.2, 4, 5];
+          status = [2, 3, 3.1, 3.2, 4, 4.1, 4.2, 5];
           break;
         case 'completed':
           status = [6, 7];
@@ -1608,7 +1608,7 @@ module.exports = function (io) {
           status = [1];
           break;
         case 'ongoing':
-          status = [2, 3, 3.1, 3.2, 4, 5];
+          status = [2, 3, 3.1, 3.2, 4, 4.1, 4.2, 5];
           break;
         case 'completed':
           status = [6, 7];
@@ -2190,7 +2190,11 @@ module.exports = function (io) {
         } else if (req.body.data.status == 3.2) {
           dateupdate = { 'status': 3.2, 'history.provider_start_off_time': new Date(), 'history.user_start_off_time': new Date() }
         } else if (req.body.data.status == 4) {
-          dateupdate = { 'status': 4, 'history.location_arrived_time': new Date() }
+          dateupdate = { 'status': 4, 'history.provider_arrived_time': new Date() }
+        } else if (req.body.data.status == 4.1) {
+          dateupdate = { 'status': 4.1, 'history.user_arrived_time': new Date() }
+        } else if (req.body.data.status == 4.2) {
+          dateupdate = { 'status': 4.2, 'history.provider_arrived_time': new Date(), 'history.user_arrived_time': new Date() }
         } else if (req.body.data.status == 5) {
           dateupdate = { 'status': 5, 'history.job_started_time': new Date() }
         } else if (req.body.data.status == 6) {
@@ -2205,6 +2209,10 @@ module.exports = function (io) {
           arr_status = [2];
         } else if (req.body.data.status == 3.2) {
           arr_status = [3, 3.1];
+        } else if (req.body.data.status == 4.1) {
+          arr_status = [3.1, 3.2];
+        } else if (req.body.data.status == 4.2) {
+          arr_status = [4, 4.1];
         }
 
         db.GetOneDocument('task', { _id: req.body.data.taskid, status: { "$in": arr_status } }, {}, {}, function (err, task) {
@@ -2229,6 +2237,13 @@ module.exports = function (io) {
               }
               if (task.history.hasOwnProperty("provider_start_off_time")) {
                 delete dateupdate['history.provider_start_off_time'];
+              }
+            } else if (req.body.data.status == 4.2) {
+              if (task.history.hasOwnProperty("user_arrived_time")) {
+                delete dateupdate['history.user_arrived_time'];
+              }
+              if (task.history.hasOwnProperty("provider_arrived_time")) {
+                delete dateupdate['history.provider_arrived_time'];
               }
             }
 
