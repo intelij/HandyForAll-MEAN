@@ -26,6 +26,7 @@ var config_transaction_schema = require('../schema/transaction.schema.js');
 var config_cancellation_reason_schema = require('../schema/cancellationReason.schema.js');
 var wallet_reacharge_schema = require('../schema/wallet.schema.js');
 var config_coupon_schema = require('../schema/coupon.schema.js');
+var config_brand_schema = require('../schema/brand.schema.js');
 var config_paid_schema = require('../schema/paid.schema.js');
 var config_billing_schema = require('../schema/billingcycle.schema.js');
 var config_notifications_schema = require('../schema/notifications.schema.js');
@@ -61,6 +62,7 @@ var transactionSchema = mongoose.Schema(config_transaction_schema.TRANSACTION, {
 var cancellationReasonSchema = mongoose.Schema(config_cancellation_reason_schema.CANCELLATION, { timestamps: true, versionKey: false });
 var walletReachargeSchema = mongoose.Schema(wallet_reacharge_schema.WALLET, { timestamps: true, versionKey: false });
 var couponSchema = mongoose.Schema(config_coupon_schema.COUPON, { timestamps: true, versionKey: false });
+var brandSchema = mongoose.Schema(config_brand_schema.BRANDS, { timestamps: true, versionKey: false });
 var paidSchema = mongoose.Schema(config_paid_schema.PAID, { timestamps: true, versionKey: false });
 var billingSchema = mongoose.Schema(config_billing_schema.BILLING, { timestamps: true, versionKey: false });
 var notificationsSchema = mongoose.Schema(config_notifications_schema.NOTIFICATIONS, { timestamps: true, versionKey: false });
@@ -71,31 +73,31 @@ var peoplecmdSchema = mongoose.Schema(config_peoplecmd_schema.PEOPLECMD, { times
 // methods ======================
 // generating a hash
 userSchema.methods.generateHash = function (password) {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
 // checking if password is valid
 userSchema.methods.validPassword = function (password) {
-    return bcrypt.compareSync(password, this.password);
+  return bcrypt.compareSync(password, this.password);
 };
 
 taskerSchema.methods.generateHash = function (password) {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
 // checking if password is valid
 taskerSchema.methods.validPassword = function (password) {
-    return bcrypt.compareSync(password, this.password);
+  return bcrypt.compareSync(password, this.password);
 };
 
 
 adminSchema.methods.generateHash = function (password) {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
 // checking if password is valid
 adminSchema.methods.validPassword = function (password) {
-    return bcrypt.compareSync(password, this.password);
+  return bcrypt.compareSync(password, this.password);
 };
 
 // create the model for users and expose it to our app
@@ -106,6 +108,7 @@ var pages = mongoose.model('pages', pageschema, 'pages');
 var emailtemplate = mongoose.model('email_template', emailtemplateSchema, 'email_template');
 var slider = mongoose.model('sliders', sliderSchema, 'sliders');
 var coupon = mongoose.model('coupon', couponSchema, 'coupon');
+var brand = mongoose.model('brand', brandSchema, 'brand');
 var category = mongoose.model('categories', categorySchema, 'categories');
 var faq = mongoose.model('faq', faqSchema, 'faq');
 var postheader = mongoose.model('postheader', postheaderSchema, 'postheader');
@@ -132,36 +135,37 @@ var emailnotifications = mongoose.model('email_notifications', emailnotification
 var posttask = mongoose.model('posttasks', posttaskSchema, 'posttasks');
 var peoplecmd = mongoose.model('peoplecmd', peoplecmdSchema, 'peoplecmd');
 module.exports = {
-    'admins': admins,
-    'users': users,
-    'tasker': tasker,
-    'pages': pages,
-    'emailtemplate': emailtemplate,
-    'slider': slider,
-    'coupon': coupon,
-    'category': category,
-    'faq': faq,
-    'postheader': postheader,
-    'experience': experience,
-    'travel_arrangement': travel_arrangement,
-    'question': question,
-    'settings': settings,
-    'languages': languages,
-    'currencies': currencies,
-    'newsletter': newsletter,
-    'paymentgateway': paymentgateway,
-    'images': images,
-    'messages': messages,
-    'contact': contact,
-    'task': task,
-    'review': review,
-    'transaction': transaction,
-    'cancellation': cancellation,
-    'walletReacharge': walletReacharge,
-    'paid': paid,
-    'billing': billing,
-    'notifications': notifications,
-    'emailnotifications': emailnotifications,
-    'posttask': posttask,
-    'peoplecmd': peoplecmd
+  'admins': admins,
+  'users': users,
+  'tasker': tasker,
+  'pages': pages,
+  'emailtemplate': emailtemplate,
+  'slider': slider,
+  'coupon': coupon,
+  'brand': brand,
+  'category': category,
+  'faq': faq,
+  'postheader': postheader,
+  'experience': experience,
+  'travel_arrangement': travel_arrangement,
+  'question': question,
+  'settings': settings,
+  'languages': languages,
+  'currencies': currencies,
+  'newsletter': newsletter,
+  'paymentgateway': paymentgateway,
+  'images': images,
+  'messages': messages,
+  'contact': contact,
+  'task': task,
+  'review': review,
+  'transaction': transaction,
+  'cancellation': cancellation,
+  'walletReacharge': walletReacharge,
+  'paid': paid,
+  'billing': billing,
+  'notifications': notifications,
+  'emailnotifications': emailnotifications,
+  'posttask': posttask,
+  'peoplecmd': peoplecmd
 };

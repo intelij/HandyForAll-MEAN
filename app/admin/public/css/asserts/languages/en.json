@@ -30,8 +30,8 @@
     "TASKS": "Tasks",
     "EARNINGS": "Earnings",
     "CANCELLATION": "Cancellation Reason",
-    "COUPONS": "Coupons"
-
+    "COUPONS": "Coupons",
+    "BRANDS": "Brands"
   },
   "SubMenu": {
     "ADMIN_LIST": "Admin List",
@@ -127,6 +127,8 @@
     "CANCELLATION": "Cancellation",
     "COUPONS_LIST": "Coupon list",
     "ADD_COUPONS": "Add coupon",
+    "BRANDS_LIST": "Brand list",
+    "ADD_BRANDS": "Add brand",
     "ADD_SUBCATEGORY":"Add Subcategory",
     "EDIT_SUBCATEGORY":"Edit Subcategory",
     "TRANSACTION_LIST":"Transaction List"

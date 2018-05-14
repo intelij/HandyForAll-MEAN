@@ -178,6 +178,25 @@
     ]
   },
   {
+    "name": "Menu.BRANDS",
+    "alias": "brands",
+    "action": "list",
+    "state": "app.brands",
+    "icon": "tag",
+    "childs": [
+      {
+        "name": "SubMenu.BRANDS_LIST",
+        "action": "all",
+        "state": "app.brands.list"
+      },
+      {
+        "name": "SubMenu.ADD_BRANDS",
+        "action": "add",
+        "state": "app.brands.edit"
+      }
+    ]
+  },
+  {
     "name": "Menu.COUPONS",
     "alias": "coupons",
     "action": "list",
