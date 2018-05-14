@@ -142,6 +142,7 @@ module.exports = function(app, io) {
     app.get('/subcategories/list', ensureAuthorized, categories.subcategorylist);
     app.post('/categories/edit', ensureAuthorized, categories.edit);
     app.get('/categories/getcatlistdropdown', ensureAuthorized, categories.getcatlistdropdown);
+    app.get('/categories/get_tree', ensureAuthorized, categories.getTree);
     app.get('/categories/getsubcatlistdropdown', ensureAuthorized, categories.getsubcatlistdropdown);
     app.post('/categories/savecategory', ensureAuthorized, middlewares.commonUpload(CONFIG.DIRECTORY_CATEGORIES).fields([{ name: 'image', maxCount: 1 }, { name: 'marker', maxCount: 1 }, { name: 'icon', maxCount: 1 }, { name: 'activeicon', maxCount: 1 }]), categories.savecategory);
     app.post('/categories/savesubcategory', ensureAuthorized, middlewares.commonUpload(CONFIG.DIRECTORY_CATEGORIES).fields([{ name: 'image', maxCount: 1 }, { name: 'icon', maxCount: 1 }, { name: 'activeicon', maxCount: 1 }]), categories.savesubcategory);

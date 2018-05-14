@@ -1,3 +1,4 @@
+<!--controller name: AvailabilityModalInstanceCtrl-->
 <div class="availabilities-day-form adminweekmodal">
 	<div class="">
 		<div class="">
@@ -7,25 +8,26 @@
 			</div>
 			<div class="modal-body">
 				<ul class="radio-contr">
-					<li>
-						<input ng-model="WorkingDays.hour.morning" id="morning" class="u-hidden" type="checkbox" value="morning" name="windowFields">
-						<label class="switch" for="morning"></label>
-						<label for="morning"> {{days[0].Morning | translate}} ({{workingTimes.morning.from}} - {{workingTimes.morning.to}})</label>
+					<li ng-repeat="(key, item) in availabilities track by item.name">
+						<input ng-model="WorkingDays.hours[key]" id="{{item.name}}" class="u-hidden" type="checkbox" name="windowFields" value="windowFields">
+						<label class="switch" for="{{item.name}}"></label>
+						<label for="{{item.name}}">{{item.name | translate}}</label>
 					</li>
-					<li>
-						<input ng-model="WorkingDays.hour.afternoon" id="evenig" class="u-hidden" type="checkbox" value="morning" name="windowFields">
-						<label class="switch" for="evenig"></label>
-						<label for="evenig"> {{days[0].afternoon | translate}} ({{workingTimes.afternoon.from}} - {{workingTimes.afternoon.to}})</label>
-					</li>
-					<li>
-						<input id="afternoon" ng-model="WorkingDays.hour.evening" class="u-hidden" type="checkbox" value="morning" name="windowFields">
-						<label class="switch" for="afternoon"></label>
-						<label for="afternoon">{{days[0].evening | translate}} ({{workingTimes.evening.from}} - {{workingTimes.evening.to}})</label>
-					</li>
+					<!--<li>-->
+						<!--<input id="evenig" class="u-hidden" type="checkbox" value="morning" name="windowFields">-->
+						<!--<label class="switch" for="evenig"></label>-->
+						<!--<label for="evenig"> {{days[0].afternoon | translate}} ({{workingTimes.afternoon.from}} - {{workingTimes.afternoon.to}})</label>-->
+					<!--</li>-->
+					<!--<li>-->
+						<!--<input id="afternoon" ng-model="WorkingDays.hour.evening" class="u-hidden" type="checkbox" value="morning" name="windowFields">-->
+						<!--<label class="switch" for="afternoon"></label>-->
+						<!--<label for="afternoon">{{days[0].evening | translate}} ({{workingTimes.evening.from}} - {{workingTimes.evening.to}})</label>-->
+					<!--</li>-->
 				</ul>
 			</div>
 			<div class="modal-footer">
 				<button style="color:green" type="button" class="btn btn-default pull-left" ng-click="ok()">{{days[0].Save | translate}} </button>
+				<button style="color:grey" type="button" class="btn btn-default pull-right" ng-click="cancel()">{{'CANCEL' | translate}} </button>
 
 			</div>
 		</div>

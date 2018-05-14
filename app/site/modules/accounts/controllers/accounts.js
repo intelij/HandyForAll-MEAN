@@ -2077,10 +2077,32 @@ angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl',
   };
 });
 
-angular.module('handyforall.accounts').controller('AvailabilityModalInstanceCtrl', function ($scope, $uibModalInstance, workingDays, workingTimes, DaysData, selectedIndex) {
+angular.module('handyforall.accounts').controller('AvailabilityModalInstanceCtrl', function ($scope, $uibModalInstance, workingDays, workingTimes, DaysData, selectedIndex, accountService) {
   $scope.WorkingDays = workingDays[selectedIndex];
   $scope.workingTimes = workingTimes;
   $scope.days = DaysData;
+  $scope.availabilities = accountService.getAvailabilities();
+  $scope.WorkingDays.hours = [];
+  // console.log($scope.WorkingDays.value);
+  // $scope.WorkingDays.value = 28371;
+
+  function init() {
+    // decimal to boolean array
+    const availabilityLength = $scope.availabilities.length;
+    for (const [key, value] of $scope.availabilities.entries()) {
+      let isTrue = false;
+      if ($scope.WorkingDays.value) {
+        // changed direction
+        if ($scope.WorkingDays.value & Math.pow(2, availabilityLength - key - 1)) {
+          isTrue = true;
+        }
+      } else {
+        isTrue = true;
+      }
+      $scope.WorkingDays.hours[key] = isTrue;
+    }
+  }
+  init();
 
   $scope.ok = function () {
     if ($scope.WorkingDays.hour.morning === true || $scope.WorkingDays.hour.afternoon === true || $scope.WorkingDays.hour.evening === true) {
@@ -2088,6 +2110,13 @@ angular.module('handyforall.accounts').controller('AvailabilityModalInstanceCtrl
     } else {
       $scope.WorkingDays.not_working = true;
     }
+    // boolean array to decimal
+    let binaryStr = '';
+    for (const value of $scope.WorkingDays.hours) {
+      binaryStr += (value)? '1' : '0';
+    }
+    $scope.WorkingDays.value = parseInt(binaryStr, 2);
+    // console.log($scope.WorkingDays.value);
     $uibModalInstance.close($scope.WorkingDays, selectedIndex);
   };
 
@@ -2102,17 +2131,38 @@ angular.module('handyforall.accounts').controller('TaskInviteViewModalInstanceCt
   tvmi.DefaultCurrency = DefaultCurrency;
   tvmi.getsettings = getsettings;
   tvmi.timeline = tvmi.TaskInvite.history;
-  tvmi.checkWorkflow = function (_index) {
-    var flowIndex = 1;
-    if (_index === 2) {
-      const secondFlowCategories = accountService.getSecondFlowCagetories();
-      const categoryName = tvmi.TaskInvite.category.name;
-      if (secondFlowCategories.includes(categoryName)) {
-        flowIndex = 2;
-      }
+  tvmi.flow = [];
+  function init() {
+    let flowIndex = 1;
+    const flow = [];
+    const secondFlowCategories = accountService.getSecondFlowCagetories();
+    const categoryName = tvmi.TaskInvite.category.name;
+    if (secondFlowCategories.includes(categoryName)) {
+      flowIndex = 2;
     }
-    return flowIndex === _index;
-  };
+    switch(flowIndex) {
+      case 1:
+      {
+        const flowList = accountService.getFirstFlowList();
+        for (const item of flowList) {
+          flow.push({name: `first_provider_${item}`, value: tvmi.timeline[item]});
+        }
+      }
+        break;
+      case 2:
+      {
+        const flowList = accountService.getSecondFlowList();
+        for (const item of flowList) {
+          flow.push({name: `second_provider_${item}`, value: tvmi.timeline[item]});
+        }
+      }
+        break;
+    }
+
+    flow.sort((a, b) => b.value - a.value);
+    tvmi.flow = flow;
+  }
+  init();
 
   tvmi.ok = function (working_day, index) {
     var data = {};
@@ -2204,17 +2254,38 @@ angular.module('handyforall.accounts').controller('TaskDetailsViewModalInstanceC
 
   tdvmi.taskdescription = TaskDetails.task_description;
   tdvmi.timeline = tdvmi.TaskDetails.history;
-  tdvmi.checkWorkflow = function (_index) {
-    var flowIndex = 1;
-    if (_index === 2) {
-      const secondFlowCategories = accountService.getSecondFlowCagetories();
-      const categoryName = tdvmi.TaskDetails.category.name;
-      if (secondFlowCategories.includes(categoryName)) {
-        flowIndex = 2;
-      }
+  tdvmi.flow = [];
+  function init() {
+    let flowIndex = 1;
+    const flow = [];
+    const secondFlowCategories = accountService.getSecondFlowCagetories();
+    const categoryName = tdvmi.TaskDetails.category.name;
+    if (secondFlowCategories.includes(categoryName)) {
+      flowIndex = 2;
     }
-    return flowIndex === _index;
-  };
+    switch(flowIndex) {
+      case 1:
+      {
+        const flowList = accountService.getFirstFlowList();
+        for (const item of flowList) {
+          flow.push({name: `first_user_${item}`, value: tdvmi.timeline[item]});
+        }
+      }
+      break;
+      case 2:
+      {
+        const flowList = accountService.getSecondFlowList();
+        for (const item of flowList) {
+          flow.push({name: `second_user_${item}`, value: tdvmi.timeline[item]});
+        }
+      }
+      break;
+    }
+
+    flow.sort((a, b) => b.value - a.value);
+    tdvmi.flow = flow;
+  }
+  init();
   tdvmi.ok = function () {
     $uibModalInstance.close();
   };
