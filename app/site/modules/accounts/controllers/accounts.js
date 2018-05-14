@@ -2077,10 +2077,32 @@ angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl',
   };
 });
 
-angular.module('handyforall.accounts').controller('AvailabilityModalInstanceCtrl', function ($scope, $uibModalInstance, workingDays, workingTimes, DaysData, selectedIndex) {
+angular.module('handyforall.accounts').controller('AvailabilityModalInstanceCtrl', function ($scope, $uibModalInstance, workingDays, workingTimes, DaysData, selectedIndex, accountService) {
   $scope.WorkingDays = workingDays[selectedIndex];
   $scope.workingTimes = workingTimes;
   $scope.days = DaysData;
+  $scope.availabilities = accountService.getAvailabilities();
+  $scope.WorkingDays.hours = [];
+  // console.log($scope.WorkingDays.value);
+  // $scope.WorkingDays.value = 28371;
+
+  function init() {
+    // decimal to boolean array
+    const availabilityLength = $scope.availabilities.length;
+    for (const [key, value] of $scope.availabilities.entries()) {
+      let isTrue = false;
+      if ($scope.WorkingDays.value) {
+        // changed direction
+        if ($scope.WorkingDays.value & Math.pow(2, availabilityLength - key - 1)) {
+          isTrue = true;
+        }
+      } else {
+        isTrue = true;
+      }
+      $scope.WorkingDays.hours[key] = isTrue;
+    }
+  }
+  init();
 
   $scope.ok = function () {
     if ($scope.WorkingDays.hour.morning === true || $scope.WorkingDays.hour.afternoon === true || $scope.WorkingDays.hour.evening === true) {
@@ -2088,6 +2110,13 @@ angular.module('handyforall.accounts').controller('AvailabilityModalInstanceCtrl
     } else {
       $scope.WorkingDays.not_working = true;
     }
+    // boolean array to decimal
+    let binaryStr = '';
+    for (const value of $scope.WorkingDays.hours) {
+      binaryStr += (value)? '1' : '0';
+    }
+    $scope.WorkingDays.value = parseInt(binaryStr, 2);
+    // console.log($scope.WorkingDays.value);
     $uibModalInstance.close($scope.WorkingDays, selectedIndex);
   };
 

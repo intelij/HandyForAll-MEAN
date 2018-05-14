@@ -59,7 +59,8 @@ function accountService($http, $q, Upload) {
     saveCurrentLocation: saveCurrentLocation,
     getSecondFlowCagetories: getSecondFlowCagetories,
     getFirstFlowList: getFirstFlowList,
-    getSecondFlowList: getSecondFlowList
+    getSecondFlowList: getSecondFlowList,
+    getAvailabilities: getAvailabilities
 
   };
   return accountService;
@@ -893,5 +894,53 @@ function accountService($http, $q, Upload) {
   function getSecondFlowList() {
     return ['job_booking_time', 'provider_assigned','job_started_time', 'location_arrived_time',
       'job_closed_time', 'job_completed_time', 'request_payment'];
+  }
+  function getAvailabilities() {
+    return [{
+        name: 'am_7_8',
+      },
+      {
+        name: 'am_8_9',
+      },
+      {
+        name: 'am_9_10',
+      },
+      {
+        name: 'am_10_11',
+      },
+      {
+        name: 'am_11_12',
+      },
+      {
+        name: 'pm_0_1',
+      },
+      {
+        name: 'pm_1_2',
+      },
+      {
+        name: 'pm_2_3',
+      },
+      {
+        name: 'pm_3_4',
+      },
+      {
+        name: 'pm_4_5',
+      },
+      {
+        name: 'pm_5_6',
+      },
+      {
+        name: 'pm_6_7',
+      },
+      {
+        name: 'pm_7_8',
+      },
+      {
+        name: 'pm_8_9',
+      },
+      {
+        name: 'pm_9_10',
+      }
+    ];
   }
 }
