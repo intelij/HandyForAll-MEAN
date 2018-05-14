@@ -1,10 +1,10 @@
 angular.module('handyforall.tasks').controller('exportTasksCtrl', exportTasksCtrl);
 
-exportTasksCtrl.$inject = ['TasksExportReslove', 'TasksService', 'toastr', '$state', '$window'];
+exportTasksCtrl.$inject = ['TasksExportResolve', 'TasksService', 'toastr', '$state', '$window'];
 
-function exportTasksCtrl(TasksExportReslove, TasksService, toastr, $state, $window) {
+function exportTasksCtrl(TasksExportResolve, TasksService, toastr, $state, $window) {
     var edttc = this;
-    edttc.editTasksData = TasksExportReslove[0];
+    edttc.editTasksData = TasksExportResolve[0];
     $state.go('app.tasks.viewsTasks');
-    $window.location.href = TasksExportReslove;
+    $window.location.href = TasksExportResolve;
 }

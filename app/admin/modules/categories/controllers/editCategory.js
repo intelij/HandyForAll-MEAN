@@ -1,13 +1,13 @@
 angular.module('handyforall.categories').controller('editCategoryCtrl', editCategoryCtrl);
 
-editCategoryCtrl.$inject = ['categoryEditReslove', 'CategoryService', 'toastr', '$state', '$stateParams', 'Slug'];
+editCategoryCtrl.$inject = ['categoryEditResolve', 'CategoryService', 'toastr', '$state', '$stateParams', 'Slug'];
 
-function editCategoryCtrl(categoryEditReslove, CategoryService, toastr, $state, $stateParams, Slug) {
+function editCategoryCtrl(categoryEditResolve, CategoryService, toastr, $state, $stateParams, Slug) {
     var ecatc = this;
 
-    ecatc.mainPagesList = categoryEditReslove[0];
+    ecatc.mainPagesList = categoryEditResolve[0];
     ecatc.editCategoryData = {};
-    ecatc.editCategoryData = categoryEditReslove[1];
+    ecatc.editCategoryData = categoryEditResolve[1];
 
     if ($stateParams.id) {
         ecatc.action = 'edit';

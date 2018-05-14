@@ -1,12 +1,12 @@
 angular.module('handyforall.faq').controller('editFaqCtrl', editFaqCtrl);
 
-editFaqCtrl.$inject = ['faqEditReslove', 'FaqService', 'toastr', '$state', '$stateParams'];
+editFaqCtrl.$inject = ['faqEditResolve', 'FaqService', 'toastr', '$state', '$stateParams'];
 
-function editFaqCtrl(faqEditReslove, FaqService, toastr, $state, $stateParams) {
+function editFaqCtrl(faqEditResolve, FaqService, toastr, $state, $stateParams) {
     var efc = this;
 
     efc.editFaqData = {};
-    efc.editFaqData = faqEditReslove;
+    efc.editFaqData = faqEditResolve;
     if ($stateParams.id) {
         efc.action = 'edit';
         efc.breadcrumb = 'SubMenu.EDIT_FAQ';

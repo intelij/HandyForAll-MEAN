@@ -1,13 +1,13 @@
 angular.module('handyforall.posttasks').controller('editPosttaskCtrl', editPosttaskCtrl);
 
-editPosttaskCtrl.$inject = ['posttaskEditReslove', 'PosttaskService', 'toastr', '$state', '$stateParams', 'Slug'];
+editPosttaskCtrl.$inject = ['posttaskEditResolve', 'PosttaskService', 'toastr', '$state', '$stateParams', 'Slug'];
 
-function editPosttaskCtrl(posttaskEditReslove, PosttaskService, toastr, $state, $stateParams, Slug) {
+function editPosttaskCtrl(posttaskEditResolve, PosttaskService, toastr, $state, $stateParams, Slug) {
     var eptc = this;
 
-    eptc.editpaymentData = posttaskEditReslove[0];
+    eptc.editpaymentData = posttaskEditResolve[0];
     eptc.editpaymentData = {};
-    eptc.editpaymentData = posttaskEditReslove[1];
+    eptc.editpaymentData = posttaskEditResolve[1];
 
     if ($stateParams.id) {
         eptc.action = 'edit';

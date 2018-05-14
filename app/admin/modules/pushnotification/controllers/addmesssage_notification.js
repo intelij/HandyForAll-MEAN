@@ -4,7 +4,7 @@ NotificationmessageCtrl.$inject = ['messageService', 'toastr', '$state', '$state
 
 function NotificationmessageCtrl(messageService, toastr, $state, $stateParams) {
   var nmlc = this;
-  // nmlc.templateData  = emailEditReslove[0];
+  // nmlc.templateData  = emailEditResolve[0];
   if ($stateParams.id) {
     nmlc.action = 'edit';
     nmlc.breadcrumb = 'SubMenu.EMAILTEMPLATE_EDIT';

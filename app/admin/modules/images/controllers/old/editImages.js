@@ -1,10 +1,10 @@
 angular.module('handyforall.images').controller('editImagesCtrl', editImagesCtrl);
 
-editImagesCtrl.$inject = ['imagesEditReslove', 'ImagesService', 'toastr', '$state'];
+editImagesCtrl.$inject = ['imagesEditResolve', 'ImagesService', 'toastr', '$state'];
 
-function editImagesCtrl(imagesEditReslove, ImagesService, toastr, $state) {
+function editImagesCtrl(imagesEditResolve, ImagesService, toastr, $state) {
     var edic = this;
-    edic.editImagesData = imagesEditReslove[0];
+    edic.editImagesData = imagesEditResolve[0];
     edic.id = $state.params.id;
 
     if (edic.id) {

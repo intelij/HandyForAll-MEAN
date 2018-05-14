@@ -724,7 +724,7 @@ angular.module('handyforall.admin')
         controllerAs: 'EDSC',
         templateUrl: 'app/admin/modules/slider/views/editSlider.html',
         resolve: {
-          sliderEditReslove: function ($stateParams, SliderService) {
+          sliderEditResolve: function ($stateParams, SliderService) {
             return SliderService.getSlider($stateParams.id);
           }
         }
@@ -753,7 +753,7 @@ angular.module('handyforall.admin')
         controllerAs: 'EDCC',
         templateUrl: 'app/admin/modules/contact-us/views/editContactUs.html',
         resolve: {
-          contactEditReslove: function ($stateParams, ContactService) {
+          contactEditResolve: function ($stateParams, ContactService) {
             return ContactService.getContact($stateParams.id);
           }
         }
@@ -782,7 +782,7 @@ angular.module('handyforall.admin')
         controllerAs: 'EDIC',
         templateUrl: 'app/admin/modules/images/views/editImages.html',
         resolve: {
-          imagesEditReslove: function ($stateParams, ImagesService) {
+          imagesEditResolve: function ($stateParams, ImagesService) {
             return ImagesService.getImage($stateParams.id);
           }
         }
@@ -867,7 +867,7 @@ angular.module('handyforall.admin')
         controllerAs: 'ECATC',
         templateUrl: 'app/admin/modules/categories/views/addEditCategory.html',
         resolve: {
-          categoryEditReslove: function (CategoryService, $stateParams) {
+          categoryEditResolve: function (CategoryService, $stateParams) {
             if ($stateParams.id) {
               return CategoryService.getCategory($stateParams.id);
             } else {
@@ -907,7 +907,7 @@ angular.module('handyforall.admin')
         controllerAs: 'ESCATC',
         templateUrl: 'app/admin/modules/categories/views/addEditsubCategory.html',
         resolve: {
-          categoryEditReslove: function (CategoryService, $stateParams) {
+          categoryEditResolve: function (CategoryService, $stateParams) {
             if ($stateParams.id) {
               return CategoryService.getsubCategory($stateParams.id);
             } else {
@@ -940,7 +940,7 @@ angular.module('handyforall.admin')
         controllerAs: 'EFC',
         templateUrl: 'app/admin/modules/faq/views/addEditFaq.html',
         resolve: {
-          faqEditReslove: function (FaqService, $stateParams) {
+          faqEditResolve: function (FaqService, $stateParams) {
             return FaqService.getFaq($stateParams.id);
           }
         }
@@ -974,7 +974,7 @@ angular.module('handyforall.admin')
         controllerAs: 'EEC',
         templateUrl: 'app/admin/modules/experience/views/add-edit-experience.html',
         resolve: {
-          ExperienceEditReslove: function (ExperienceService, $stateParams) {
+          ExperienceEditResolve: function (ExperienceService, $stateParams) {
             if ($stateParams.id) {
               return ExperienceService.getExperience($stateParams.id);
             } else {
@@ -1007,7 +1007,7 @@ angular.module('handyforall.admin')
         controllerAs: 'ctrl',
         templateUrl: 'app/admin/modules/travel-arrangement/views/add-edit-travel-arrangement.html',
         resolve: {
-          TravelArrangementEditReslove: function (TravelArrangementService, $stateParams) {
+          TravelArrangementEditResolve: function (TravelArrangementService, $stateParams) {
             if ($stateParams.id) {
               return TravelArrangementService.getTravelArrangement($stateParams.id);
             } else {
@@ -1040,7 +1040,7 @@ angular.module('handyforall.admin')
         controllerAs: 'EDQC',
         templateUrl: 'app/admin/modules/question-management/views/editQuestionManagement.html',
         resolve: {
-          QuestionEditReslove: function ($stateParams, QuestionService) {
+          QuestionEditResolve: function ($stateParams, QuestionService) {
             return QuestionService.getQuestion($stateParams.id);
           }
         }
@@ -1069,7 +1069,7 @@ angular.module('handyforall.admin')
         controllerAs: 'EDRC',
         templateUrl: 'app/admin/modules/reviews/views/editReviews.html',
         resolve: {
-          ReviewsEditReslove: function ($stateParams, ReviewsService) {
+          ReviewsEditResolve: function ($stateParams, ReviewsService) {
             return ReviewsService.getReviews($stateParams.id);
           }
         }
@@ -1098,7 +1098,7 @@ angular.module('handyforall.admin')
         controllerAs: 'EDTTC',
         templateUrl: 'app/admin/modules/tasks/views/editTasks.html',
         resolve: {
-          TasksEditReslove: function ($stateParams, TasksService) {
+          TasksEditResolve: function ($stateParams, TasksService) {
             return TasksService.getTasks($stateParams.id);
           }
         }
@@ -1119,7 +1119,7 @@ angular.module('handyforall.admin')
         action: 'all',
         controller: 'exportTasksCtrl',
         resolve: {
-          TasksExportReslove: function (TasksService) {
+          TasksExportResolve: function (TasksService) {
             return TasksService.getTasksExport();
           }
         }
@@ -1199,7 +1199,7 @@ angular.module('handyforall.admin')
         controllerAs: 'ENCC',
         templateUrl: 'app/admin/modules/earnings/views/editearning.html',
         resolve: {
-          TaskerEarningReslove: function ($stateParams, EarningService) {
+          TaskerEarningResolve: function ($stateParams, EarningService) {
             var data = {};
             data.tasker = $stateParams.id;
             data.cycle = $stateParams.cycle;
@@ -1300,7 +1300,7 @@ angular.module('handyforall.admin')
         controllerAs: 'EPTC',
         templateUrl: 'app/admin/modules/posttasks/views/addEditPosttasks.html',
         resolve: {
-          posttaskEditReslove: function (PosttaskService, $stateParams) {
+          posttaskEditResolve: function (PosttaskService, $stateParams) {
             if ($stateParams.id) {
               return PosttaskService.getPayment($stateParams.id);
             } else {
@@ -1344,7 +1344,7 @@ angular.module('handyforall.admin')
         controllerAs: 'EPCC',
         templateUrl: 'app/admin/modules/peoplecomment/views/addEditPeoplecmd.html',
         resolve: {
-          PeoplecmdEditReslove: function (PeoplecmdService, $stateParams) {
+          PeoplecmdEditResolve: function (PeoplecmdService, $stateParams) {
             if ($stateParams.id) {
               return PeoplecmdService.getPeople($stateParams.id);
             } else {
@@ -1526,7 +1526,7 @@ angular.module('handyforall.admin')
         controllerAs: 'EDIC',
         templateUrl: 'app/admin/modules/images/views/editImages.html',
         resolve: {
-          imagesEditReslove: function ($stateParams, ImagesService) {
+          imagesEditResolve: function ($stateParams, ImagesService) {
             return ImagesService.getImage($stateParams.id);
           }
         }
@@ -1566,10 +1566,10 @@ angular.module('handyforall.admin')
           UsernotificationServiceResolve: function (UsernotificationService) {
             return UsernotificationService.getUserList(10, 0);
           },
-          emailEditReslove: function (emailService) {
+          emailEditResolve: function (emailService) {
             return emailService.getmailtemplate();
           },
-          messageEditReslove: function (emailService) {
+          messageEditResolve: function (emailService) {
             return emailService.getmessagetemplate();
           }
         }
@@ -1603,7 +1603,7 @@ angular.module('handyforall.admin')
         controllerAs: 'NELC',
         templateUrl: 'app/admin/modules/pushnotification/views/addEmailnotification.html',
         resolve: {
-          emailEditReslove: function (emailService, $stateParams) {
+          emailEditResolve: function (emailService, $stateParams) {
             if ($stateParams.id) {
               return emailService.getNotificationemail($stateParams.id);
             } else {
@@ -1755,7 +1755,7 @@ angular.module('handyforall.admin')
         controllerAs: 'ctrl',
         templateUrl: 'app/admin/modules/brands/views/add_brand.html',
         resolve: {
-          brandEditReslove: function (BrandService, $stateParams) {
+          brandEditResolve: function (BrandService, $stateParams) {
             if ($stateParams.id) {
               return BrandService.getBrand($stateParams.id);
             } else {
@@ -1853,7 +1853,7 @@ angular.module('handyforall.admin')
         controllerAs: 'EDCC',
         templateUrl: 'app/admin/modules/manage-country/views/editManageCountry.html',
         resolve: {
-            CountryEditReslove: function ($stateParams, CountryService) {
+            CountryEditResolve: function ($stateParams, CountryService) {
                 return CountryService.getCountry($stateParams.id);
             }
         }

@@ -1,10 +1,10 @@
 angular.module('handyforall.experience').controller('editExperienceCtrl', editExperienceCtrl);
 
-editExperienceCtrl.$inject = ['ExperienceService', 'toastr', 'ExperienceEditReslove', '$state', '$stateParams'];
-function editExperienceCtrl(ExperienceService, toastr, ExperienceEditReslove, $state, $stateParams) {
+editExperienceCtrl.$inject = ['ExperienceService', 'toastr', 'ExperienceEditResolve', '$state', '$stateParams'];
+function editExperienceCtrl(ExperienceService, toastr, ExperienceEditResolve, $state, $stateParams) {
     var eec = this;
-    eec.editExperienceData = ExperienceEditReslove;
-    /*,ExperienceEditReslove*/
+    eec.editExperienceData = ExperienceEditResolve;
+    /*,ExperienceEditResolve*/
     if ($stateParams.id) {
         eec.action = 'edit';
         eec.breadcrumb = 'SubMenu.EDIT_EXPERIENCE';

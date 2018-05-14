@@ -1,15 +1,15 @@
 angular.module('handyforall.categories').controller('editsubCategoryCtrl', editsubCategoryCtrl);
 
-editsubCategoryCtrl.$inject = ['categoryEditReslove', 'CategoryService', 'toastr', '$state', '$stateParams', '$location', 'Slug'];
+editsubCategoryCtrl.$inject = ['categoryEditResolve', 'CategoryService', 'toastr', '$state', '$stateParams', '$location', 'Slug'];
 
-function editsubCategoryCtrl(categoryEditReslove, CategoryService, toastr, $state, $stateParams, $location, Slug) {
+function editsubCategoryCtrl(categoryEditResolve, CategoryService, toastr, $state, $stateParams, $location, Slug) {
   var escatc = this;
 
-  escatc.mainPagesList = categoryEditReslove[0];
-  escatc.parentPagesList = categoryEditReslove[2];
+  escatc.mainPagesList = categoryEditResolve[0];
+  escatc.parentPagesList = categoryEditResolve[2];
   escatc.editCategoryData = {};
-  escatc.editCategoryData = categoryEditReslove[1];
-  console.log('categoryEditReslove', categoryEditReslove);
+  escatc.editCategoryData = categoryEditResolve[1];
+  console.log('categoryEditResolve', categoryEditResolve);
 
   escatc.createTreeView = (level, name) => {
     return `${'&nbsp;&nbsp;'.repeat(level)} ${name}`;

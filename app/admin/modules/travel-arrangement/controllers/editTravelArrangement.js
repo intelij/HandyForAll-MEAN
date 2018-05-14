@@ -1,10 +1,10 @@
 angular.module('handyforall.travel-arrangement').controller('editTravelArrangementCtrl', editTravelArrangementCtrl);
 
-editTravelArrangementCtrl.$inject = ['TravelArrangementService', 'toastr', 'TravelArrangementEditReslove', '$state', '$stateParams'];
-function editTravelArrangementCtrl(TravelArrangementService, toastr, TravelArrangementEditReslove, $state, $stateParams) {
+editTravelArrangementCtrl.$inject = ['TravelArrangementService', 'toastr', 'TravelArrangementEditResolve', '$state', '$stateParams'];
+function editTravelArrangementCtrl(TravelArrangementService, toastr, TravelArrangementEditResolve, $state, $stateParams) {
   var ctrl = this;
 
-  ctrl.editTravelArrangementData = TravelArrangementEditReslove;
+  ctrl.editTravelArrangementData = TravelArrangementEditResolve;
 
   if ($stateParams.id) {
     ctrl.action = 'edit';
