@@ -224,31 +224,401 @@ module.exports = function (io) {
 		} else {
 			res.send([]);
 		}
-	}
+	};
+
+  router.taskerAvailabilitybyCategory = function taskerAvailabilitybyCategory(req, res) {
+    const taskid = req.query.task;
+    const categoryid = req.query.categoryid;
+    const date = req.query.date;
+    let working_days = {};
+    let responseflag = true;
+    const hour = req.query.hour;
+    const day = req.query.day;
+    const startAmount = req.query.minvalue;
+    const endAmount = req.query.maxvalue;
+    const limit = parseInt(req.query.limit) || 6;
+    const skip = parseInt(req.query.skip) || 0;
+    if (hour && day) {
+      let hourcondition = [];
+      let hourArr = hour.split(",");
+      for (const i in hourArr) {
+        let val = hourArr[i];
+        if (val === 'morning') {
+          hourcondition.push({ $elemMatch: { "day": day, "hour.morning": true } });
+        } else if (val === 'afternoon') {
+          hourcondition.push({ $elemMatch: { "day": day, "hour.afternoon": true } });
+        } else if (val === 'evening') {
+          hourcondition.push({ $elemMatch: { "day": day, "hour.evening": true } });
+        } else {
+          responseflag = false;
+        }
+        working_days = { $all: hourcondition };
+      }
+    } else {
+      responseflag = false;
+    }
+    let recentupdate = {};
+    recentupdate.task_day = req.query.day;
+    recentupdate.task_date = req.query.date;
+    recentupdate.task_hour = req.query.hour;
+
+    recentupdate.booking_information = {};
+
+    if (!req.query.time) {
+      req.query.time = "09:00:00"
+    }
+
+    let defaultCondition = [];
+
+    if (responseflag) {
+      async.waterfall([
+        function (callback) {
+          db.GetOneDocument('settings', { 'alias': 'general' }, {}, {}, function (err, settingData) {
+            if (err || !settingData) {
+              data.response = 'Configure your website setting'; res.send(data);
+            } else {
+              callback(err, settingData);
+            }
+          });
+        },
+
+        function (settingData, callback) {
+          let options = {};
+          options.populate = 'tasker user category';
+          db.GetDocument('task', { _id: new mongoose.Types.ObjectId(taskid) }, {}, { options }, function (err, taskData) {
+            if (err || !taskData) { data.response = 'Unable to get taskData'; res.send(data); }
+            else { callback(err, settingData, taskData); }
+          });
+        },
+
+        // Count
+        function (settingData, taskData, callback) {
+          let distanceval = 0.001;
+
+          if (settingData.settings.distanceby === 'km') {
+            distanceval = 0.001;
+          } else {
+            distanceval = 0.000621371;
+          }
+
+          const minDistance = parseInt(req.query.kmminvalue) * 1000;
+          const maxDistance = parseInt(req.query.kmmaxvalue) * 1000;
+
+          defaultCondition = [
+            {
+              "$geoNear": {
+                near: { type: "Point", coordinates: [parseFloat(taskData[0].location.log), parseFloat(taskData[0].location.lat)] },
+                distanceField: "distance",
+                includeLocs: "location",
+                query: {
+                  "status": 1, "availability": 1,
+                  "taskerskills": { $elemMatch: { childid: new mongoose.Types.ObjectId(taskData[0].category._id), status: 1 } },
+                  "working_days": working_days
+                  // "current_task": { $exists: false }
+                  // "_id": { '$ne': new mongoose.Types.ObjectId(taskRespo[0].tasker) }
+                },
+                distanceMultiplier: distanceval,
+                spherical: true,
+                minDistance: minDistance,
+                maxDistance: maxDistance,
+              }
+            },
+            {
+              "$redact": {
+                "$cond": {
+                  "if": { "$lte": ["$distance", "$radius"] },
+                  "then": "$$KEEP",
+                  "else": "$$PRUNE"
+                }
+              }
+            },
+            {
+              $lookup: {
+                from: "task",
+                localField: "_id",
+                foreignField: "tasker",
+                as: "tasks"
+              }
+            },
+            {
+              $unwind: { path: "$tasks", preserveNullAndEmptyArrays: true }
+            },
+            {
+              $project:
+                {
+                  "username": 1,
+                  "name": 1,
+                  "email": 1,
+                  "phone": 1,
+                  "taskerskills": 1,
+                  "avatar": 1,
+                  "location": 1,
+                  "address": 1,
+                  "tasker_area": 1,
+                  "tasks": 1,
+                  "booked":
+                    {
+                      $cond: { if: { $and: [{ $eq: ["$tasks.task_hour", recentupdate.task_hour] }, { $eq: ["$tasks.task_date", recentupdate.task_date] }, { $gte: ["$tasks.status", 2] }, { $lte: ["$tasks.status", 6] }] }, then: 1, else: 0 }
+                    }
+                }
+            },
+            {
+              "$group":
+                {
+                  "_id": "$_id",
+                  "username": { $first: "$username" },
+                  "name": { $first: "$name" },
+                  "email": { $first: "$email" },
+                  "phone": { $first: "$phone" },
+                  "taskerskills": { $first: "$taskerskills" },
+                  "avatar": { $first: "$avatar" },
+                  "location": { $first: "$location" },
+                  "address": { $first: "$address" },
+                  "tasker_area": { $first: "$tasker_area" },
+                  "booked": { $sum: "$booked" },
+                  //"tasks": { "$push": "$tasks" }
+                }
+            },
+            {
+              "$match": { "booked": 0 }
+            }
+          ];
+          let customCondition = [
+            {
+              "$group":
+                {
+                  _id: null,
+                  count: { $sum: 1 },
+                  taskers: { $push: "$$ROOT" }
+                }
+            }
+          ];
+          let taskercondition = defaultCondition.concat(customCondition);
+          db.GetAggregation('tasker', taskercondition, function (err, newtaskercount) {
+            if (err || !newtaskercount[0]) {
+              res.send({ count: 0, result: [] });
+            } else {
+              callback(err, settingData, newtaskercount[0].count, taskData);
+            }
+          });
+        },
+        //End count
+        function (settingData, newtaskercount, taskData, callback) {
+          let customCondition = [
+            { '$skip': skip },
+            { '$limit': limit },
+            /*
+            {
+              "$lookup":
+              {
+              from: "task",
+              localField: "current_task",
+              foreignField: "_id",
+              as: "current_task"
+              }
+            },
+            */
+            {
+              "$group":
+                {
+                  _id: null,
+                  count: { $sum: 1 },
+                  taskers: { $push: "$$ROOT" }
+                }
+            }
+          ];
+
+          let taskercondition = defaultCondition.concat(customCondition);
+
+          db.GetAggregation('tasker', taskercondition, function (err, taskerdata) {
+            if (err || !taskerdata[0]) {
+              res.send({ count: 0, result: [] });
+            } else {
+              let amountData = taskerdata[0].taskers;
+              let newArray = [];
+              for (let j = 0; j < amountData.length; j++) {
+                for (let xx = 0; xx < amountData[j].taskerskills.length; xx++) {
+                  if (categoryid.toString() === amountData[j].taskerskills[xx].childid.toString()) {
+                    if ((startAmount <= amountData[j].taskerskills[xx].hour_rate) && (endAmount >= amountData[j].taskerskills[xx].hour_rate)) {
+                      newArray.push(amountData[j]);
+                      if (newArray[j]) {
+                        if (!newArray[j].avatar)
+                          newArray[j].avatar = './' + CONFIG.USER_PROFILE_IMAGE_DEFAULT;
+
+                        if (settingData.settings.distanceby === 'km') {
+                          newArray[j].distance = geodist({
+                            lat: parseFloat(taskData[0].location.lat),
+                            lon: parseFloat(taskData[0].location.log)
+                          }, {
+                            lat: newArray[j].location.lat,
+                            lon: newArray[j].location.lng,
+                          }, {
+                            unit: 'km'
+                          }) + " km";
+                        } else {
+                          newArray[j].distance = geodist({
+                            lat: parseFloat(taskData[0].location.lat),
+                            lon: parseFloat(taskData[0].location.log)
+                          }, {
+                            lat: newArray[j].location.lat,
+                            lon: newArray[j].location.lng,
+                          }) + " miles";
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              callback(err, settingData, newtaskercount, taskData, taskerdata, newArray);
+            }
+          });
+        },
+
+        function (settingData, newtaskercount, taskData, taskerdata, newArray, callback) {
+          //var formatedDate = moment(new Date(req.query.date + ' ' + req.query.time)).format('YYYY-MM-DD HH:mm:ss');
+          let formatedDate = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+          recentupdate.booking_information.booking_date = timezone.tz(formatedDate, settingData.settings.time_zone);
+          recentupdate.booking_information.service_type = taskData[0].category.name;
+          recentupdate.booking_information.work_type = taskData[0].category.name;
+          db.UpdateDocument('task', { _id: req.query.task }, recentupdate, function (err, docdata) {
+            if (err || !docdata) { data.response = 'Unable to Put Task'; res.send(data); }
+            else { callback(err, settingData, newtaskercount, taskData, taskerdata, newArray, docdata); }
+          });
+        },
+
+        function (settingData, newtaskercount, taskData, taskerdata, newArray, docdata, callback) {
+          let copiedData = [];
+          for (let i = 0; i < taskerdata[0].taskers.length; i++) {
+            copiedData.push(new mongoose.Types.ObjectId(taskerdata[0].taskers[i]._id));
+          }
+          let getQuery = [
+            {
+              "$match": { $and: [{ "tasker": { $in: copiedData } }, { status: { $eq: 7 } }] }
+            },
+            {
+              $project: {
+                tasker: 1,
+                document: "$$ROOT"
+              }
+            },
+            {
+              $group: { "_id": "$tasker", "count": { "$sum": 1 }, "induvidualcount": { "$sum": 1 }, "documentData": { $push: "$document" } }
+            },
+            {
+              $group: {
+                "_id": "$_id", "induvidualcount": { $first: "$induvidualcount" }, "datacount": { $sum: "$count" }, "documentData": { $first: "$documentData" }
+              }
+            }
+          ];
+          db.GetAggregation('task', getQuery, function (err, documentData) {
+            if (err) {
+              res.send(err);
+            } else {
+              callback(err, settingData, newtaskercount, taskData, taskerdata, newArray, docdata, documentData);
+            }
+          });
+        },
+
+        function (settingData, newtaskercount, taskData, taskerdata, newArray, docdata, documentData, callback) {
+          let copiedData = [];
+          for (let i = 0; i < taskerdata[0].taskers.length; i++) {
+            copiedData.push(new mongoose.Types.ObjectId(taskerdata[0].taskers[i]._id));
+          }
+          let getQuery = [
+            {
+              "$match": { "tasker": { $in: copiedData }, type: "user" }
+            },
+            {
+              $unwind: { path: "$copiedData", preserveNullAndEmptyArrays: true }
+            },
+            {
+              $lookup: { from: 'users', localField: "user", foreignField: "_id", as: "userdetails" }
+            },
+            {
+              $unwind: { path: "$userdetails", preserveNullAndEmptyArrays: true }
+            },
+
+            {
+              $lookup: { from: 'task', localField: "task", foreignField: "_id", as: "taskdetail" }
+            },
+            {
+              $unwind: { path: "$taskdetail", preserveNullAndEmptyArrays: true }
+            },
+            {
+              "$match": { "taskdetail.status": { $eq: 7 }, "taskdetail.invoice.status": { $eq: 1 } }
+            },
+
+            {
+              $project: {
+                comments: 1,
+                rating: 1,
+                tasker: 1,
+                userdetails: 1,
+                document: "$$ROOT"
+              }
+            },
+            {
+              $group: { "_id": "$tasker", "count": { "$sum": 1 }, "induvidualrating": { "$sum": "$rating" }, "documentData": { $push: "$document" } }
+            },
+            {
+              $group: {
+                "_id": "$_id", "induvidualrating": { $first: "$induvidualrating" }, "avg": { $sum: { $divide: ["$induvidualrating", "$count"] } }, "datacount": { $sum: "$count" }, "documentData": { $first: "$documentData" }
+              }
+            }
+          ];
+
+          db.GetAggregation('review', getQuery, function (err, avgratingdata) {
+            if (err) {
+              res.send(err);
+            } else {
+              if (avgratingdata.length) {
+                if (avgratingdata[0].documentData) {
+                  for (let i = 0; i < avgratingdata[0].documentData.length; i++) {
+                    if (avgratingdata[0].documentData[i].userdetails.avatar === '' || !avgratingdata[0].documentData[i].userdetails.avatar) {
+                      avgratingdata[0].documentData[i].userdetails.avatar = './' + CONFIG.USER_PROFILE_IMAGE_DEFAULT;
+                    }
+                  }
+                }
+              }
+              callback(err, settingData, newtaskercount, taskData, docdata, taskerdata, newArray, documentData, avgratingdata);
+            }
+          });
+        }
+      ], function (err, settingData, newtaskercount, taskData, docdata, taskerdata, newArray, documentData, avgratingdata) {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send({ count: taskerdata[0].count, result: newArray, avgrating: avgratingdata, taskercount: documentData, countall: newtaskercount });
+        }
+      });
+    }
+    else {
+      res.send({ count: 0, result: [] });
+    }
+  };
 
 	router.taskerAvailabilitybyWorkingArea = function taskerAvailabilitybyWorkingArea(req, res) {
-
-		var taskid = req.query.task;
-		var categoryid = req.query.categoryid;
-		var date = req.query.date;
-		var working_days = {};
-		var responseflag = true;
-		var hour = req.query.hour;
-		var day = req.query.day;
-		var startAmount = req.query.minvalue;
-		var endAmount = req.query.maxvalue;
-		var limit = parseInt(req.query.limit) || 6;
-		var skip = parseInt(req.query.skip) || 0;
+		const taskid = req.query.task;
+		const categoryid = req.query.categoryid;
+		const date = req.query.date;
+		let working_days = {};
+		let responseflag = true;
+		const hour = req.query.hour;
+		const day = req.query.day;
+		const startAmount = req.query.minvalue;
+		const endAmount = req.query.maxvalue;
+		const limit = parseInt(req.query.limit) || 6;
+		const skip = parseInt(req.query.skip) || 0;
 		if (hour && day) {
-			var hourcondition = [];
-			var hourArr = hour.split(",");
-			for (var i in hourArr) {
-				var val = hourArr[i];
-				if (val == 'morning') {
+			let hourcondition = [];
+			let hourArr = hour.split(",");
+			for (const i in hourArr) {
+				let val = hourArr[i];
+				if (val === 'morning') {
 					hourcondition.push({ $elemMatch: { "day": day, "hour.morning": true } });
-				} else if (val == 'afternoon') {
+				} else if (val === 'afternoon') {
 					hourcondition.push({ $elemMatch: { "day": day, "hour.afternoon": true } });
-				} else if (val == 'evening') {
+				} else if (val === 'evening') {
 					hourcondition.push({ $elemMatch: { "day": day, "hour.evening": true } });
 				} else {
 					responseflag = false;
@@ -258,7 +628,7 @@ module.exports = function (io) {
 		} else {
 			responseflag = false;
 		}
-		var recentupdate = {};
+		let recentupdate = {};
 		recentupdate.task_day = req.query.day;
 		recentupdate.task_date = req.query.date;
 		recentupdate.task_hour = req.query.hour;
@@ -269,36 +639,41 @@ module.exports = function (io) {
 			req.query.time = "09:00:00"
 		}
 
-		var defaultCondition = [];
+		let defaultCondition = [];
 
 		if (responseflag) {
 			async.waterfall([
 				function (callback) {
 					db.GetOneDocument('settings', { 'alias': 'general' }, {}, {}, function (err, settingData) {
-						if (err || !settingData) { data.response = 'Configure your website setting'; res.send(data); }
-						else { callback(err, settingData); }
+						if (err || !settingData) {
+						  data.response = 'Configure your website setting'; res.send(data);
+						} else {
+						  callback(err, settingData);
+						}
 					});
 				},
+
 				function (settingData, callback) {
-					var options = {};
+					let options = {};
 					options.populate = 'tasker user category';
 					db.GetDocument('task', { _id: new mongoose.Types.ObjectId(taskid) }, {}, { options }, function (err, taskData) {
 						if (err || !taskData) { data.response = 'Unable to get taskData'; res.send(data); }
 						else { callback(err, settingData, taskData); }
 					});
 				},
+
 				// Count
 				function (settingData, taskData, callback) {
+          let distanceval = 0.001;
 
-					if (settingData.settings.distanceby == 'km') {
-						var distanceval = 0.001;
-					}
-					else {
-						var distanceval = 0.000621371;
+					if (settingData.settings.distanceby === 'km') {
+						distanceval = 0.001;
+					} else {
+						distanceval = 0.000621371;
 					}
 
-					var minDistance = parseInt(req.query.kmminvalue)* 1000;
-					var maxDistance = parseInt(req.query.kmmaxvalue)* 1000;
+					const minDistance = parseInt(req.query.kmminvalue) * 1000;
+					const maxDistance = parseInt(req.query.kmmaxvalue) * 1000;
 					
 					defaultCondition = [
 						{
@@ -379,7 +754,7 @@ module.exports = function (io) {
 							"$match": { "booked": 0 }
 						}
 					];
-					var customCondition = [
+					let customCondition = [
 						{
 							"$group":
 								{
@@ -388,12 +763,9 @@ module.exports = function (io) {
 									taskers: { $push: "$$ROOT" }
 								}
 						}
-
 					];
-					var taskercondition = defaultCondition.concat(customCondition);
+					let taskercondition = defaultCondition.concat(customCondition);
 					db.GetAggregation('tasker', taskercondition, function (err, newtaskercount) {
-
-
 						if (err || !newtaskercount[0]) {
 							res.send({ count: 0, result: [] });
 						} else {
@@ -403,7 +775,7 @@ module.exports = function (io) {
 				},
 				//End count
 				function (settingData, newtaskercount, taskData, callback) {
-					var customCondition = [
+					let customCondition = [
 						{ '$skip': skip },
 						{ '$limit': limit },
 						/*
@@ -417,7 +789,6 @@ module.exports = function (io) {
 							}
 						},
 						*/
-
 						{
 							"$group":
 								{
@@ -426,43 +797,42 @@ module.exports = function (io) {
 									taskers: { $push: "$$ROOT" }
 								}
 						}
-
 					];
 
-					var taskercondition = defaultCondition.concat(customCondition);
+					let taskercondition = defaultCondition.concat(customCondition);
 
 					db.GetAggregation('tasker', taskercondition, function (err, taskerdata) {
 						if (err || !taskerdata[0]) {
 							res.send({ count: 0, result: [] });
 						} else {
-							var amountData = taskerdata[0].taskers;
-							var newArray = [];
-							for (var j = 0; j < amountData.length; j++) {
-								for (var xx = 0; xx < amountData[j].taskerskills.length; xx++) {
-									if (categoryid == amountData[j].taskerskills[xx].childid) {
+							let amountData = taskerdata[0].taskers;
+							let newArray = [];
+							for (let j = 0; j < amountData.length; j++) {
+								for (let xx = 0; xx < amountData[j].taskerskills.length; xx++) {
+									if (categoryid.toString() === amountData[j].taskerskills[xx].childid.toString()) {
 										if ((startAmount <= amountData[j].taskerskills[xx].hour_rate) && (endAmount >= amountData[j].taskerskills[xx].hour_rate)) {
 											newArray.push(amountData[j]);
 											if (newArray[j]) {
 												if (!newArray[j].avatar)
 													newArray[j].avatar = './' + CONFIG.USER_PROFILE_IMAGE_DEFAULT;
 
-												if (settingData.settings.distanceby == 'km') {
-                                                    newArray[j].distance = geodist({
-                                                        lat: parseFloat(taskData[0].location.lat),
-                                                        lon: parseFloat(taskData[0].location.log)
-                                                    }, {
-                                                        lat: newArray[j].location.lat,
-                                                        lon: newArray[j].location.lng,
-                                                    }, {
-                                                        unit: 'km'
+												if (settingData.settings.distanceby === 'km') {
+                          newArray[j].distance = geodist({
+                            lat: parseFloat(taskData[0].location.lat),
+                            lon: parseFloat(taskData[0].location.log)
+                          }, {
+                            lat: newArray[j].location.lat,
+                            lon: newArray[j].location.lng,
+                          }, {
+                            unit: 'km'
 													}) + " km";
 												} else {
-                                                    newArray[j].distance = geodist({
-														lat: parseFloat(taskData[0].location.lat),
-                                                        lon: parseFloat(taskData[0].location.log)
+												  newArray[j].distance = geodist({
+													  lat: parseFloat(taskData[0].location.lat),
+                            lon: parseFloat(taskData[0].location.log)
 													}, {
-                                                    	lat: newArray[j].location.lat,
-                                                        lon: newArray[j].location.lng,
+												    lat: newArray[j].location.lat,
+                            lon: newArray[j].location.lng,
 													}) + " miles";
 												}
 											}
@@ -474,9 +844,10 @@ module.exports = function (io) {
 						}
 					});
 				},
+
 				function (settingData, newtaskercount, taskData, taskerdata, newArray, callback) {
 					//var formatedDate = moment(new Date(req.query.date + ' ' + req.query.time)).format('YYYY-MM-DD HH:mm:ss');
-					var formatedDate = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+					let formatedDate = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
 					recentupdate.booking_information.booking_date = timezone.tz(formatedDate, settingData.settings.time_zone);
 					recentupdate.booking_information.service_type = taskData[0].category.name;
 					recentupdate.booking_information.work_type = taskData[0].category.name;
@@ -485,12 +856,13 @@ module.exports = function (io) {
 						else { callback(err, settingData, newtaskercount, taskData, taskerdata, newArray, docdata); }
 					});
 				},
+
 				function (settingData, newtaskercount, taskData, taskerdata, newArray, docdata, callback) {
-					var copiedData = [];
-					for (var i = 0; i < taskerdata[0].taskers.length; i++) {
+					let copiedData = [];
+					for (let i = 0; i < taskerdata[0].taskers.length; i++) {
 						copiedData.push(new mongoose.Types.ObjectId(taskerdata[0].taskers[i]._id));
 					}
-					var getQuery = [
+					let getQuery = [
 						{
 							"$match": { $and: [{ "tasker": { $in: copiedData } }, { status: { $eq: 7 } }] }
 						},
@@ -508,9 +880,6 @@ module.exports = function (io) {
 								"_id": "$_id", "induvidualcount": { $first: "$induvidualcount" }, "datacount": { $sum: "$count" }, "documentData": { $first: "$documentData" }
 							}
 						}
-
-
-
 					];
 					db.GetAggregation('task', getQuery, function (err, documentData) {
 						if (err) {
@@ -519,14 +888,14 @@ module.exports = function (io) {
 							callback(err, settingData, newtaskercount, taskData, taskerdata, newArray, docdata, documentData);
 						}
 					});
-
 				},
+
 				function (settingData, newtaskercount, taskData, taskerdata, newArray, docdata, documentData, callback) {
-					var copiedData = [];
-					for (var i = 0; i < taskerdata[0].taskers.length; i++) {
+					let copiedData = [];
+					for (let i = 0; i < taskerdata[0].taskers.length; i++) {
 						copiedData.push(new mongoose.Types.ObjectId(taskerdata[0].taskers[i]._id));
 					}
-					var getQuery = [
+					let getQuery = [
 						{
 							"$match": { "tasker": { $in: copiedData }, type: "user" }
 						},
@@ -567,16 +936,16 @@ module.exports = function (io) {
 								"_id": "$_id", "induvidualrating": { $first: "$induvidualrating" }, "avg": { $sum: { $divide: ["$induvidualrating", "$count"] } }, "datacount": { $sum: "$count" }, "documentData": { $first: "$documentData" }
 							}
 						}
-
 					];
+
 					db.GetAggregation('review', getQuery, function (err, avgratingdata) {
 						if (err) {
 							res.send(err);
 						} else {
 							if (avgratingdata.length) {
 								if (avgratingdata[0].documentData) {
-									for (var i = 0; i < avgratingdata[0].documentData.length; i++) {
-										if (avgratingdata[0].documentData[i].userdetails.avatar == '' || !avgratingdata[0].documentData[i].userdetails.avatar) {
+									for (let i = 0; i < avgratingdata[0].documentData.length; i++) {
+										if (avgratingdata[0].documentData[i].userdetails.avatar === '' || !avgratingdata[0].documentData[i].userdetails.avatar) {
 											avgratingdata[0].documentData[i].userdetails.avatar = './' + CONFIG.USER_PROFILE_IMAGE_DEFAULT;
 										}
 									}
@@ -597,7 +966,7 @@ module.exports = function (io) {
 		else {
 			res.send({ count: 0, result: [] });
 		}
-	}
+	};
 
 	// 											---------------- Map ----------------------
 	router.taskerAvailabilitybyWorkingAreaMap = function taskerAvailabilitybyWorkingAreaMap(req, res) {
@@ -1875,7 +2244,6 @@ module.exports = function (io) {
 	}
 
 	router.profileConfirm = function profileConfirm(req, res) {
-		console.log("jkkkkkkkkkkkkkkk");
 		db.GetOneDocument('settings', { 'alias': 'general' }, {}, {}, function (err, settingdata) {
 			if (err || !settingdata) {
 				res.send(err);

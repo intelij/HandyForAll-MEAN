@@ -172,14 +172,14 @@ function TaskService($http, $q) {
   }
 
   function getTaskerByGeoFilter(filter, page, itemsPerPage) {
-    var url = '';
-    var categoryid = "";
-    var taskid = "";
-    var date = "";
+    let url = '';
+    let categoryid = "";
+    let taskid = "";
+    let date = "";
     if (angular.isDefined(filter.date)) {
       date = filter.date;
     }
-    var time = "";
+    let time = "";
     if (angular.isDefined(filter.time)) {
       time = filter.time;
     }
@@ -190,53 +190,52 @@ function TaskService($http, $q) {
     if (angular.isDefined(filter.task)) {
       taskid = filter.task;
     }
-    var vechile = "";
+    let vechile = "";
     if (angular.isDefined(filter.vechile)) {
       vechile = filter.vechile;
     }
-    var lon = "";
+    let lon = "";
     if (angular.isDefined(filter.lon)) {
       lon = filter.lon;
     }
-    var lat = "";
+    let lat = "";
     if (angular.isDefined(filter.lat)) {
       lat = filter.lat;
     }
-    var day = "";
+    let day = "";
     if (angular.isDefined(filter.day)) {
       day = filter.day;
     }
-    var hour = "";
+    let hour = "";
     if (angular.isDefined(filter.hour)) {
       hour = filter.hour;
     }
-    var minvalue = "";
+    let minvalue = "";
     if (angular.isDefined(filter.minvalue)) {
       minvalue = filter.minvalue;
     }
-    var maxvalue = "";
+    let maxvalue = "";
     if (angular.isDefined(filter.maxvalue)) {
       maxvalue = filter.maxvalue;
     }
-    var kmminvalue = "";
+    let kmminvalue = "";
     if (angular.isDefined(filter.kmminvalue)) {
       kmminvalue = filter.kmminvalue;
     }
-    var kmmaxvalue = "";
+    let kmmaxvalue = "";
     if (angular.isDefined(filter.kmmaxvalue)) {
       kmmaxvalue = filter.kmmaxvalue;
     }
 
-
     if (page) {
-      var skip = (parseInt(page) - 1) * itemsPerPage;
+      const skip = (parseInt(page) - 1) * itemsPerPage;
       url = '/site/task/taskeravailabilitybyWorkingArea?page=' + page + '&skip=' + skip + '&limit=' + itemsPerPage + '&vechile=' + vechile + '&categoryid=' + categoryid + '&day=' + day + '&hour=' + hour + '&time=' + time + '&task=' + taskid + '&date=' + date + '&minvalue=' + minvalue + '&maxvalue=' + maxvalue + '&kmminvalue=' + kmminvalue + '&kmmaxvalue=' + kmmaxvalue ;
     } else {
       url = '/site/task/taskeravailabilitybyWorkingArea?page=' + 0 + '&skip=' + 0 + '&limit=' + itemsPerPage + '&vechile=' + vechile + '&categoryid=' + categoryid + '&day=' + day + '&hour=' + hour + '&time=' + time + '&task=' + taskid + '&date=' + date + '&minvalue=' + minvalue + '&maxvalue=' + maxvalue + '&kmminvalue=' + kmminvalue + '&kmmaxvalue=' + kmmaxvalue;
     }
-    var deferred = $q.defer();
-    var result =1;
-    if(result == 1){
+    const deferred = $q.defer();
+    let result =1;
+    if (result === 1) {
       $http({
         method: 'GET',
         url: url
@@ -250,6 +249,7 @@ function TaskService($http, $q) {
     }
 
   }
+
   function getTaskerByGeoFiltermap(filter, page, itemsPerPage) {
     var url = '';
     var categoryid = "";

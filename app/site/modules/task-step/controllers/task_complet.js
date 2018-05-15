@@ -30,6 +30,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
   }
 
   const user = AuthenticationService.GetCredentials();
+
   MainService.getCurrentUsers(user.currentUser.username).then(function (result) {
     tfc.currentUserData = result[0];
   }, function (error) {
@@ -45,6 +46,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
     option.category = stateParams.category;
   }
   if (angular.isDefined(stateParams.task)) {
+    console.log(stateParams.task);
     option.task = stateParams.task;
   }
 
@@ -77,11 +79,11 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
     tfc.WorkingDate = new Date(tfc.filter.date);
     if (tfc.WorkingDate === 'Invalid Date') {
       tfc.WorkingDate = new Date();
-      console.log(tfc.WorkingDate,"qqqqqqqqqq");
+      // console.log(tfc.WorkingDate,"qqqqqqqqqq");
     }
   } else {
     tfc.WorkingDate = new Date();
-    console.log(tfc.WorkingDate,"qqqqqqqqqq");
+    // console.log(tfc.WorkingDate,"qqqqqqqqqq");
   }
 
   tfc.FullDate = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -154,8 +156,8 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
     });
   };
 
-
   tfc.getTaskerDetails = function () {
+    console.log('getTaskerDetails init');
     if (tfc.UIslide) {
       tfc.filter.minvalue = tfc.UIslide[0];
       tfc.filter.maxvalue = tfc.UIslide[1];
@@ -175,56 +177,57 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
 
       //console.log(">>>>>",tfc.viewType);
       if (tfc.viewType === 'list') {
-        TaskService.getTaskerByGeoFilter(tfc.filter, tfc.currentPage, tfc.itemsPerPage).then(function (response) {
-          //console.log("response*/*/*/",response);
-          if (angular.isDefined(response.countall)) {
-            tfc.totalItem = response.countall;
-          }
-          if (angular.isDefined(response.result)) {
-            tfc.TaskerDetails = response.result;
+        TaskService.getTaskerByGeoFilter(tfc.filter, tfc.currentPage, tfc.itemsPerPage)
+          .then(function (response) {
+            //console.log("response*/*/*/",response);
+            if (angular.isDefined(response.countall)) {
+              tfc.totalItem = response.countall;
+            }
+            if (angular.isDefined(response.result)) {
+              tfc.TaskerDetails = response.result;
 
-            console.log("tfc.TaskerDetails",tfc.TaskerDetails)
+              // console.log("tfc.TaskerDetails",tfc.TaskerDetails);
 
-            console.log("TFC.TaskerDetails/*/*/*/*/*/*",tfc.TaskerDetails);
+              // console.log("TFC.TaskerDetails/*/*/*/*/*/*",tfc.TaskerDetails);
+              angular.forEach(tfc.TaskerDetails, function (value, key) {
+                angular.forEach(value.taskerskills, function (value1, key1) {
+                  if (value1.childid === tfc.filter.categoryid) {
+                    tfc.dummyarrayValue.push(value1);
+                  }
+                });
+              });
+            }
+            if (angular.isDefined(response.avgrating)) {
+              tfc.avgtasker = response.avgrating;
+              // console.log('tfc.avgtasker',tfc.avgtasker)
+            }
+            if (angular.isDefined(response.taskercount)) {
+              tfc.taskercount = response.taskercount;
+            }
             angular.forEach(tfc.TaskerDetails, function (value, key) {
-              angular.forEach(value.taskerskills, function (value1, key1) {
-                if (value1.childid === tfc.filter.categoryid) {
-                  tfc.dummyarrayValue.push(value1);
+              angular.forEach(tfc.avgtasker, function (value1, key1) {
+                if (value._id === value1._id) {
+                  tfc.TaskerDetails[key].avarating = parseInt(value1.avg);
+                  //console.log("tfc.TaskerDetails[key].avarating",tfc.TaskerDetails[key].avarating)
+                  tfc.TaskerDetails[key].taskCount = parseInt(value1.datacount);
+                  tfc.TaskerDetails[key].recentReview = value1.documentData[value1.documentData.length - 1];
+                  if (value1.documentData[value1.documentData.length - 1].userdetails.avatar) {
+                    tfc.TaskerDetails[key].userAvater = value1.documentData[value1.documentData.length - 1].userdetails.avatar;
+                  }
                 }
               });
             });
-          }
-          if (angular.isDefined(response.avgrating)) {
-            tfc.avgtasker = response.avgrating;
-            // console.log('tfc.avgtasker',tfc.avgtasker)
-          }
-          if (angular.isDefined(response.taskercount)) {
-            tfc.taskercount = response.taskercount;
-          }
-          angular.forEach(tfc.TaskerDetails, function (value, key) {
-            angular.forEach(tfc.avgtasker, function (value1, key1) {
-              if (value._id === value1._id) {
-                tfc.TaskerDetails[key].avarating = parseInt(value1.avg);
-                //console.log("tfc.TaskerDetails[key].avarating",tfc.TaskerDetails[key].avarating)
-                tfc.TaskerDetails[key].taskCount = parseInt(value1.datacount);
-                tfc.TaskerDetails[key].recentReview = value1.documentData[value1.documentData.length - 1];
-                if (value1.documentData[value1.documentData.length - 1].userdetails.avatar) {
-                  tfc.TaskerDetails[key].userAvater = value1.documentData[value1.documentData.length - 1].userdetails.avatar;
+
+            angular.forEach(tfc.TaskerDetails, function (value, key) {
+              angular.forEach(tfc.taskercount, function (value1, key1) {
+                if (value._id === value1._id) {
+                  tfc.TaskerDetails[key].taskercount = value1.induvidualcount;
+
                 }
-              }
+              });
             });
-          });
-
-          angular.forEach(tfc.TaskerDetails, function (value, key) {
-            angular.forEach(tfc.taskercount, function (value1, key1) {
-              if (value._id === value1._id) {
-                tfc.TaskerDetails[key].taskercount = value1.induvidualcount;
-
-              }
-            });
-          });
-          tfc.getTaskerDetailsResponse = true;
-        }, function (error) { });
+            tfc.getTaskerDetailsResponse = true;
+          }, function (error) { });
       } else {
         TaskService.getTaskerByGeoFiltermap(tfc.filter, tfc.currentPage, tfc.itemsPerPage).then(function (response) {
           if (angular.isDefined(response.result)) {
@@ -256,13 +259,13 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
                 });
               }
               TaskerData.forEach(function (item) {
-                var cityData = item;
+                const cityData = item;
                 $scope.cityMetaData.push(cityData);
                 tfc.addressMarker(cityData);
               });
-            }
+            };
             tfc.addressMarker = function (cityItem) {
-              const deferred = $q.defer();
+              // const deferred = $q.defer();
               const address = cityItem.TaskerName.availability_address;
               const geocoder = new google.maps.Geocoder();
               geocoder.geocode({
@@ -285,7 +288,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
                   $log.info('Geocode was not successful for the following reason:' + status);
                 }
               });
-            }
+            };
             $scope.getCityInfo();
             tfc.showCity = function (event, cityItem) {
               $scope.selectedCity = cityItem;
