@@ -5,8 +5,8 @@ CATEGORIES_SCHEMA.CATEGORIES = {
   name: String,
   slug: String,
   position: Number,
-  commision: Number,
-  level: Number,
+  commision: Number, //Minimum Hourly Rate
+  level: { type: Number, default: 1, required: false },
   status: Number,
   skills:[],
   image: String,
@@ -23,7 +23,8 @@ CATEGORIES_SCHEMA.CATEGORIES = {
     description: String
   },
   admincommision: Number,
-  parent: { type: Schema.ObjectId, ref: 'category' }
+  parent: { type: Schema.ObjectId, ref: 'category' },
+  classification: { type: String, default: "service"}
 };
 
 module.exports = CATEGORIES_SCHEMA;

@@ -42,6 +42,19 @@
                   <span ng-show="categoryForm.CategoryName.$invalid && !categoryForm.CategoryName.$pristine">Sub Category Name is required.</span>
                 </p>
               </div>
+
+              <div class="form-group" ng-class="{ 'has-error' : categoryForm.classification.$invalid && !categoryForm.classification.$pristine, 'has-success' : categoryForm.classification.$valid && !categoryForm.classification.$pristine}">
+                <label for="classification">Classification</label>
+                <select id="classification" name="classification" ng-model="ESCATC.editCategoryData.classification" class="form-control mb-10" on-blur-validation required ng-click="ESCATC.loadCategoryTree(ESCATC.editCategoryData.classification)">
+                  <option value=''>(No Classification)</option>
+                  <option value='service'>Service</option>
+                  <option value='product'>Product</option>
+                  <p class="help-block">
+                    <span ng-show="categoryForm.classification.$invalid && !categoryForm.classification.$pristine">Classification is required.</span>
+                  </p>
+                </select>
+              </div>
+              
               <div class="form-group" ng-class="{ 'has-error' : categoryForm.slug.$invalid && !categoryForm.slug.$pristine, 'has-success' : categoryForm.slug.$valid && !categoryForm.slug.$pristine}">
                 <label for="slug">Page Slug: </label>
                 <p class="mb-10 custom-font">
@@ -59,14 +72,11 @@
                    ng-class="{ 'has-error' : categoryForm.ParentList.$invalid && !categoryForm.ParentList.$pristine, 'has-success' : categoryForm.ParentList.$valid && !categoryForm.ParentList.$pristine}">
                 <label for="ParentList">Parent</label>
                 <select required id="ParentList" name="ParentList"
-                        ng-model="ESCATC.editCategoryData.parent" class="form-control mb-10">
+                        ng-model="ESCATC.editCategoryData.parent" class="form-control mb-10" ng-click="ESCATC.updateClassification(ESCATC.editCategoryData.parent)">
                   <option value="">(no parent)</option>
-                  <!--<option required ng-repeat="mainpage in ESCATC.mainPagesList" ng-show="(mainpage._id!= ESCATC.editCategoryData._id)" value="{{mainpage._id}}">-->
-                    <!--{{mainpage.name}}-->
-                  <!--</option>-->
                   <option required ng-repeat="item in ESCATC.parentPagesList"
                           ng-show="(item._id!= ESCATC.editCategoryData._id)"
-                          value="{{item}}" ng-bind-html="ESCATC.createTreeView(item.level, item.name)">
+                          value="{{item._id}}" ng-bind-html="ESCATC.createTreeView(item.level, item.name)">
                   </option>
                 </select>
                 <p class="help-block">
@@ -74,13 +84,6 @@
                 </p>
               </div>
 
-              <!--<div class="form-group" ng-class="{ 'has-error' : categoryForm.description.$invalid && !categoryForm.description.$pristine, 'has-success' : categoryForm.description.$valid && !categoryForm.description.$pristine}">
-                      <label for="description">Description</label>
-                      <input type="text" name="description" class="form-control" ng-model="ESCATC.editCategoryData.description" id="description" on-blur-validation required>
-                      <p class="help-block">
-                         <span ng-show="categoryForm.description.$invalid && !categoryForm.description.$pristine">Description is required.</span>
-                      </p>
-                   </div>-->
               <div class="form-group" ng-class="{ 'has-error' : categoryForm.image.$invalid && !categoryForm.image.$pristine, 'has-success' : categoryForm.image.$valid && !categoryForm.image.$pristine}">
                 <label class="control-label">Sub Category Image</label>
                 <input ui-jq="filestyle" type="file" ngf-select="temp=true" ng-model="ESCATC.editCategoryData.image" name="image" ngf-max-size="1MB"
@@ -138,13 +141,24 @@
               </div>
 
 
-              <div class="form-group" ng-class="{ 'has-error' : categoryForm.commision.$invalid && !categoryForm.commision.$pristine, 'has-success' : categoryForm.commision.$valid && !categoryForm.commision.$pristine}">
+              <div ng-if="ESCATC.editCategoryData.classification == 'service'" class="form-group" ng-class="{ 'has-error' : categoryForm.commision.$invalid && !categoryForm.commision.$pristine, 'has-success' : categoryForm.commision.$valid && !categoryForm.commision.$pristine}">
                 <label for="commision">Minimum Hourly Rate</label>
                 <input type="number" min="1" name="commision" class="form-control" ng-model="ESCATC.editCategoryData.commision" id="commision"
                        ng-minlength="1" ng-maxlength="4" on-blur-validation required>
                 <p class="help-block">
                   <span ng-show="categoryForm.commision.$error.required && categoryForm.commision.$invalid && !categoryForm.commision.$pristine">Minimum Amount is required.</span>
-                  <span style="color:red" ng-show="categoryForm.commision.$error.min">Minimum legth is required.</span>
+                  <span style="color:red" ng-show="categoryForm.commision.$error.min">Minimum Hourly Rate is required.</span>
+                  <!--<span ng-show="categoryForm.commision.$error.maxlength && !categoryForm.commision.$pristine">Minimum Amount exceed the Maximum length</span> -->
+                </p>
+              </div>
+
+              <div ng-if="ESCATC.editCategoryData.classification == 'product'" class="form-group" ng-class="{ 'has-error' : categoryForm.commision.$invalid && !categoryForm.commision.$pristine, 'has-success' : categoryForm.commision.$valid && !categoryForm.commision.$pristine}">
+                <label for="commision">Minimum Price</label>
+                <input type="number" min="1" name="commision" class="form-control" ng-model="ESCATC.editCategoryData.commision" id="commision"
+                       ng-minlength="1" ng-maxlength="4" on-blur-validation required>
+                <p class="help-block">
+                  <span ng-show="categoryForm.commision.$error.required && categoryForm.commision.$invalid && !categoryForm.commision.$pristine">Minimum Amount is required.</span>
+                  <span style="color:red" ng-show="categoryForm.commision.$error.min">Minimum Price is required.</span>
                   <!--<span ng-show="categoryForm.commision.$error.maxlength && !categoryForm.commision.$pristine">Minimum Amount exceed the Maximum length</span> -->
                 </p>
               </div>

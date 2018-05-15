@@ -3,39 +3,38 @@ angular.module('handyforall.categories').controller('editsubCategoryCtrl', edits
 editsubCategoryCtrl.$inject = ['categoryEditResolve', 'CategoryService', 'toastr', '$state', '$stateParams', '$location', 'Slug'];
 
 function editsubCategoryCtrl(categoryEditResolve, CategoryService, toastr, $state, $stateParams, $location, Slug) {
-  var escatc = this;
+  var ctrl = this;
 
-  escatc.mainPagesList = categoryEditResolve[0];
-  escatc.parentPagesList = categoryEditResolve[2];
-  escatc.editCategoryData = {};
-  escatc.editCategoryData = categoryEditResolve[1];
-  console.log('categoryEditResolve', categoryEditResolve);
+  ctrl.parentPagesList = categoryEditResolve[0];
 
-  escatc.createTreeView = (level, name) => {
-    return `${'&nbsp;&nbsp;'.repeat(level)} ${name}`;
+  ctrl.createTreeView = (level, name) => {
+    return `${'&nbsp;&nbsp;'.repeat(level - 1)} ${name}`;
   };
 
   CategoryService.getSetting()
     .then(function (response) {
-      escatc.editsettingData = response[0].settings.site_url;
+      ctrl.editsettingData = response[0].settings.site_url;
     })
     .catch(err => {});
 
   if ($stateParams.id) {
-    escatc.action = 'edit';
-    escatc.breadcrumb = 'SubMenu.EDIT_SUBCATEGORY';
+    ctrl.action = 'edit';
+    ctrl.breadcrumb = 'SubMenu.EDIT_SUBCATEGORY';
+
+    ctrl.editCategoryData = categoryEditResolve[1];
   } else {
-    escatc.action = 'add';
-    escatc.breadcrumb = 'SubMenu.ADD_SUBCATEGORY';
+    ctrl.action = 'add';
+    ctrl.breadcrumb = 'SubMenu.ADD_SUBCATEGORY';
+
+    ctrl.editCategoryData = {
+      status: "1"
+    };
   }
-  escatc.disbledValue = false;
-  escatc.submit = function submit(isValid, data) {
+  ctrl.disbledValue = false;
+  ctrl.submit = function submit(isValid, data) {
     if (isValid) {
-      escatc.disbledValue = true;
-      // saving parent and level
-      const parent = JSON.parse(data.parent);
-      data.level = parent.level + 1;
-      data.parent = parent._id;
+      ctrl.disbledValue = true;
+      data.level = !parent.level ? 2 : (parent.level + 1);
       data.slug = Slug.slugify(data.slug);
       CategoryService.savesubcategory(data).then(function (response) {
         toastr.success('Category Added Successfully');
@@ -49,4 +48,23 @@ function editsubCategoryCtrl(categoryEditResolve, CategoryService, toastr, $stat
 
   };
 
+  ctrl.loadCategoryTree = function (classification) {
+    CategoryService.getCategoryTree(!classification ? "" : classification).then(function(response) {
+      ctrl.parentPagesList = response;
+
+      ctrl.editCategoryData.parent = "";
+    }).catch(function (error) {
+      console.error('Failed to load the category tree.', error);
+    });
+  };
+
+  ctrl.updateClassification = function (parent_id) {
+    if (!parent_id)
+      return;
+
+    var objParent = ctrl.parentPagesList.find(function(item) {
+      return item._id == parent_id;
+    });
+    ctrl.editCategoryData.classification = objParent.classification;
+  };
 }
