@@ -5,6 +5,8 @@ app.factory('CategoryService', CategoryService);
 CategoryService.$inject = ['$http', '$q', 'Upload'];
 
 function CategoryService($http, $q, Upload) {
+  var classification = "";
+
   var CategoryService = {
     getCategoryList: getCategoryList,
     CategoryList: CategoryList,
@@ -14,16 +16,19 @@ function CategoryService($http, $q, Upload) {
     getsubCategory: getsubCategory,
     savecategory: savecategory,
     savesubcategory: savesubcategory,
-    getSetting: getSetting
+    getSetting: getSetting,
+    getCategoryTree: getCategoryTree
   };
 
   return CategoryService;
 
-  function getCategoryList(limit, skip, sort, status, search) {
+  function getCategoryList(params) {
+    classification = params.classification;
+
     var deferred = $q.defer();
     $http({
       method: 'GET',
-      url: '/categories/list/?sort=' + sort + '&status=' + status + '&search=' + search + '&limit=' + limit + '&skip=' + skip
+      url: '/categories/list/?' + $.param(params)
     }).success(function (data) {
       deferred.resolve(data);
     }).error(function (err) {
@@ -39,6 +44,7 @@ function CategoryService($http, $q, Upload) {
     data.search = search;
     data.limit = limit;
     data.skip = skip;
+    data.classification = classification;
 
     $http({
       method: 'POST',
@@ -51,11 +57,13 @@ function CategoryService($http, $q, Upload) {
     });
     return deferred.promise;
   }
-  function getsubCategoryList(limit, skip, sort, status, search) {
+  function getsubCategoryList(params) {
+    classification = params.classification;
+
     var deferred = $q.defer();
     $http({
       method: 'GET',
-      url: '/subcategories/list/?sort=' + sort + '&status=' + status + '&search=' + search + '&limit=' + limit + '&skip=' + skip
+      url: '/subcategories/list/?' + $.param(params)
     }).success(function (data) {
       deferred.resolve(data);
     }).error(function (err) {
@@ -71,6 +79,7 @@ function CategoryService($http, $q, Upload) {
     data.search = search;
     data.limit = limit;
     data.skip = skip;
+    data.classification = classification;
 
     $http({
       method: 'POST',
@@ -114,7 +123,7 @@ function CategoryService($http, $q, Upload) {
     const deferred3 = $q.defer();
 
     $http({
-      method: 'POST',
+      method: 'GET',
       url: '/categories/get_tree',
     }).success(function (data) {
       deferred3.resolve(data);
@@ -125,45 +134,49 @@ function CategoryService($http, $q, Upload) {
 
     return $q.all([promise1, promise2, promise3]);
   }
-  function getsubCategory(id) {
-    const data = { id: id };
-    const deferred1 = $q.defer();
-    $http({
-      method: 'GET',
-      url: '/categories/getsubcatlistdropdown'
-    }).success(function (data) {
-      deferred1.resolve(data);
-    }).error(function (err) {
-      deferred1.reject(err);
-    });
-    const promise1 = deferred1.promise;
 
+  function getsubCategory(data) {
     const deferred2 = $q.defer();
 
     $http({
       method: 'POST',
       url: '/categories/edit/',
       data: data,
-    }).success(function (data) {
-      deferred2.resolve(data);
+    }).success(function (response) {
+      deferred2.resolve(response);
     }).error(function (err) {
       deferred2.reject(err);
     });
     const promise2 = deferred2.promise;
 
-    const deferred3 = $q.defer();
+    const deferred1 = $q.defer();
 
     $http({
       method: 'GET',
       url: '/categories/get_tree',
-    }).success(function (data) {
-      deferred3.resolve(data);
+    }).success(function (response) {
+      deferred1.resolve(response);
     }).error(function (err) {
-      deferred3.reject(err);
+      deferred1.reject(err);
     });
-    const promise3 = deferred3.promise;
+    const promise1 = deferred1.promise;
 
-    return $q.all([promise1, promise2, promise3]);
+    return $q.all([promise1, promise2]);
+  }
+
+  function getCategoryTree(classification) {
+    const deferred = $q.defer();
+
+    $http({
+      method: 'GET',
+      url: '/categories/get_tree?classification=' + classification
+    }).success(function (response) {
+      deferred.resolve(response);
+    }).error(function (err) {
+      deferred.reject(err);
+    });
+
+    return deferred.promise;
   }
 
   function savecategory(data) {

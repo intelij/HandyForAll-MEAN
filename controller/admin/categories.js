@@ -187,16 +187,23 @@ module.exports = function () {
   };
 
   controller.list = function (req, res) {
+    var match = { status: { $ne: 0 }, parent: { $exists: false } };
+
     if (req.query.sort != "") {
       var sorted = req.query.sort;
     }
+
+    if (req.query.classification)
+      match.classification = req.query.classification;
+
     var categoryQuery = [{
-      "$match": { status: { $ne: 0 }, parent: { $exists: false } }
+      "$match": match
     }, {
       $project: {
         name: 1,
         image: 1,
         status: 1,
+        classification: 1,
         dname: { $toLower: '$' + sorted }
       }
     }, {
@@ -261,12 +268,16 @@ module.exports = function () {
   }
 
   controller.subcategorylist = function (req, res) {
-    console.log("yes");
     if (req.query.sort != "") {
       var sorted = req.query.sort;
     }
+
+    var match = { status: { $ne: 0 }, parent: { $exists: true } };
+    if (req.query.classification)
+      match.classification = req.query.classification;
+
     var categoryQuery = [{
-      "$match": { status: { $ne: 0 }, parent: { $exists: true } }
+      "$match": match
     },
       { $lookup: { from: 'categories', localField: "parent", foreignField: "_id", as: "categoryName" } },
       {
@@ -274,6 +285,7 @@ module.exports = function () {
           name: 1,
           image: 1,
           status: 1,
+          classification: 1,
           dname: { $toLower: '$' + sorted },
           categoryName: 1
         }
@@ -394,7 +406,12 @@ module.exports = function () {
       }
       return tree;
     };
-    db.GetDocument('category', { status: { $ne: 0 } }, {}, {}, function (err, docdata) {
+
+    var match = { status: { $ne: 0 } };
+    if (req.query.classification)
+      match.classification = req.query.classification;
+
+    db.GetDocument('category', match, {}, {}, function (err, docdata) {
       if (err) {
         res.send(err);
       } else {
@@ -462,23 +479,29 @@ module.exports = function () {
 
   controller.allCategories = function allCategories(req, res) {
     var errors = req.validationErrors();
+
     if (errors) {
       res.send(errors, 400);
       return;
     }
 
+    var match = { status: { $ne: 0 }, parent: { $exists: false } };
+
     if (req.body.sort) {
       var sorted = req.body.sort.field;
     }
 
+    if (req.body.classification)
+      match.classification = req.body.classification;
 
     var categoryQuery = [{
-      "$match": { status: { $ne: 0 }, parent: { $exists: false } }
+      "$match": match
     }, {
       $project: {
         name: 1,
         image: 1,
         status: 1,
+        classification: 1,
         dname: { $toLower: '$' + sorted }
       }
     }, {
@@ -547,7 +570,6 @@ module.exports = function () {
 
 
   controller.allSubCategories = function allSubCategories(req, res) {
-
     var errors = req.validationErrors();
     if (errors) {
       res.send(errors, 400);
@@ -558,9 +580,13 @@ module.exports = function () {
       var sorted = req.body.sort.field;
     }
 
+    var match = { status: { $ne: 0 }, parent: { $exists: true } };
+    if (req.body.classification)
+      match.classification = req.body.classification;
+
 
     var categoryQuery = [{
-      "$match": { status: { $ne: 0 }, parent: { $exists: true } }
+      "$match": match
     },
       { $lookup: { from: 'categories', localField: "parent", foreignField: "_id", as: "categoryName" } },
       {

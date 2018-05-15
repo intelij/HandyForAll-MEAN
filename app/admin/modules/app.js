@@ -838,25 +838,17 @@ angular.module('handyforall.admin')
         template: '<div ui-view></div>'
       })
       .state('app.categories.list', {
-        url: '/category-list/:page/:items',
+        url: '/category-list/:page/:items/:classification',
         action: 'all',
         controller: 'categoryListCtrl',
         controllerAs: 'VCL',
         templateUrl: '/app/admin/modules/categories/views/categoryList.html',
         resolve: {
           CategoryServiceResolve: function (CategoryService, $stateParams) {
-            var items = 10;
-            var skip = 0;
+            var items = !$stateParams.items || parseInt($stateParams.items, 10) ? 10 : parseInt($stateParams.items);
+            var skip = !$stateParams.page || !parseInt($stateParams.page, 10) ? 0 : (parseInt($stateParams.page, 10) - 1) * items;
 
-            if ($stateParams.items !== '') {
-              items = $stateParams.items;
-            }
-
-            if ($stateParams.page) {
-              skip = (parseInt($stateParams.page, 10) - 1) * items;
-            }
-
-            return CategoryService.getCategoryList(items, skip);
+            return CategoryService.getCategoryList({limit: items, skip: skip, classification: $stateParams.classification});
           }
         }
       })
@@ -877,25 +869,17 @@ angular.module('handyforall.admin')
         }
       })
       .state('app.categories.subcategorylist', {
-        url: '/subcategory-list/:page/:items',
+        url: '/subcategory-list/:page/:items/:classification',
         action: 'all',
         controller: 'subcategoryListCtrl',
         controllerAs: 'VSCL',
         templateUrl: 'app/admin/modules/categories/views/subcategoryList.html',
         resolve: {
           CategoryServiceResolve: function (MainService, CategoryService, $stateParams) {
-            var items = 10;
-            var skip = 0;
+            var items = !$stateParams.items || parseInt($stateParams.items, 10) ? 10 : parseInt($stateParams.items);
+            var skip = !$stateParams.page || !parseInt($stateParams.page, 10) ? 0 : (parseInt($stateParams.page, 10) - 1) * items;
 
-            if ($stateParams.items !== '') {
-              items = $stateParams.items;
-            }
-
-            if ($stateParams.page) {
-              skip = (parseInt($stateParams.page, 10) - 1) * items;
-            }
-
-            return CategoryService.getsubCategoryList(items, skip);
+            return CategoryService.getsubCategoryList({limit: items, skip: skip, classification: $stateParams.classification});
           }
         }
       })
@@ -909,9 +893,9 @@ angular.module('handyforall.admin')
         resolve: {
           categoryEditResolve: function (CategoryService, $stateParams) {
             if ($stateParams.id) {
-              return CategoryService.getsubCategory($stateParams.id);
+              return CategoryService.getsubCategory({id: $stateParams.id});
             } else {
-              return CategoryService.getsubCategory();
+              return CategoryService.getsubCategory({});
             }
           }
         }
