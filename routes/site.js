@@ -101,7 +101,7 @@ module.exports = function (app, io) {
 
     /** Task Step Page  **/
     app.post('/site/task/taskbaseinfo', task.taskbaseinfo);
-    app.get('/site/task/tasker_availabilityby_category', task.taskerAvailabilitybyCategory);
+    app.get('/site/task/tasker_availability_by_category', task.taskerAvailabilitybyCategory);
     app.get('/site/task/taskeravailabilitybyWorkingArea', task.taskerAvailabilitybyWorkingArea);
     app.get('/site/task/taskeravailabilitybyWorkingAreaMap', task.taskerAvailabilitybyWorkingAreaMap);
     app.get('/site/task/taskerAvailabilitybyWorkingAreaCount', task.taskerAvailabilitybyWorkingAreaCount);

@@ -228,6 +228,9 @@ module.exports = function (io) {
 
   router.taskerAvailabilitybyCategory = function taskerAvailabilitybyCategory(req, res) {
     const taskid = req.query.task;
+    if (!taskid) {
+      return res.send({ count: 0, result: [] });
+    }
     const categoryid = req.query.categoryid;
     const date = req.query.date;
     let working_days = {};

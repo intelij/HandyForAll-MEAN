@@ -35,7 +35,9 @@ function categoryCtrl($scope, $rootScope, $location, $stateParams, Categoryservi
       });
     }
   };
+
   cac.goProviders = (subCategory) => {
     console.log('go to providers', subCategory);
+    $state.go('search', {slug: subCategory.slug});
   };
 }
