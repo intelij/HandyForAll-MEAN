@@ -62,17 +62,20 @@
         </div>
         <div class="cvr-dv col-md-12 col-sm-12 col-xs-12">
 			  <div class="spcf-dv col-md-4 col-sm-4" ng-repeat="subcategory in CAC.subcategory">
-				<div class="pro1">
-				  <a ui-sref="hirestep1({slug:subcategory.slug})">
-					<div class="pro-pict">
-					  <img ng-if="subcategory.image !=''" ng-src="{{subcategory.image}}" err-src alt="gallery">
-					  <img ng-if="subcategory.image ==''" src="uploads/images/categories/noimage.jpg" alt="gallery">
-					</div>
-					<div class="cat-txtt">
-					  <span>{{subcategory.name}}</span>
-					</div>
-				  </a>
-				</div>
+          <div class="pro1">
+            <a>
+              <div class="pro-pict">
+                <img ng-if="subcategory.image !=''" ng-src="{{subcategory.image}}" err-src alt="gallery">
+                <img ng-if="subcategory.image ==''" src="uploads/images/categories/noimage.jpg" alt="gallery">
+              </div>
+              <div class="cat-txtt">
+                <span ui-sref="hirestep1({slug:subcategory.slug})" style="cursor:pointer;">{{subcategory.name}}</span>
+              </div>
+              <div class="cat-top" ng-click="CAC.goProviders(subcategory)">
+                <span>{{'PROVIDERS' | translate}}</span>
+              </div>
+            </a>
+          </div>
 
 			  </div>
 	    </div>

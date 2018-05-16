@@ -892,7 +892,11 @@ angular.module('handyforall.site', ['Authentication',
         },
         resolve: {
           SearchResolve: function (TaskService, $stateParams) {
-            return TaskService.searchTasker($stateParams.task);
+            if ($stateParams.task) {
+              return TaskService.searchTasker($stateParams.task);
+            } else {
+              return {};
+            }
           },
           TaskserviceResolve: function (TaskService, $stateParams) {
             return TaskService.taskbaseinfo($stateParams.slug);
@@ -904,12 +908,19 @@ angular.module('handyforall.site', ['Authentication',
             }
           },
           TaskServiceNewResolve: function (TaskService, $stateParams) {
-            return TaskService.getTaskDetailsbyid($stateParams.task);
+            if ($stateParams.task) {
+              return TaskService.getTaskDetailsbyid($stateParams.task);
+            } else {
+              return {};
+            }
           },
           TaskerCountResolve: function (TaskService, $stateParams) {
-            return TaskService.taskerCount($stateParams.task, 0, 5);
+            if ($stateParams.task) {
+              return TaskService.taskerCount($stateParams.task, 0, 5);
+            } else {
+              return {};
+            }
           }
-
         }
       })
       .state('account', {
