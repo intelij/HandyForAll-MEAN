@@ -2069,7 +2069,7 @@ angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl',
 
   acm.selectedCategoryData.hour_rate = parseFloat((acm.selectedCategoryData.hour_rate * (!acm.defaultcurrency || !acm.defaultcurrency.length ? 1 : acm.defaultcurrency[0].value)).toFixed(2));
   acm.selectedCategoryData.km_rate = parseFloat((acm.selectedCategoryData.km_rate * (!acm.defaultcurrency || !acm.defaultcurrency.length ? 1 : acm.defaultcurrency[0].value)).toFixed(2));
-  acm.selectedCategoryData.price = parseFloat((acm.selectedCategoryData.price * (!acm.defaultcurrency || !acm.defaultcurrency.length ? 1 : acm.defaultcurrency[0].value)).toFixed(2));
+  acm.selectedCategoryData.unit_price = parseFloat((acm.selectedCategoryData.unit_price * (!acm.defaultcurrency || !acm.defaultcurrency.length ? 1 : acm.defaultcurrency[0].value)).toFixed(2));
 
   acm.ok = function (valid) {
     if (valid) {

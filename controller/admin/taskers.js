@@ -942,7 +942,7 @@ module.exports = function (app, io) {
     data.taskerskills.travel_arrangement = req.body.travel_arrangement;
     data.taskerskills.hour_rate = !req.body.hour_rate ? 0 : req.body.hour_rate;
     data.taskerskills.km_rate = req.body.km_rate;
-    data.taskerskills.price = !req.body.price ? 0 : req.body.price;
+    data.taskerskills.unit_price = !req.body.unit_price ? 0 : req.body.unit_price;
     if (req.body.brand)
       data.taskerskills.brand = req.body.brand;
     data.taskerskills.quick_pitch = req.body.quick_pitch;

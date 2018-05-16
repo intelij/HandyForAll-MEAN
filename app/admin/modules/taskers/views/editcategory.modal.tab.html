@@ -60,15 +60,15 @@
 
         <div class="input-group mb-10">
           <span class="input-group-addon">{{ACM.defaultcurrency.symbol}}</span>
-          <input type="number" name="price" id="price" class="form-control" ng-model="ACM.selectedCategoryData.price"
+          <input type="number" name="unit_price" id="unit_price" class="form-control" ng-model="ACM.selectedCategoryData.unit_price"
                  min="{{ACM.MinimumAmount}}" on-blur-validation required>
         </div>
         <div class="col-md-12s">
           <p class="help-block">
-            <label style="color:red;" ng-show="selectcategoryform.price.$invalid && !selectcategoryform.price.$pristine && selectcategoryform.price.$error.required">
+            <label style="color:red;" ng-show="selectcategoryform.unit_price.$invalid && !selectcategoryform.unit_price.$pristine && selectcategoryform.unit_price.$error.required">
               Price is required.
             </label>
-            <label style="color:red;" ng-show="selectcategoryform.price.$error.min" >Minimun price is {{ACM.defaultcurrency.symbol}} {{ACM.MinimumAmount}}.</label>
+            <label style="color:red;" ng-show="selectcategoryform.unit_price.$error.min" >Minimun unit_price is {{ACM.defaultcurrency.symbol}} {{ACM.MinimumAmount}}.</label>
           </p>
         </div>
       </div>
