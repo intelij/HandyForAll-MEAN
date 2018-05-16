@@ -1,152 +1,181 @@
 angular.module('handyforall.task').controller('taskFilterCtrl', taskFilterCtrl);
 
-taskFilterCtrl.$inject = ['$scope', '$rootScope', '$location', '$stateParams', 'SearchResolve', 'TaskService', 'TaskserviceResolve', 'toastr', '$state', '$filter', 'AuthenticationService', '$modal', 'MainService', 'TaskServiceNewResolve', '$translate', 'ngMeta', 'TaskerCountResolve', 'NgMap', '$scope', '$q', '$log', '$uibModal'];
-function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResolve, TaskService, TaskserviceResolve, toastr, $state, $filter, AuthenticationService, $modal, MainService, TaskServiceNewResolve, $translate, ngMeta, TaskerCountResolve, NgMap, $q, $log, $uibModal) {
+taskFilterCtrl.$inject = ['$scope', '$timeout', '$uibModal', '$rootScope', '$location', '$stateParams', 'SearchResolve', 'TaskService',
+  'TaskserviceResolve', 'toastr', '$state', '$filter', 'AuthenticationService', '$modal', 'MainService',
+  'TaskServiceNewResolve', '$translate', 'ngMeta', 'TaskerCountResolve', 'NgMap', '$scope', '$q', '$log'];
+function taskFilterCtrl($scope, $timeout, $uibModal, $rootScope, $location, $stateParams, SearchResolve, TaskService, TaskserviceResolve,
+                        toastr, $state, $filter, AuthenticationService, $modal, MainService, TaskServiceNewResolve,
+                        $translate, ngMeta, TaskerCountResolve, NgMap, $q, $log) {
 
   const tfc = this;
-  const option = {};
-
-  tfc.viewType = 'list'; // list or map
-  tfc.radiusby = $rootScope.settings.distanceby;
-
-  if (tfc.radiusby === 'km') {
-    tfc.radiusval = 1000;
-  } else {
-    tfc.radiusval = 1609.34;
-  }
-
   tfc.search = SearchResolve;
   tfc.taskinfo = TaskServiceNewResolve;
   tfc.page = TaskerCountResolve.count;
 
-  if (TaskserviceResolve[0].categorydetails) {
-    if (TaskserviceResolve[0].categorydetails.marker) {
-      tfc.marker = TaskserviceResolve[0].categorydetails.marker;
+  function init() {
+    console.log('init');
+    const option = {};
+
+    tfc.viewType = 'list'; // list or map
+    tfc.radiusby = $rootScope.settings.distanceby;
+
+    if (tfc.radiusby === 'km') {
+      tfc.radiusval = 1000;
+    } else {
+      tfc.radiusval = 1609.34;
     }
-  }
+    if (TaskserviceResolve[0].categorydetails) {
+      if (TaskserviceResolve[0].categorydetails.marker) {
+        tfc.marker = TaskserviceResolve[0].categorydetails.marker;
+      }
+    }
 
-  if (TaskserviceResolve[0].SubCategoryInfo.name) {
-    ngMeta.setTitle(TaskserviceResolve[0].SubCategoryInfo.name);
-  }
+    if (TaskserviceResolve[0].SubCategoryInfo.name) {
+      ngMeta.setTitle(TaskserviceResolve[0].SubCategoryInfo.name);
+    }
 
-  const user = AuthenticationService.GetCredentials();
+    const user = AuthenticationService.GetCredentials();
 
-  MainService.getCurrentUsers(user.currentUser.username).then(function (result) {
-    tfc.currentUserData = result[0];
-  }, function (error) {
-    $translate('INIT CURRENT DATA ERROR').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
-  });
+    MainService.getDefaultCurrency().then(function (response) {
+      tfc.DefaultCurrency = response;
+    });
 
-  MainService.getDefaultCurrency().then(function (response) {
-    tfc.DefaultCurrency = response;
-  });
+    const stateParams = angular.copy($rootScope.currentparams);
+    if (angular.isDefined(stateParams.categoryid)) {
+      option.category = stateParams.category;
+    }
+    if (angular.isDefined(stateParams.task)) {
+      console.log(stateParams.task);
+      option.task = stateParams.task;
+    }
 
-  const stateParams = angular.copy($rootScope.currentparams);
-  if (angular.isDefined(stateParams.categoryid)) {
-    option.category = stateParams.category;
-  }
-  if (angular.isDefined(stateParams.task)) {
-    console.log(stateParams.task);
-    option.task = stateParams.task;
-  }
+    tfc.filter = option;
+    tfc.taskbaseinfo = {};
 
-  tfc.filter = option;
-  tfc.taskbaseinfo = {};
+    if ($stateParams.current_page) {
+      tfc.currentPage = $stateParams.current_page;
+    } else{
+      tfc.currentPage = 1;
+    }
 
-  if ($stateParams.current_page) {
-    tfc.currentPage = $stateParams.current_page;
-  } else{
-    tfc.currentPage = 1;
-  }
+    tfc.itemsPerPage = 10;
+    tfc.totalItem = tfc.page;
+    tfc.format = 'MM/dd/yyyy';
+    tfc.logincheck = AuthenticationService.isAuthenticated();
 
-  tfc.itemsPerPage = 10;
-  tfc.totalItem = tfc.page;
-  tfc.format = 'MM/dd/yyyy';
-  tfc.logincheck = AuthenticationService.isAuthenticated();
+    if (angular.isDefined($stateParams.date && $stateParams.date !== 'undefined')) {
+      tfc.filter.date = $stateParams.date;
+    }
 
-  if (angular.isDefined($stateParams.date && $stateParams.date !== 'undefined')) {
-    tfc.filter.date = $stateParams.date;
-  }
+    if (TaskserviceResolve.length > 0) {
+      tfc.taskbaseinfo.SubCategoryInfo = TaskserviceResolve[0].SubCategoryInfo;
+    } else {
+      $translate('WE ARE LOOKING FOR THIS TROUBLE SORRY UNABLE TO FETCH DATA').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
+      $state.go('landing', {}, { reload: false });
+    }
 
-  if (TaskserviceResolve.length > 0) {
-    tfc.taskbaseinfo.SubCategoryInfo = TaskserviceResolve[0].SubCategoryInfo;
-  } else {
-    $translate('WE ARE LOOKING FOR THIS TROUBLE SORRY UNABLE TO FETCH DATA').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
-    $state.go('landing', {}, { reload: false });
-  }
-
-  if (angular.isDefined(tfc.filter.date) && tfc.filter.date !== '') {
-    tfc.WorkingDate = new Date(tfc.filter.date);
-    if (tfc.WorkingDate === 'Invalid Date') {
+    if (angular.isDefined(tfc.filter.date) && tfc.filter.date !== '') {
+      tfc.WorkingDate = new Date(tfc.filter.date);
+      if (tfc.WorkingDate === 'Invalid Date') {
+        tfc.WorkingDate = new Date();
+        // console.log(tfc.WorkingDate,"qqqqqqqqqq");
+      }
+    } else {
       tfc.WorkingDate = new Date();
       // console.log(tfc.WorkingDate,"qqqqqqqqqq");
     }
-  } else {
-    tfc.WorkingDate = new Date();
-    // console.log(tfc.WorkingDate,"qqqqqqqqqq");
-  }
 
-  tfc.FullDate = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  tfc.filter.day = tfc.FullDate[tfc.WorkingDate.getDay()];
-  tfc.filter.date = $filter('date')(tfc.WorkingDate, tfc.format, '');
-  tfc.hours = {
-    morning: false,
-    afternoon: false,
-    evening: false
-  };
+    tfc.FullDate = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    tfc.filter.day = tfc.FullDate[tfc.WorkingDate.getDay()];
+    tfc.filter.date = $filter('date')(tfc.WorkingDate, tfc.format, '');
+    tfc.hours = {
+      morning: false,
+      afternoon: false,
+      evening: false
+    };
 
-  if (angular.isDefined(tfc.filter.hour)) {
-    if (tfc.filter.hour === "morning") {
-      tfc.hours.morning = true;
-    } else if (tfc.filter.hour === "afternoon") {
-      tfc.hours.afternoon = true;
-    } else if (tfc.filter.hour === "evening") {
-      tfc.hours.evening = true;
+    if (angular.isDefined(tfc.filter.hour)) {
+      if (tfc.filter.hour === "morning") {
+        tfc.hours.morning = true;
+      } else if (tfc.filter.hour === "afternoon") {
+        tfc.hours.afternoon = true;
+      } else if (tfc.filter.hour === "evening") {
+        tfc.hours.evening = true;
+      } else {
+        tfc.filter.hour = 'morning';
+        tfc.hours.morning = true;
+      }
     } else {
       tfc.filter.hour = 'morning';
       tfc.hours.morning = true;
     }
-  } else {
-    tfc.filter.hour = 'morning';
-    tfc.hours.morning = true;
+    tfc.filter.categoryid = tfc.taskbaseinfo.SubCategoryInfo._id;
+    tfc.filter.categoryname = tfc.taskbaseinfo.SubCategoryInfo.name;
+    tfc.getTaskerDetailsResponse = false;
+
+    if (tfc.search.minRate === tfc.search.maxRate) {
+      tfc.min = tfc.filter.minvalue = tfc.search.minRate || 0;
+      tfc.max = tfc.filter.maxvalue = tfc.min + 200;
+    } else {
+      tfc.min = tfc.filter.minvalue = tfc.search.minRate || 0;
+      tfc.max = tfc.filter.maxvalue = tfc.search.maxRate || 500;
+    }
+
+    if (tfc.search.kmminRate === tfc.search.kmmaxRate) {
+      tfc.kmmin = tfc.filter.kmminvalue = tfc.search.kmminRate || 0;
+      tfc.kmmax = tfc.filter.kmmaxvalue = tfc.kmmin + 200;
+      // tfc.kmmin = 0;
+      // tfc.kmmax = 100;
+    } else {
+
+      // tfc.kmmin = tfc.filter.kmminvalue = tfc.search.kmminRate || 0;
+      // tfc.kmmax = tfc.filter.kmmaxvalue = tfc.search.kmmaxRate || 500;
+
+      tfc.kmmin = 0;
+      tfc.kmmax = 500;
+
+    }
+
+    tfc.UIslide = [tfc.min, tfc.max];
+    tfc.UIkmslide = [0, tfc.kmmax];
+
+    $scope.$watchCollection('DefaultCurrency', function (newNames, oldNames) {
+      tfc.min = (tfc.min).toFixed(2);
+      tfc.max = (tfc.max).toFixed(2);
+    });
+
+    MainService.getCurrentUsers(user.currentUser.username).then(function (result) {
+      tfc.currentUserData = result[0];
+      tfc.location = tfc.currentUserData.addressList[0];
+      console.log('current user', tfc.currentUserData);
+      tfc.filter.lat = tfc.location.location.lat;
+      tfc.filter.lng = tfc.location.location.lng;
+      tfc.filterDate();
+    }, function (error) {
+      $translate('INIT CURRENT DATA ERROR')
+        .then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
+    });
   }
+
+  $timeout(() => {
+    init();
+  });
+
+  tfc.changeLocation = () => {
+    console.log('location', tfc.location);
+    tfc.filter.lat = tfc.location.location.lat;
+    tfc.filter.lng = tfc.location.location.lng;
+    tfc.getTaskerDetails();
+  };
+
+    // .then(res => {
+    //   console.log('test', res);
+    // })
+    // .catch(err => {});
 
   tfc.teskerErrorMsg = function () {
     toastr.error('Own task can\'t continue');
   };
-
-  tfc.filter.categoryid = tfc.taskbaseinfo.SubCategoryInfo._id;
-  tfc.getTaskerDetailsResponse = false;
-
-  if (tfc.search.minRate === tfc.search.maxRate) {
-    tfc.min = tfc.filter.minvalue = tfc.search.minRate || 0;
-    tfc.max = tfc.filter.maxvalue = tfc.min + 200;
-  } else {
-    tfc.min = tfc.filter.minvalue = tfc.search.minRate || 0;
-    tfc.max = tfc.filter.maxvalue = tfc.search.maxRate || 500;
-  }
-
-  if (tfc.search.kmminRate === tfc.search.kmmaxRate) {
-    tfc.kmmin = tfc.filter.kmminvalue = tfc.search.kmminRate || 0;
-    tfc.kmmax = tfc.filter.kmmaxvalue = tfc.kmmin + 200;
-    // tfc.kmmin = 0;
-    // tfc.kmmax = 100;
-  } else {
-
-    // tfc.kmmin = tfc.filter.kmminvalue = tfc.search.kmminRate || 0;
-    // tfc.kmmax = tfc.filter.kmmaxvalue = tfc.search.kmmaxRate || 500;
-
-    tfc.kmmin = 0;
-    tfc.kmmax = 500;
-
-  }
-
-  tfc.UIslide = [tfc.min, tfc.max];
-  tfc.UIkmslide = [0, tfc.kmmax];
-  $scope.$watchCollection('DefaultCurrency', function (newNames, oldNames) {
-    tfc.min = (tfc.min).toFixed(2);
-    tfc.max = (tfc.max).toFixed(2);
-  });
 
   tfc.changeViewType = function (type) {
     tfc.viewType = type;

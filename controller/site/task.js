@@ -228,9 +228,16 @@ module.exports = function (io) {
 
   router.taskerAvailabilitybyCategory = function taskerAvailabilitybyCategory(req, res) {
     const taskid = req.query.task;
+    const lat = req.query.lat;
+    const lng = req.query.lng;
+    const categoryname = req.query.categoryname;
     // if (!taskid) {
     //   return res.send({ count: 0, result: [] });
     // }
+    if (!lat || !lng || !categoryname) {
+      console.log(lat, lng, categoryname);
+      return res.send({ count: 0, result: [] });
+    }
     const categoryid = req.query.categoryid;
     const date = req.query.date;
     let working_days = {};
@@ -285,14 +292,16 @@ module.exports = function (io) {
           });
         },
 
-        // function (settingData, callback) {
-        //   let options = {};
-        //   options.populate = 'tasker user category';
-        //   db.GetDocument('task', { _id: new mongoose.Types.ObjectId(taskid) }, {}, { options }, function (err, taskData) {
-        //     if (err || !taskData) { data.response = 'Unable to get taskData'; res.send(data); }
-        //     else { callback(err, settingData, taskData); }
-        //   });
-        // },
+        function (settingData, callback) {
+          const taskData = {};
+          callback(undefined, settingData, taskData);
+          // let options = {};
+          // options.populate = 'tasker user category';
+          // db.GetDocument('task', { _id: new mongoose.Types.ObjectId(taskid) }, {}, { options }, function (err, taskData) {
+          //   if (err || !taskData) { data.response = 'Unable to get taskData'; res.send(data); }
+          //   else { callback(err, settingData, taskData); }
+          // });
+        },
 
         // Count
         function (settingData, taskData, callback) {
@@ -310,12 +319,14 @@ module.exports = function (io) {
           defaultCondition = [
             {
               "$geoNear": {
-                near: { type: "Point", coordinates: [parseFloat(taskData[0].location.log), parseFloat(taskData[0].location.lat)] },
+                // near: { type: "Point", coordinates: [parseFloat(taskData[0].location.log), parseFloat(taskData[0].location.lat)] },
+                near: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
                 distanceField: "distance",
                 includeLocs: "location",
                 query: {
                   "status": 1, "availability": 1,
-                  "taskerskills": { $elemMatch: { childid: new mongoose.Types.ObjectId(taskData[0].category._id), status: 1 } },
+                  // "taskerskills": { $elemMatch: { childid: new mongoose.Types.ObjectId(taskData[0].category._id), status: 1 } },
+                  "taskerskills": { $elemMatch: { childid: new mongoose.Types.ObjectId(categoryid), status: 1 } },
                   "working_days": working_days
                   // "current_task": { $exists: false }
                   // "_id": { '$ne': new mongoose.Types.ObjectId(taskRespo[0].tasker) }
@@ -450,8 +461,10 @@ module.exports = function (io) {
 
                         if (settingData.settings.distanceby === 'km') {
                           newArray[j].distance = geodist({
-                            lat: parseFloat(taskData[0].location.lat),
-                            lon: parseFloat(taskData[0].location.log)
+                            // lat: parseFloat(taskData[0].location.lat),
+                            lat: parseFloat(lat),
+                            // lon: parseFloat(taskData[0].location.log)
+                            lon: parseFloat(lng)
                           }, {
                             lat: newArray[j].location.lat,
                             lon: newArray[j].location.lng,
@@ -460,8 +473,10 @@ module.exports = function (io) {
                           }) + " km";
                         } else {
                           newArray[j].distance = geodist({
-                            lat: parseFloat(taskData[0].location.lat),
-                            lon: parseFloat(taskData[0].location.log)
+                            // lat: parseFloat(taskData[0].location.lat),
+                            lat: parseFloat(lat),
+                            // lon: parseFloat(taskData[0].location.log)
+                            lon: parseFloat(lng)
                           }, {
                             lat: newArray[j].location.lat,
                             lon: newArray[j].location.lng,
@@ -481,8 +496,10 @@ module.exports = function (io) {
           //var formatedDate = moment(new Date(req.query.date + ' ' + req.query.time)).format('YYYY-MM-DD HH:mm:ss');
           let formatedDate = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
           recentupdate.booking_information.booking_date = timezone.tz(formatedDate, settingData.settings.time_zone);
-          recentupdate.booking_information.service_type = taskData[0].category.name;
-          recentupdate.booking_information.work_type = taskData[0].category.name;
+          // recentupdate.booking_information.service_type = taskData[0].category.name;
+          recentupdate.booking_information.service_type = categoryname;
+          // recentupdate.booking_information.work_type = taskData[0].category.name;
+          recentupdate.booking_information.work_type = categoryname;
           db.UpdateDocument('task', { _id: req.query.task }, recentupdate, function (err, docdata) {
             if (err || !docdata) { data.response = 'Unable to Put Task'; res.send(data); }
             else { callback(err, settingData, newtaskercount, taskData, taskerdata, newArray, docdata); }

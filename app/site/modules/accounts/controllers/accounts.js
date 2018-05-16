@@ -631,6 +631,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
       $translate('PLEASE ENTER THE AMOUNT TO ADD TO THE WALLET').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
     }
   };
+
   //Category
   accountService.getPaymentdetails().then(function (respo) {
     acc.paymentgateway = respo;
@@ -658,6 +659,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
       acc.brands = respo;
     });
   });
+
   // Payment
   acc.payment = function payment(isValid, formdata) {
     if (isValid) {
@@ -1230,11 +1232,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
       });
     });
 
-  }
-
-
-
-
+  };
 
   acc.TaskReviewModal = function (index) {
     var modalInstance = $uibModal.open({
