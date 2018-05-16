@@ -58,9 +58,10 @@
                       <div ng-controller="DatepickerDemoCtrl" class="cal-holde hre2-cal">
                         <i ng-click="open($event)" class="fa fa-calendar"></i>
                         <form name="hireStepForm">
+                          <!-- ng-init="TFC.filterDate()"-->
                           <input ng-change="TFC.filterDate()" type="text" name="valid_from" id="valid_from"
                                  class="dateside" datepicker-popup="{{format}}"
-                                 ng-model="TFC.WorkingDate" ng-init="TFC.filterDate()" is-open="opened"
+                                 ng-model="TFC.WorkingDate" is-open="opened"
                                  datepicker-options="dateOptions"
                                  min-date="minDate" ng-required="true" close-text="Close" show-clear="false" required/>
                           <span ng-show="hireStepForm.valid_from.$invalid && !hireStepForm.valid_from.$pristine">
@@ -120,6 +121,18 @@
                       </div>
                     </div>
                   </li>
+                  <li ng-if="!TFC.filter.task">
+                    <label>{{'ADDRESS' | translate}}<i class="fa fa-chevron-down" aria-hidden="true"></i></label>
+                    <div class="col-sm-12 pad0 fixed-box">
+                      <div class="hirestp-radio availabilities-day-form">
+                        <select ng-model="TFC.location"  ng-change="TFC.changeLocation()"
+                                class="time-selc" style="width: 100%!important;"
+                                repeat="item in TFC.currentUserData.addressList"
+                                ng-options="size as size.city for size in TFC.currentUserData.addressList" name="select_address">
+                        </select>
+                      </div>
+                    </div>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -168,13 +181,16 @@
                         <i class="fa fa-wechat"></i>
                       </span>
                       <div class="tskr-vew">
-                        <a class="hirebtn confirm-task" href="#"
-                           ng-click="TFC.confirmatask({task:TFC.filter.task,tasker:TaskerDetails,childid:TFC.filter.categoryid,bdate:TFC.WorkingDate,btime:TFC.hours})">
+                        <a class="hirebtn confirm-task" href="#" ng-if="TFC.filter.task"
+                           ng-click="TFC.confirmatask({task:TFC.filter.task, tasker:TaskerDetails,childid:TFC.filter.categoryid,bdate:TFC.WorkingDate,btime:TFC.hours})">
                           <span class="muted">{{'CONFIRM' | translate}}</span>
                         </a>
                         <a class="" href="javascript:void(0)"
                            ui-sref="taskerProfile({taskerId:TaskerDetails._id,slug:TFC.taskbaseinfo.SubCategoryInfo.slug,lat:TFC.filter.lat,lon:TFC.filter.lon,vechile:TFC.filter.vechile,day:TFC.filter.day,hour:TFC.filter.hour,date:TFC.filter.date,minprice:TFC.filter.minvalue,maxprice:TFC.filter.maxvalue,kmmaxvalue:TFC.filter.kmmaxvalue,kmminvalue:TFC.filter.kmminvalue,time:TFC.filter.time,booking_id:TFC.filter.booking_id,task:TFC.filter.task,sub_id:TFC.taskbaseinfo.SubCategoryInfo._id,current_page:TFC.currentPage})">
                           <span class="muted"> {{'VIEW_PROFILE' | translate}}</span>
+                        </a><br>
+                        <a class="" href="javascript:void(0)">
+                          <span class="muted"> {{'VIEW_DEMAND' | translate}}</span>
                         </a>
                         <br/>
                         <b>{{TaskerDetails.distance}}</b>
@@ -195,6 +211,9 @@
                           </p>
                           <p ng-if="!TaskerDetails.avarating"><span class="glyphicon glyphicon-thumbs-down"></span>
                             {{'NO ONE HAS REVIEWED YET' | translate}}
+                          </p>
+                          <p class="name-tile" style="font-size: 15px">
+                            {{TFC.taskbaseinfo.SubCategoryInfo.name}}: {{}}
                           </p>
                         </div>
                         <div class="col-md-5 tsker-rte">

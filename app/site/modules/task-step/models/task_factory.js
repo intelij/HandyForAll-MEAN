@@ -198,10 +198,6 @@ function TaskService($http, $q) {
     if (angular.isDefined(filter.lon)) {
       lon = filter.lon;
     }
-    let lat = "";
-    if (angular.isDefined(filter.lat)) {
-      lat = filter.lat;
-    }
     let day = "";
     if (angular.isDefined(filter.day)) {
       day = filter.day;
@@ -227,6 +223,10 @@ function TaskService($http, $q) {
       kmmaxvalue = filter.kmmaxvalue;
     }
 
+    const lat = filter.lat || '';
+    const lng = filter.lng || '';
+    const categoryname = filter.categoryname || '';
+
     // if (page) {
     //   const skip = (parseInt(page) - 1) * itemsPerPage;
     //   url = `/site/task/taskeravailabilitybyWorkingArea?page=${page}&skip=${skip}&limit=${itemsPerPage}&vechile=${vechile}&categoryid=${categoryid}&day=${day}&hour=${hour}&time=${time}&task=${taskid}&date=${date}&minvalue=${minvalue}&maxvalue=${maxvalue}&kmminvalue=${kmminvalue}&kmmaxvalue=${kmmaxvalue}`;
@@ -243,9 +243,9 @@ function TaskService($http, $q) {
     } else {
       if (page) {
         let skip = (parseInt(page) - 1) * itemsPerPage;
-        url = `/site/task/tasker_availability_by_category?page=${page}&skip=${skip}&limit=${itemsPerPage}&vechile=${vechile}&categoryid=${categoryid}&day=${day}&hour=${hour}&time=${time}&date=${date}&minvalue=${minvalue}&maxvalue=${maxvalue}&kmminvalue=${kmminvalue}&kmmaxvalue=${kmmaxvalue}`;
+        url = `/site/task/tasker_availability_by_category?page=${page}&skip=${skip}&limit=${itemsPerPage}&vechile=${vechile}&categoryid=${categoryid}&day=${day}&hour=${hour}&time=${time}&date=${date}&minvalue=${minvalue}&maxvalue=${maxvalue}&kmminvalue=${kmminvalue}&kmmaxvalue=${kmmaxvalue}&lat=${lat}&lng=${lng}&categoryname=${categoryname}`;
       } else {
-        url = `/site/task/tasker_availability_by_category?page=${page}&skip=0&limit=${itemsPerPage}&vechile=${vechile}&categoryid=${categoryid}&day=${day}&hour=${hour}&time=${time}&date=${date}&minvalue=${minvalue}&maxvalue=${maxvalue}&kmminvalue=${kmminvalue}&kmmaxvalue=${kmmaxvalue}`;
+        url = `/site/task/tasker_availability_by_category?page=${page}&skip=0&limit=${itemsPerPage}&vechile=${vechile}&categoryid=${categoryid}&day=${day}&hour=${hour}&time=${time}&date=${date}&minvalue=${minvalue}&maxvalue=${maxvalue}&kmminvalue=${kmminvalue}&kmmaxvalue=${kmmaxvalue}&lat=${lat}&lng=${lng}&categoryname=${categoryname}`;
       }
     }
     const deferred = $q.defer();
