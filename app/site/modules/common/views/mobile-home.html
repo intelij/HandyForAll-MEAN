@@ -1,23 +1,23 @@
 <section class="mobile-devices">
-        <div class="container">
-          <div class="mbls-cateo">
-           <h2>Categories</h2>
-         </div>
-   
-           <div class=" col-md-6 col-sm-6 col-xs-6 pad-all" ng-repeat="categoryinfo in MAC.data.response[0].ActiveCategory">
-               <div class="mbls-gallery">
-                 <a ui-sref="category({slug:categoryinfo.slug})" href="category({slug:categoryinfo.slug})">
-                   <div class="pro-pict">
-                     <img ng-if="categoryinfo.image !=''" src="{{categoryinfo.image}}" err-src alt="gallery" class="img-responsive">
-                     <img ng-if="categoryinfo.image ==''" src="uploads/images/homepage/gallery1.png" alt="gallery" class="img-responsive">
-                     <span class="image-shadow"></span>
-                   </div>
-                   <div class="mbls-varts">
-                     <h5>{{categoryinfo.name}}</h5>
-                   </div>
-                 </a>
-               </div>
-   
-             </div>
-        </div>
-     </section>
+  <div class="container">
+    <div class="mbls-cateo">
+      <h2>Categories</h2>
+    </div>
+
+    <div class=" col-md-6 col-sm-6 col-xs-6 pad-all" ng-repeat="categoryinfo in MAC.filtered_service_categories">
+      <div class="mbls-gallery">
+        <a ui-sref="category({slug:categoryinfo.slug})" href="category({slug:categoryinfo.slug})">
+          <div class="pro-pict">
+            <img ng-if="categoryinfo.image !=''" src="{{categoryinfo.image}}" err-src alt="gallery" class="img-responsive">
+            <img ng-if="categoryinfo.image ==''" src="uploads/images/homepage/gallery1.png" alt="gallery" class="img-responsive">
+            <span class="image-shadow"></span>
+          </div>
+          <div class="mbls-varts">
+            <h5>{{categoryinfo.name}}</h5>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>

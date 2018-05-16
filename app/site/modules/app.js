@@ -165,9 +165,7 @@ angular.module('handyforall.site', ['Authentication',
       if ($rootScope.PreviousState.name !== 'userlogin' && $rootScope.currentState.name === 'landing') {
         $rootScope.selectedCategory = {};
       }
-
     }
-
   });
 }])
   .factory('myHttpInterceptor', function ($q, $location, $rootScope, $cookieStore) {
@@ -1211,17 +1209,17 @@ angular.module('handyforall.site', ['Authentication',
     };
     rc.otpverifications = function otpverifications(data) {
       if (!data) {
-        $translate('ENTER USER NAME').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
+        $translate('ENTER USER NAME').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error) });
       } else {
         MainService.otpverifications(data).then(function (response) {
           rc.userdata = response;
           if (data === rc.userdata.username) {
             $state.go('signupotp', { 'id': rc.userdata._id }, { reload: false });
           } else {
-            $translate('USERNAME ALREADY ACTIVATED').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
+            $translate('USERNAME ALREADY ACTIVATED').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error) });
           }
         }, function (err) {
-          $translate(err.message).then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
+          $translate(err.message).then(function (headline) { toastr.error(headline); }, function (error) { console.error(error) });
         });
       }
     };
@@ -1439,103 +1437,126 @@ angular.module('handyforall.site', ['Authentication',
         $rootScope.taskerStatus = $scope.currentUserCredentials.currentUser.tasker_status;
       }
     });
-  }).controller('MainCtrl', function ($scope, $location, $rootScope, $http, toastr, MainserviceResolve, MainService, $state, $translate, $cookieStore) {
+  })
+  .controller('MainCtrl', function ($scope, $location, $rootScope, $http, toastr, MainserviceResolve, MainService, $state, $translate, $cookieStore) {
+    var mac = this;
+    mac.myInterval = 9000;
 
-  var mac = this;
-  mac.myInterval = 9000;
-  mac.data = MainserviceResolve;
-  console.log('mac.data',mac.data)
-  mac.postheader = mac.data.response[1].PostHeader;
-  mac.paymentprice = mac.data.response[5].Paymentprice;
-  mac.peoplecomment = mac.data.response[6].Peoplecomment;
-  mac.banner = mac.data.response[3].slider;
-  mac.lan_backgroundimg = mac.banner[0].image;
-  mac.lan_bannername = mac.banner[0].name;
-  mac.lan_bannerdes = mac.banner[0].description;
+    mac.filtered_service_categories = MainserviceResolve.filtered_service_categories;
+    mac.service_categories = MainserviceResolve.service_categories;
+    mac.product_categories = MainserviceResolve.product_categories;
+    mac.event_categories = MainserviceResolve.event_categories;
+    mac.career_categories = MainserviceResolve.career_categories;
 
-  $scope.getLocation = function getLocation(data) {
-    return (MainService.searchSuggestions(data).then(function (response) {
-      return response;
-    }, function (error) {
-      return error;
-    }));
-  }
+    mac.postheader = MainserviceResolve.PostHeader;
+    mac.paymentprice = MainserviceResolve.Paymentprice;
+    mac.peoplecomment = MainserviceResolve.Peoplecomment;
+    mac.banner = MainserviceResolve.slider;
 
-  mac.subscription = function subscription(subscriptionForm, data) {
-    function clearSubscribe() {
-      mac.email = "";
-      subscriptionForm.$setPristine();
-      subscriptionForm.$setUntouched();
-      subscriptionForm.email.$setValidity();
-      subscriptionForm.email.$setDirty();
-      subscriptionForm.email.$pattern();
-    }
+    mac.lan_backgroundimg = mac.banner[0].image;
+    mac.lan_bannername = mac.banner[0].name;
+    mac.lan_bannerdes = mac.banner[0].description;
 
-    if (data) {
-      return (MainService.subscription(data).then(function (response) {
-        $translate('SUBSCRIBED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
-        clearSubscribe();
+    mac.searchData = {
+      service: {},
+      product: {},
+      event: {},
+      career: {}
+    };
+
+    mac.sub_categories = {
+      service: [],
+      product: [],
+      event: [],
+      career: []
+    };
+
+    /**
+    $scope.getLocation = function getLocation(data) {
+      return (MainService.searchSuggestions(data).then(function (response) {
+        return response;
       }, function (error) {
-        $translate('EMAIL ALREADY SUBSCRIBED').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
-        clearSubscribe();
+        return error;
       }));
-    } else {
-      $translate('INVALID EMAIL').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
-    }
-  };
+    };
+    //*/
 
-  $scope.searchData = {};
-  if ($rootScope.selectedCategory) {
-    $scope.searchData.parent = $rootScope.selectedCategory.parent;
-    $scope.searchData.child = $rootScope.selectedCategory.child
-  }
-
-  mac.getsubcategory = function (parentid) {
-    return (MainService.getsubcategory(parentid).then(function (response) {
-      $scope.searchData.child = null;
-      mac.subcategorydata = response;
-      return response;
-    }, function (error) {
-      return error;
-    }));
-  };
-
-  mac.onfocusSubCat = function () {
-    if ($scope.searchData.parent) {
-      if (!mac.subcategorydata[0]) {
-        $translate('NO SUB CATEGORY FOUND FOR THIS CATEGORY').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
+    mac.subscription = function (subscriptionForm, data) {
+      function clearSubscribe() {
+        mac.email = "";
+        subscriptionForm.$setPristine();
+        subscriptionForm.$setUntouched();
+        subscriptionForm.email.$setValidity();
+        subscriptionForm.email.$setDirty();
+        subscriptionForm.email.$pattern();
       }
-    } else {
-      $scope.$broadcast('UiSelectParentCategory');
-      $translate('PLEASE CHOOSE A CATEGORY').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
-    }
-  };
 
-  $scope.changeparent = function childSuggestions(data) {
-    return (MainService.searchchildSuggestions(data).then(function (response) {
-      $scope.childcat = response;
-    }, function (error) {
-      return error;
-    }));
-  }
-
-  $scope.search = function search(data) {
-    var ca = $cookieStore.get('text');
-    $rootScope.selectedCategory = data; // Store data for history
-    if (ca) {
-      $cookieStore.remove('text');
-    }
-    if (data.parent) {
-      if (data.child) {
-        $state.go('hirestep1', { 'slug': data.child.slug });
+      if (data) {
+        return (MainService.subscription(data).then(function (response) {
+          $translate('SUBSCRIBED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+          clearSubscribe();
+        }, function (error) {
+          $translate('EMAIL ALREADY SUBSCRIBED').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error) });
+          clearSubscribe();
+        }));
       } else {
-        $state.go('category', { 'slug': data.parent.slug });
+        $translate('INVALID EMAIL').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error) });
       }
-    } else {
-      $translate('PLEASE CHOOSE A CATEGORY').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
-    }
-  }
-})
+    };
+
+    /*if ($rootScope.selectedCategory) {
+      mac.searchData.parent = $rootScope.selectedCategory.parent;
+      mac.searchData.child = $rootScope.selectedCategory.child
+    }*/
+
+    mac.getsubcategory = function (parentid, classification) {
+      return (MainService.getsubcategory(parentid).then(function (response) {
+        mac.searchData[classification].child = null;
+        mac.sub_categories[classification] = response;
+        return response;
+      }, function (error) {
+        return error;
+      }));
+    };
+
+    mac.onfocusSubCat = function (classification) {
+      if (mac.searchData[classification].parent) {
+        if (!mac.sub_categories[classification][0]) {
+          $translate('NO SUB CATEGORY FOUND FOR THIS CATEGORY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error) });
+        }
+      } else {
+        $scope.$broadcast('UiSelectParentCategory');
+        $translate('PLEASE CHOOSE A CATEGORY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error) });
+      }
+    };
+
+    mac.search = function (data) {
+      var ca = $cookieStore.get('text');
+
+      // $rootScope.selectedCategory = data; // Store data for history
+
+      if (ca) {
+        $cookieStore.remove('text');
+      }
+
+      if (data.parent) {
+        if (data.child) {
+          $state.go('hirestep1', { 'slug': data.child.slug });
+        } else {
+          $state.go('category', { 'slug': data.parent.slug });
+        }
+      } else {
+        $translate('PLEASE CHOOSE A CATEGORY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error) });
+      }
+    };
+
+    mac.createTreeView = (objSubCategory) => {
+      if (!objSubCategory.level || objSubCategory.level <= 1)
+        return objSubCategory.name;
+
+      return `${'&nbsp;&nbsp;'.repeat(objSubCategory.level - 1)} ${objSubCategory.name}`;
+    };
+  })
   .controller('MorecategoryCtrl', function (MorecategoryserviceResolve) {
     var moc = this;
     moc.count = 4;
