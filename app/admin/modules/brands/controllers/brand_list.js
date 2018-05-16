@@ -29,7 +29,6 @@ function brandListCtrl(BrandServiceResolve, BrandService, $scope, $stateParams) 
       name: 'Actions',
       template: '<button class="btn btn-info btn-rounded btn-ef btn-ef-5 btn-ef-5b" ng-if="options.permission.edit != false" ui-sref="app.brands.edit({id:content._id,page:currentpage,items:entrylimit})"><i class="fa fa-edit"></i> <span>Edit</span></button>' +
       '<button class="btn btn-danger btn-rounded btn-ef btn-ef-5 btn-ef-5b" ng-if="options.permission.delete != false" ng-click="CCC.openDeleteModal(small, content, options)" ><i class="fa fa-trash"></i> <span>Delete</span></button>'
-
     }
   ];
 
@@ -40,12 +39,18 @@ function brandListCtrl(BrandServiceResolve, BrandService, $scope, $stateParams) 
   ctrl.table.entryLimit = $stateParams.items || 10;
   ctrl.table.count = BrandServiceResolve[1] || 0;
   ctrl.table.delete = {
-    'permission': ctrl.permission, service: '/brand/deletebrand', getData: function (currentPage, itemsPerPage, sort, status, search) {
+    permission: ctrl.permission,
+    service: '/brand/deletebrand',
+    getData: function (currentPage, itemsPerPage, sort, search) {
       if (currentPage >= 1) {
-        var skip = (parseInt(currentPage) - 1) * itemsPerPage;
-        BrandService.BrandList(itemsPerPage, skip, sort, status, search).then(function (respo) {
-          ctrl.table.data = respo[0];
-          ctrl.table.count = respo[1];
+        BrandService.getBrandList({
+          limit: itemsPerPage,
+          skip: (parseInt(currentPage, 10) - 1) * itemsPerPage,
+          sort: sort,
+          search: search
+        }).then(function (response) {
+          ctrl.table.data = response[0];
+          ctrl.table.count = response[1];
         });
       }
     }

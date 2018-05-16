@@ -59,7 +59,7 @@ module.exports = function () {
       var sorted = req.query.sort;
     }
     var brandQuery = [{
-      "$match": { status: { $ne: 0 }, parent: { $exists: false } }
+      "$match": { status: { $ne: 0 } }
     }, {
       $project: {
         name: 1,
@@ -143,99 +143,7 @@ module.exports = function () {
       if (err) {
         res.send(err);
       } else {
-        db.UpdateDocument('brand', { parent: { $in: req.body.delData } }, { 'status': 0 }, { multi: true }, function (err, docdata) {
-
-          // db.DeleteDocument('brand', {parent:{$in:req.body.delData}},function(err,docdata){
-          if (err) {
-            res.send(err);
-          } else {
-
-            res.send(docdata);
-          }
-        });
-      }
-    });
-  };
-
-  controller.allBrands = function allBrands(req, res) {
-    var errors = req.validationErrors();
-    if (errors) {
-      res.send(errors, 400);
-      return;
-    }
-
-    if (req.body.sort) {
-      var sorted = req.body.sort.field;
-    }
-
-    var brandQuery = [{
-      "$match": { status: { $ne: 0 }, parent: { $exists: false } }
-    }, {
-      $project: {
-        name: 1,
-        image: 1,
-        status: 1,
-        dname: { $toLower: '$' + sorted }
-      }
-    }, {
-      $project: {
-        name: 1,
-        document: "$$ROOT"
-      }
-    }, {
-      $group: { "_id": null, "count": { "$sum": 1 }, "documentData": { $push: "$document" } }
-    }];
-
-
-    brandQuery.push({ $unwind: { path: "$documentData", preserveNullAndEmptyArrays: true } });
-
-    if (req.body.search) {
-      var searchs = req.body.search;
-      brandQuery.push({ "$match": { "documentData.name": { $regex: searchs + '.*', $options: 'si' } } });
-      //search limit
-      brandQuery.push({ $group: { "_id": null, "countvalue": { "$sum": 1 }, "documentData": { $push: "$documentData" } } });
-      brandQuery.push({ $unwind: { path: "$documentData", preserveNullAndEmptyArrays: true } });
-      if (req.body.limit && req.body.skip >= 0) {
-        brandQuery.push({ '$skip': parseInt(req.body.skip) }, { '$limit': parseInt(req.body.limit) });
-      }
-      brandQuery.push({ $group: { "_id": null, "count": { "$first": "$countvalue" }, "documentData": { $push: "$documentData" } } });
-      //search limit
-    }
-
-    var sorting = {};
-    if (req.body.sort) {
-      var sorter = 'documentData.' + req.body.sort.field;
-      sorting[sorter] = req.body.sort.order;
-      brandQuery.push({ $sort: sorting });
-    } else {
-      sorting["documentData.createdAt"] = -1;
-      brandQuery.push({ $sort: sorting });
-    }
-
-    if ((req.body.limit && req.body.skip >= 0) && !req.body.search) {
-      brandQuery.push({ '$skip': parseInt(req.body.skip) }, { '$limit': parseInt(req.body.limit) });
-    }
-    //brandQuery.push({ $group: { "_id": null, "count": { "$first": "$count" }, "documentData": { $push: "$documentData" } } });
-    if (!req.body.search) {
-      brandQuery.push({ $group: { "_id": null, "count": { "$first": "$count" }, "documentData": { $push: "$documentData" } } });
-    }
-
-    db.GetAggregation('brand', brandQuery, function (err, docdata) {
-      /*if (err || docdata.length <= 0) {
-          res.send([0, 0]);
-      } else {
-
-          res.send([docdata[0].documentData, docdata[0].count]);
-      }*/
-      if (err) {
-        res.send(err);
-      } else {
-
-        if (docdata.length != 0) {
-          res.send([docdata[0].documentData, docdata[0].count]);
-        } else {
-          res.send([0, 0]);
-        }
+        res.send(docdata);
       }
     });
   };
