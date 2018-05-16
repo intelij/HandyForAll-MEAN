@@ -77,7 +77,15 @@ module.exports = function () {
   router.getlandingdata = function (req, res) {
     async.parallel({
       filtered_service_categories: function (callback) {
-        db.GetDocument('category', { 'status': 1, 'classification': 'service', 'parent': { $exists: false } }, {}, {sort: { name : 1 }}, function (err, categories) {
+        db.GetDocument('category', {
+          'status': 1,
+          $or: [
+            { classification: 'service'},
+            { classification: ''},
+            { classification: { $exists: false }}
+          ],
+          'parent': { $exists: false }
+        }, {}, {sort: { name : 1 }}, function (err, categories) {
           if (err) {
             callback(err, null);
           } else {
@@ -91,7 +99,15 @@ module.exports = function () {
         });
       },
       service_categories: function (callback) {
-        db.GetDocument('category', { 'status': 1, 'classification': 'service', 'parent': { $exists: false } }, {}, {sort: { name : 1 }}, function (err, categories) {
+        db.GetDocument('category', {
+          'status': 1,
+          $or: [
+            { classification: 'service'},
+            { classification: ''},
+            { classification: { $exists: false }}
+          ],
+          'parent': { $exists: false }
+        }, {}, {sort: { name : 1 }}, function (err, categories) {
           if (err) {
             callback(err, categories);
           } else {
