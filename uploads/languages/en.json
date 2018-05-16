@@ -673,6 +673,7 @@
   "Copyright": "Copyright",
   "All rights reserved": "All Rights Reserved",
   "PROVIDER": "Provider",
+  "PROVIDERS": "Providers",
   "first_user_job_booking_time": "Delivery has been booked",
   "first_user_provider_assigned": "Provider has accepted the demand",
   "first_user_provider_start_off_time": "Consumer has confirmed start off",
