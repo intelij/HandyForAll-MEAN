@@ -153,13 +153,12 @@
               </div>
 
               <div ng-if="ESCATC.editCategoryData.classification == 'product'" class="form-group" ng-class="{ 'has-error' : categoryForm.commision.$invalid && !categoryForm.commision.$pristine, 'has-success' : categoryForm.commision.$valid && !categoryForm.commision.$pristine}">
-                <label for="commision">Minimum Price</label>
+                <label for="commision">Minimum Unit Price</label>
                 <input type="number" min="1" name="commision" class="form-control" ng-model="ESCATC.editCategoryData.commision" id="commision"
                        ng-minlength="1" ng-maxlength="4" on-blur-validation required>
                 <p class="help-block">
                   <span ng-show="categoryForm.commision.$error.required && categoryForm.commision.$invalid && !categoryForm.commision.$pristine">Minimum Amount is required.</span>
-                  <span style="color:red" ng-show="categoryForm.commision.$error.min">Minimum Price is required.</span>
-                  <!--<span ng-show="categoryForm.commision.$error.maxlength && !categoryForm.commision.$pristine">Minimum Amount exceed the Maximum length</span> -->
+                  <span style="color:red" ng-show="categoryForm.commision.$error.min">Minimum Unit Price is required.</span>
                 </p>
               </div>
 
@@ -187,7 +186,7 @@
               </div>
 
               <div class="form-group tcol">
-                <button class="btn btn-success btn-ef btn-ef-5 btn-ef-5a" ng-disabled="ESCATC.disbledValue" ng-click="ESCATC.submit(categoryForm.$valid,ESCATC.editCategoryData);">
+                <button class="btn btn-success btn-ef btn-ef-5 btn-ef-5a" ng-disabled="ESCATC.disbledValue" ng-click="ESCATC.submit(categoryForm.$valid, ESCATC.editCategoryData);">
                   <i class="fa fa-upload"></i> <span>Submit</span>
                 </button>
               </div>

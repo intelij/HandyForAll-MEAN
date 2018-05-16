@@ -36,7 +36,7 @@
         </p>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" ng-if="ACM.category.classification == 'service'">
         <label class="control-label" for="hour_rate">{{'SET_HOURLY_RATE' | translate}} ( {{'MINIMUM_HOURLY_RATE_IS' | translate}}  {{ACM.defaultcurrency[0].symbol}}{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }} /hr)</label>
         <div class="input-group">
           <span class="input-group-addon" > {{ACM.defaultcurrency[0].symbol}} </span>
@@ -45,6 +45,18 @@
         <p class="help-block">
           <label style="margin-left: 3px;color:red" ng-show="selectcategoryform.hour_rate.$error.min">{{'MINIMUM HOURLY RATE SHOULD BE' | translate}} {{ACM.defaultcurrency[0].symbol}} {{ACM.MinimumAmount*  ACM.defaultcurrency[0].value | number:2}}  /hr.</label>
           <label style="margin-bottom: -192px;color:red" ng-show="selectcategoryform.hour_rate.$invalid && !selectcategoryform.hour_rate.$pristine && selectcategoryform.hour_rate.$error.required">{{'HOURLY RATE IS REQUIRED' | translate}}.</label>
+        </p>
+      </div>
+
+      <div class="form-group" ng-if="ACM.category.classification == 'product'">
+        <label class="control-label" for="unit_price">{{'SET_UNIT_PRICE' | translate}} ( {{'MINIMUM_UNIT_PRICE_IS' | translate}}  {{ACM.defaultcurrency[0].symbol}}{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }} /unit )</label>
+        <div class="input-group">
+          <span class="input-group-addon" > {{ACM.defaultcurrency[0].symbol}} </span>
+          <input type="number" name="unit_price" id="unit_price" class="form-control" ng-model="ACM.selectedCategoryData.unit_price" min="{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }}" on-blur-validation required >
+        </div>
+        <p class="help-block">
+          <label style="margin-left: 3px;color:red" ng-show="selectcategoryform.unit_price.$error.min">{{'MINIMUM HOURLY RATE SHOULD BE' | translate}} {{ACM.defaultcurrency[0].symbol}} {{ACM.MinimumAmount*  ACM.defaultcurrency[0].value | number:2}}  /hr.</label>
+          <label style="margin-bottom: -192px;color:red" ng-show="selectcategoryform.unit_price.$invalid && !selectcategoryform.unit_price.$pristine && selectcategoryform.unit_price.$error.required">{{'HOURLY RATE IS REQUIRED' | translate}}.</label>
         </p>
       </div>
 
@@ -59,7 +71,7 @@
         </p>
       </div>
 
-      <div class="form-group" ng-class="{ 'has-error' : selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine, 'has-success' : selectcategoryform.levels.$valid && !selectcategoryform.levels.$pristine}">
+      <div ng-if="ACM.category.classification == 'service'" class="form-group" ng-class="{ 'has-error' : selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine, 'has-success' : selectcategoryform.levels.$valid && !selectcategoryform.levels.$pristine}">
         <label class="control-label">{{'LEVEL_OF_EXPERIENCE' | translate}}</label>
         <select name="levels" class="form-control" id="experience" ng-model="ACM.selectedCategoryData.experience" on-blur-validation required>
           <option value=''>{{'SELECT_YOUR_EXPERIENCE' | translate}}</option>
@@ -68,6 +80,43 @@
         <p class="help-block">
           <label style="margin-bottom: -192px;color:red" ng-show="selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine">{{'EXPERIENCE IS REQUIRED' | translate}}.</label>
         </p>
+      </div>
+
+      <div ng-if="ACM.category.classification == 'product'" class="form-group" ng-class="{ 'has-error' : selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine, 'has-success' : selectcategoryform.levels.$valid && !selectcategoryform.levels.$pristine}">
+        <label class="control-label">{{'BRAND' | translate}}</label>
+        <select name="levels" class="form-control" id="brand" ng-model="ACM.selectedCategoryData.brand" on-blur-validation required>
+          <option value=''>{{'SELECT_BRAND' | translate}}</option>
+          <option ng-repeat="brand in ACM.brands" value="{{brand._id}}">{{brand.name}}</option>
+        </select>
+        <p class="help-block">
+          <label style="margin-bottom: -192px;color:red" ng-show="selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine">{{'BRAND IS REQUIRED' | translate}}.</label>
+        </p>
+      </div>
+
+      <div ng-if="ACM.selectedCategoryData.childid && ACM.category.classification == 'product'" class="form-group " ng-class="{ 'has-error' : selectcategoryform.inventory.$invalid && !selectcategoryform.inventory.$pristine, 'has-success' : selectcategoryform.inventory.$valid && !selectcategoryform.inventory.$pristine}">
+        <label class="control-label" for="inventory">Inventory</label>
+        <div class="input-group mb-10">
+          <span class="input-group-addon">{{ACM.defaultcurrency.symbol}}</span>
+          <input type="number" name="inventory" id="inventory" class="form-control" ng-model="ACM.selectedCategoryData.inventory" on-blur-validation required>
+        </div>
+        <div class="col-md-12s">
+          <p class="help-block">
+            <label style="color:red;" ng-show="selectcategoryform.inventory.$invalid && !selectcategoryform.inventory.$pristine && selectcategoryform.inventory.$error.required">
+              Inventory is required.
+            </label>
+          </p>
+        </div>
+      </div>
+
+      <div ng-if="ACM.selectedCategoryData.childid && ACM.category.classification == 'product'" class="form-group" ng-class="{ 'has-error' : selectcategoryform.product_image.$invalid && !selectcategoryform.product_image.$pristine, 'has-success' : selectcategoryform.product_image.$valid && !selectcategoryform.product_image.$pristine}">
+        <label class="control-label">Product Image</label>
+        <input ui-jq="filestyle" type="file" ngf-select="temp=true" ng-model="ACM.selectedCategoryData.product_image" name="product_image"
+               ngf-max-size="1MB" ngf-pattern="'image/jpg,image/jpeg,image/png,image/gif'" ngf-model-invalid="errorFiles" class="filestyle" ui-options="{ buttonText: 'Select file', iconName: 'fa fa-inbox'}" id="product_image" ng-required="!ACM.selectedCategoryData._id">
+        <div class="form-group" ng-class="{ 'has-error' : selectcategoryform.product_image.$invalid && !selectcategoryform.product_image.$pristine, 'has-success' : selectcategoryform.product_image.$valid && !selectcategoryform.product_image.$pristine}">
+          <span class="help-block">Allowed files: jpeg, png, jpg. Max file size 1Mb</span>
+          <img ng-if="temp" height="150" ngf-src="ACM.selectedCategoryData.product_image" >
+          <img ng-if="!temp&&!ACM.selectedCategoryData.product_image==''" height="150" ngf-src="ACM.selectedCategoryData.product_image" >
+        </div>
       </div>
 
       <div class="form-group" ng-class="{ 'has-error' : selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine, 'has-success' : selectcategoryform.levels.$valid && !selectcategoryform.levels.$pristine}">

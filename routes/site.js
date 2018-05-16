@@ -131,7 +131,6 @@ module.exports = function (app, io) {
     app.post('/site/account/categories/get', account.getCategories);
     app.post('/site/account/categories/getchild', account.getchild);
     app.post('/site/account/categories/get-experience', account.getExperience);
-    app.get('/site/account/categories/travel-arrangement', account.getTravelArrangementList);
     app.post('/site/account/getwalletdetails', ensureAuthorized, account.getwalletdetails);
     app.post('/site/account/getmaincatname', ensureAuthorized, account.getmaincatname);
     app.post('/site/account/paybywallet', account.paybywallet);
@@ -175,7 +174,7 @@ module.exports = function (app, io) {
 
     app.post('/site/account/usercanceltask', ensureAuthorized, account.usercanceltask);
     app.post('/site/account/ignoreTask', ensureAuthorized, account.ignoreTask);
-    app.post('/site/account/updatecategoryinfo', ensureAuthorized, account.updateCategory);
+    app.post('/site/account/updatecategoryinfo', ensureAuthorized, middlewares.commonUpload(CONFIG.DIRECTORY_PRODUCTS).fields([{ name: 'product_image', maxCount: 1 }]), account.updateCategory);
     app.post('/site/account/deleteCategory', ensureAuthorized, account.deleteCategory);
     app.post('/site/account/deactivateAccount', ensureAuthorized, account.deactivate);
     app.post('/site/account/getReview', account.getReview);  // review are same
@@ -209,6 +208,8 @@ module.exports = function (app, io) {
     app.post('/site/task/profileConfirm', task.profileConfirm);
     app.post('/site/account/saveCurrentLocation', siteUsers.saveCurrentLocation);
 
+    app.get('/site/travel_arrangements', account.getTravelArrangementList);
+    app.get('/site/brands/', account.getBrandList);
   } catch (e) {
     console.log('Error On Site', e);
   }

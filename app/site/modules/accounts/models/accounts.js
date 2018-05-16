@@ -28,6 +28,7 @@ function accountService($http, $q, Upload) {
     saveAvailability: saveAvailability,
     getExperience: getExperience,
     getTravelArrangement: getTravelArrangement,
+    getBrandList: getBrandList,
     updateCategory: updateCategory,
     deleteCategory: deleteCategory,
     deactivateAccount: deactivateAccount,
@@ -428,7 +429,20 @@ function accountService($http, $q, Upload) {
     var deferred = $q.defer();
     $http({
       method: 'GET',
-      url: '/site/account/categories/travel-arrangement'
+      url: '/site/travel_arrangements'
+    }).success(function (data) {
+      deferred.resolve(data);
+    }).error(function (err) {
+      deferred.reject(err);
+    });
+    return deferred.promise;
+  }
+
+  function getBrandList() {
+    var deferred = $q.defer();
+    $http({
+      method: 'GET',
+      url: '/site/brands/'
     }).success(function (data) {
       deferred.resolve(data);
     }).error(function (err) {
@@ -587,13 +601,12 @@ function accountService($http, $q, Upload) {
 
   function updateCategory(data) {
     var deferred = $q.defer();
-    $http({
-      method: 'POST',
+    Upload.upload({
       url: '/site/account/updatecategoryinfo',
       data: data,
-    }).success(function (data) {
-      deferred.resolve(data);
-    }).error(function (err) {
+    }).then(function (response) {
+      deferred.resolve(response);
+    }, function (err) {
       deferred.reject(err);
     });
     return deferred.promise;
