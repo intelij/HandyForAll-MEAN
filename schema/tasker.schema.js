@@ -94,6 +94,8 @@ TASKER_SCHEMA.TASKER = {
     experience: { type: Schema.ObjectId, ref: 'experience' },
     travel_arrangement: { type: Schema.ObjectId, ref: 'travel_arrangement' },
     brand: { type: Schema.ObjectId, ref: 'brand', required: false },
+    inventory: { type: Number, default: 0, required: false },
+    product_image: { type: String, required: false },
     status: { type: Number, default: 1 }
   }],
   working_days: [{

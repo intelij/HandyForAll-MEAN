@@ -98,7 +98,7 @@ module.exports = function(app, io) {
     app.post('/taskers/get-user-categories', ensureAuthorized, taskers.getusercategories);
     app.post('/taskers/gettaskercategory', ensureAuthorized, taskers.gettaskercategory);
     app.post('/taskers/getcategories', ensureAuthorized, taskers.getCategories);
-    app.post('/taskers/addcategory', ensureAuthorized, taskers.addcategory);
+    app.post('/taskers/addcategory', ensureAuthorized, middlewares.commonUpload(CONFIG.DIRECTORY_PRODUCTS).fields([{ name: 'product_image', maxCount: 1 }]), taskers.addcategory);
 
     // app.post('/taskers/addNewCategory', ensureAuthorized, taskers.addNewCategory);
     app.post('/taskers/getexperience', ensureAuthorized, taskers.getExperience);

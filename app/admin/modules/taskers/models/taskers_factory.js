@@ -371,14 +371,13 @@ function TaskersService($http, $q, Upload) {
 
 
   function addCategory(data) {
-    var deferred = $q.defer();
-    $http({
-      method: 'POST',
+    const deferred = $q.defer();
+    Upload.upload({
       url: '/taskers/addcategory',
-      data: data
-    }).success(function (response) {
-      deferred.resolve(response);
-    }).error(function (err) {
+      data: data,
+    }).then(function (data) {
+      deferred.resolve(data);
+    }, function (err) {
       deferred.reject(err);
     });
     return deferred.promise;
