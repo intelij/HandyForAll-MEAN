@@ -228,9 +228,9 @@ module.exports = function (io) {
 
   router.taskerAvailabilitybyCategory = function taskerAvailabilitybyCategory(req, res) {
     const taskid = req.query.task;
-    if (!taskid) {
-      return res.send({ count: 0, result: [] });
-    }
+    // if (!taskid) {
+    //   return res.send({ count: 0, result: [] });
+    // }
     const categoryid = req.query.categoryid;
     const date = req.query.date;
     let working_days = {};
@@ -285,14 +285,14 @@ module.exports = function (io) {
           });
         },
 
-        function (settingData, callback) {
-          let options = {};
-          options.populate = 'tasker user category';
-          db.GetDocument('task', { _id: new mongoose.Types.ObjectId(taskid) }, {}, { options }, function (err, taskData) {
-            if (err || !taskData) { data.response = 'Unable to get taskData'; res.send(data); }
-            else { callback(err, settingData, taskData); }
-          });
-        },
+        // function (settingData, callback) {
+        //   let options = {};
+        //   options.populate = 'tasker user category';
+        //   db.GetDocument('task', { _id: new mongoose.Types.ObjectId(taskid) }, {}, { options }, function (err, taskData) {
+        //     if (err || !taskData) { data.response = 'Unable to get taskData'; res.send(data); }
+        //     else { callback(err, settingData, taskData); }
+        //   });
+        // },
 
         // Count
         function (settingData, taskData, callback) {
