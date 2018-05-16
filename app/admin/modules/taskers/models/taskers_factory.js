@@ -375,8 +375,8 @@ function TaskersService($http, $q, Upload) {
     Upload.upload({
       url: '/taskers/addcategory',
       data: data,
-    }).then(function (data) {
-      deferred.resolve(data);
+    }).then(function (response) {
+      deferred.resolve(response);
     }, function (err) {
       deferred.reject(err);
     });

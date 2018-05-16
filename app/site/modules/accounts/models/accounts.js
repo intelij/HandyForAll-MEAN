@@ -601,13 +601,12 @@ function accountService($http, $q, Upload) {
 
   function updateCategory(data) {
     var deferred = $q.defer();
-    $http({
-      method: 'POST',
+    Upload.upload({
       url: '/site/account/updatecategoryinfo',
       data: data,
-    }).success(function (data) {
-      deferred.resolve(data);
-    }).error(function (err) {
+    }).then(function (response) {
+      deferred.resolve(response);
+    }, function (err) {
       deferred.reject(err);
     });
     return deferred.promise;

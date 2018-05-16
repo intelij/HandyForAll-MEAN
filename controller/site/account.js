@@ -3120,6 +3120,7 @@ module.exports = function (io) {
     data.taskerskills.hour_rate = !req.body.hour_rate ? 0 : req.body.hour_rate;
     data.taskerskills.km_rate = req.body.km_rate;
     data.taskerskills.unit_price = !req.body.unit_price ? 0 : req.body.unit_price;
+    data.taskerskills.inventory = !req.body.inventory ? 0 : req.body.inventory;
     if (req.body.brand)
       data.taskerskills.brand = req.body.brand;
     data.taskerskills.quick_pitch = req.body.quick_pitch;
@@ -3128,6 +3129,10 @@ module.exports = function (io) {
     data.taskerskills.skills = req.body.skills;
     data.taskerskills.terms = req.body.terms;
     data.taskerskills.status = 1;
+
+    if (req.files && req.files.product_image && req.files.product_image.length > 0) {
+      data.taskerskills.product_image = attachment.get_attachment(req.files.product_image[0].destination, req.files.product_image[0].filename);
+    }
 
     console.log("tasker skills", data.taskerskills);
 
