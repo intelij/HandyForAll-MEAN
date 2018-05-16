@@ -36,7 +36,7 @@
         </p>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" ng-if="ACM.category.classification == 'service'">
         <label class="control-label" for="hour_rate">{{'SET_HOURLY_RATE' | translate}} ( {{'MINIMUM_HOURLY_RATE_IS' | translate}}  {{ACM.defaultcurrency[0].symbol}}{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }} /hr)</label>
         <div class="input-group">
           <span class="input-group-addon" > {{ACM.defaultcurrency[0].symbol}} </span>
@@ -45,6 +45,18 @@
         <p class="help-block">
           <label style="margin-left: 3px;color:red" ng-show="selectcategoryform.hour_rate.$error.min">{{'MINIMUM HOURLY RATE SHOULD BE' | translate}} {{ACM.defaultcurrency[0].symbol}} {{ACM.MinimumAmount*  ACM.defaultcurrency[0].value | number:2}}  /hr.</label>
           <label style="margin-bottom: -192px;color:red" ng-show="selectcategoryform.hour_rate.$invalid && !selectcategoryform.hour_rate.$pristine && selectcategoryform.hour_rate.$error.required">{{'HOURLY RATE IS REQUIRED' | translate}}.</label>
+        </p>
+      </div>
+
+      <div class="form-group" ng-if="ACM.category.classification == 'product'">
+        <label class="control-label" for="price">{{'SET_PRICE' | translate}} ( {{'MINIMUM_PRICE_IS' | translate}}  {{ACM.defaultcurrency[0].symbol}}{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }})</label>
+        <div class="input-group">
+          <span class="input-group-addon" > {{ACM.defaultcurrency[0].symbol}} </span>
+          <input type="number" name="price" id="price" class="form-control" ng-model="ACM.selectedCategoryData.price" min="{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }}" on-blur-validation required >
+        </div>
+        <p class="help-block">
+          <label style="margin-left: 3px;color:red" ng-show="selectcategoryform.price.$error.min">{{'MINIMUM HOURLY RATE SHOULD BE' | translate}} {{ACM.defaultcurrency[0].symbol}} {{ACM.MinimumAmount*  ACM.defaultcurrency[0].value | number:2}}  /hr.</label>
+          <label style="margin-bottom: -192px;color:red" ng-show="selectcategoryform.price.$invalid && !selectcategoryform.price.$pristine && selectcategoryform.price.$error.required">{{'HOURLY RATE IS REQUIRED' | translate}}.</label>
         </p>
       </div>
 
@@ -59,7 +71,7 @@
         </p>
       </div>
 
-      <div class="form-group" ng-class="{ 'has-error' : selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine, 'has-success' : selectcategoryform.levels.$valid && !selectcategoryform.levels.$pristine}">
+      <div ng-if="ACM.category.classification == 'service'" class="form-group" ng-class="{ 'has-error' : selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine, 'has-success' : selectcategoryform.levels.$valid && !selectcategoryform.levels.$pristine}">
         <label class="control-label">{{'LEVEL_OF_EXPERIENCE' | translate}}</label>
         <select name="levels" class="form-control" id="experience" ng-model="ACM.selectedCategoryData.experience" on-blur-validation required>
           <option value=''>{{'SELECT_YOUR_EXPERIENCE' | translate}}</option>
@@ -67,6 +79,17 @@
         </select>
         <p class="help-block">
           <label style="margin-bottom: -192px;color:red" ng-show="selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine">{{'EXPERIENCE IS REQUIRED' | translate}}.</label>
+        </p>
+      </div>
+
+      <div ng-if="ACM.category.classification == 'product'" class="form-group" ng-class="{ 'has-error' : selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine, 'has-success' : selectcategoryform.levels.$valid && !selectcategoryform.levels.$pristine}">
+        <label class="control-label">{{'BRAND' | translate}}</label>
+        <select name="levels" class="form-control" id="brand" ng-model="ACM.selectedCategoryData.brand" on-blur-validation required>
+          <option value=''>{{'SELECT_BRAND' | translate}}</option>
+          <option ng-repeat="brand in ACM.brands" value="{{brand._id}}">{{brand.name}}</option>
+        </select>
+        <p class="help-block">
+          <label style="margin-bottom: -192px;color:red" ng-show="selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine">{{'BRAND IS REQUIRED' | translate}}.</label>
         </p>
       </div>
 

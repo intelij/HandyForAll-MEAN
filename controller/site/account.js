@@ -2175,6 +2175,16 @@ module.exports = function (io) {
     });
   };
 
+  controller.getBrandList = function getExperience(req, res) {
+    db.GetDocument('brand', { status: 1 }, {}, {}, function (err, docdata) {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(docdata);
+      }
+    });
+  };
+
   controller.updatetaskstatus = function updatetaskstatus(req, res) {
     var dateupdate = {};
     db.GetOneDocument('settings', { 'alias': 'general' }, {}, {}, function (err, settings) {
@@ -3107,8 +3117,11 @@ module.exports = function (io) {
     }
     data.taskerskills.experience = req.body.experience;
     data.taskerskills.travel_arrangement = req.body.travel_arrangement;
-    data.taskerskills.hour_rate = req.body.hour_rate;
+    data.taskerskills.hour_rate = !req.body.hour_rate ? 0 : req.body.hour_rate;
     data.taskerskills.km_rate = req.body.km_rate;
+    data.taskerskills.price = !req.body.price ? 0 : req.body.price;
+    if (req.body.brand)
+      data.taskerskills.brand = req.body.brand;
     data.taskerskills.quick_pitch = req.body.quick_pitch;
     data.taskerskills.categoryid = req.body.categoryid;
     data.taskerskills.childid = req.body.childid;

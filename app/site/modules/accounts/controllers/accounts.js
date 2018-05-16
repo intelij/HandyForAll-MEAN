@@ -654,6 +654,9 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
     accountService.getTravelArrangement().then(function (respo) {
       acc.travel_arrangements = respo;
     });
+    accountService.getBrandList().then(function (respo) {
+      acc.brands = respo;
+    });
   });
   // Payment
   acc.payment = function payment(isValid, formdata) {
@@ -684,6 +687,9 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
         },
         travel_arrangements: function () {
           return acc.travel_arrangements;
+        },
+        brands: function () {
+          return acc.brands;
         },
         defaultcurrency: function () {
           return $scope.DefaultCurrency;
@@ -1999,7 +2005,7 @@ angular.module('handyforall.accounts').controller('DeactivateCtrl', function ($u
   };
 });
 
-angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl', function (accountService, $uibModalInstance, experiences, travel_arrangements, user, toastr, categories, category, defaultcurrency, $translate) {
+angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl', function (accountService, $uibModalInstance, experiences, travel_arrangements, brands, user, toastr, categories, category, defaultcurrency, $translate) {
 
   var acm = this;
   if (category) {
@@ -2014,6 +2020,7 @@ angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl',
   acm.categories = categories;
   acm.experiences = experiences;
   acm.travel_arrangements = travel_arrangements;
+  acm.brands = brands;
   acm.category = acm.categories.filter(function (obj) {
 
     return obj._id === category;
@@ -2045,16 +2052,13 @@ angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl',
     accountService.getChild(category).then(function (response) {
       acm.MinimumAmount = response.commision;
     });
-    acm.category = acm.user.taskerskills.filter(function (obj) {
-      console.log("acm.user.taskerskills", obj);
+
+    acm.user.taskerskills.forEach(function (obj) {
       if (obj.childid === category) {
         $translate('ALREADY THE CATEGORY IS EXISTS').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
         $uibModalInstance.dismiss('cancel');
       }
-      else {
-        return obj._id === category;
-      }
-    })[0];
+    });
   };
 
   if (acm.selectedCategoryData.childid) {
@@ -2063,8 +2067,10 @@ angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl',
     });
   }
 
-
   acm.selectedCategoryData.hour_rate = parseFloat((acm.selectedCategoryData.hour_rate * (!acm.defaultcurrency || !acm.defaultcurrency.length ? 1 : acm.defaultcurrency[0].value)).toFixed(2));
+  acm.selectedCategoryData.km_rate = parseFloat((acm.selectedCategoryData.km_rate * (!acm.defaultcurrency || !acm.defaultcurrency.length ? 1 : acm.defaultcurrency[0].value)).toFixed(2));
+  acm.selectedCategoryData.price = parseFloat((acm.selectedCategoryData.price * (!acm.defaultcurrency || !acm.defaultcurrency.length ? 1 : acm.defaultcurrency[0].value)).toFixed(2));
+
   acm.ok = function (valid) {
     if (valid) {
       $uibModalInstance.close(acm.selectedCategoryData);

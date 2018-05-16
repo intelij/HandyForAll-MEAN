@@ -131,7 +131,6 @@ module.exports = function (app, io) {
     app.post('/site/account/categories/get', account.getCategories);
     app.post('/site/account/categories/getchild', account.getchild);
     app.post('/site/account/categories/get-experience', account.getExperience);
-    app.get('/site/account/categories/travel-arrangement', account.getTravelArrangementList);
     app.post('/site/account/getwalletdetails', ensureAuthorized, account.getwalletdetails);
     app.post('/site/account/getmaincatname', ensureAuthorized, account.getmaincatname);
     app.post('/site/account/paybywallet', account.paybywallet);
@@ -209,6 +208,8 @@ module.exports = function (app, io) {
     app.post('/site/task/profileConfirm', task.profileConfirm);
     app.post('/site/account/saveCurrentLocation', siteUsers.saveCurrentLocation);
 
+    app.get('/site/travel_arrangements', account.getTravelArrangementList);
+    app.get('/site/brands/', account.getBrandList);
   } catch (e) {
     console.log('Error On Site', e);
   }
