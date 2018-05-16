@@ -53,10 +53,10 @@ function categoryListCtrl(CategoryServiceResolve, CategoryService, $scope, $stat
   tlc.table.entryLimit = $stateParams.items || 10;
   tlc.table.count = CategoryServiceResolve[1] || 0;
   tlc.table.delete = {
-    'permission': tlc.permission, service: '/category/deleteMaincategory', getData: function (currentPage, itemsPerPage, sort, status, search) {
+    'permission': tlc.permission, service: '/category/deleteMaincategory', getData: function (currentPage, itemsPerPage, sort, search) {
       if (currentPage >= 1) {
         var skip = (parseInt(currentPage) - 1) * itemsPerPage;
-        CategoryService.CategoryList(itemsPerPage, skip, sort, status, search).then(function (respo) {
+        CategoryService.CategoryList(itemsPerPage, skip, sort, search).then(function (respo) {
           tlc.table.data = respo[0];
           tlc.table.count = respo[1];
         });

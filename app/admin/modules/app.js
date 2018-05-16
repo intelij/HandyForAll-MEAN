@@ -503,16 +503,8 @@ angular.module('handyforall.admin')
         templateUrl: 'app/admin/modules/users/views/list_user.html',
         resolve: {
           usersServiceResolve: function (UsersService, $stateParams) {
-            var items = 10;
-            var skip = 0;
-
-            if ($stateParams.items !== '') {
-              items = $stateParams.items;
-            }
-
-            if ($stateParams.page) {
-              skip = (parseInt($stateParams.page, 10) - 1) * items;
-            }
+            var items = !$stateParams.items ? 10 : parseInt($stateParams.items, 10);
+            var skip = !$stateParams.page ? 0 : (parseInt($stateParams.page, 10) - 1) * items;
 
             return UsersService.getAllUsers(0, items, skip);
           }
@@ -555,16 +547,8 @@ angular.module('handyforall.admin')
         templateUrl: 'app/admin/modules/taskers/views/list_tasker.html',
         resolve: {
           taskersServiceResolve: function (TaskersService, $stateParams) {
-            var items = 10;
-            var skip = 0;
-
-            if ($stateParams.items !== '') {
-              items = $stateParams.items;
-            }
-
-            if ($stateParams.page) {
-              skip = (parseInt($stateParams.page, 10) - 1) * items;
-            }
+            var items = !$stateParams.items ? 10 : parseInt($stateParams.items, 10);
+            var skip = !$stateParams.page ? 0 : (parseInt($stateParams.page, 10) - 1) * items;
 
             return TaskersService.getAllTaskers(0, items, skip);
           }
@@ -800,16 +784,8 @@ angular.module('handyforall.admin')
         templateUrl: 'app/admin/modules/email-template/views/email_template_list.html',
         resolve: {
           emailTemplateListResolve: function (EmailTemplateService, $stateParams) {
-            var items = 10;
-            var skip = 0;
-
-            if ($stateParams.items !== '') {
-              items = $stateParams.items;
-            }
-
-            if ($stateParams.page !== '') {
-              skip = (parseInt($stateParams.page, 10) - 1) * items;
-            }
+            var items = !$stateParams.items ? 10 : parseInt($stateParams.items, 10);
+            var skip = !$stateParams.page ? 0 : (parseInt($stateParams.page, 10) - 1) * items;
 
             return EmailTemplateService.getTemplateList(items, skip);
           }
@@ -1262,16 +1238,8 @@ angular.module('handyforall.admin')
         templateUrl: '/app/admin/modules/posttasks/views/posttasksList.html',
         resolve: {
           PosttaskServiceResolve: function (MainService, PosttaskService, $stateParams) {
-            var items = 10;
-            var skip = 0;
-
-            if ($stateParams.items !== '') {
-              items = $stateParams.items;
-            }
-
-            if ($stateParams.page) {
-              skip = (parseInt($stateParams.page, 10) - 1) * items;
-            }
+            var items = !$stateParams.items ? 10 : parseInt($stateParams.items, 10);
+            var skip = !$stateParams.page ? 0 : (parseInt($stateParams.page, 10) - 1) * items;
 
             return PosttaskService.getPaymentPrice(items, skip);
           }
@@ -1306,16 +1274,8 @@ angular.module('handyforall.admin')
         templateUrl: '/app/admin/modules/peoplecomment/views/peoplecmdList.html',
         resolve: {
           PeoplecmdServiceResolve: function (MainService, PeoplecmdService, $stateParams) {
-            var items = 10;
-            var skip = 0;
-
-            if ($stateParams.items !== '') {
-              items = $stateParams.items;
-            }
-
-            if ($stateParams.page) {
-              skip = (parseInt($stateParams.page, 10) - 1) * items;
-            }
+            var items = !$stateParams.items ? 10 : parseInt($stateParams.items, 10);
+            var skip = !$stateParams.page ? 0 : (parseInt($stateParams.page, 10) - 1) * items;
 
             return PeoplecmdService.getPeoplelist(items, skip);
           }
@@ -1717,18 +1677,13 @@ angular.module('handyforall.admin')
         templateUrl: 'app/admin/modules/brands/views/brand_list.html',
         resolve: {
           BrandServiceResolve: function (BrandService, $stateParams) {
-            var items = 10;
-            var skip = 0;
+            var items = !$stateParams.items ? 10 : parseInt($stateParams.items, 10);
+            var skip = !$stateParams.page ? 0 : (parseInt($stateParams.page, 10) - 1) * items;
 
-            if ($stateParams.items !== '') {
-              items = $stateParams.items;
-            }
-
-            if ($stateParams.page) {
-              skip = (parseInt($stateParams.page, 10) - 1) * items;
-            }
-
-            return BrandService.getBrandList(items, skip);
+            return BrandService.getBrandList({
+              limit: items,
+              skip: skip
+            });
           }
         }
       })

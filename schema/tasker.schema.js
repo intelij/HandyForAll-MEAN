@@ -88,10 +88,12 @@ TASKER_SCHEMA.TASKER = {
     // terms: Boolean,
     name: String,
     quick_pitch: String,
-    hour_rate: Number,
+    hour_rate: { type: Number, required: false, default: 0},
     km_rate: Number,
+    price: { type: Number, required: false, default: 0},
     experience: { type: Schema.ObjectId, ref: 'experience' },
     travel_arrangement: { type: Schema.ObjectId, ref: 'travel_arrangement' },
+    brand: { type: Schema.ObjectId, ref: 'brand', required: false },
     status: { type: Number, default: 1 }
   }],
   working_days: [{

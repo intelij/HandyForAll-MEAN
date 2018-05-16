@@ -152,7 +152,6 @@ module.exports = function(app, io) {
     app.get('/subcategories/getSetting', ensureAuthorized, categories.getSetting);
 
     app.get('/brands/list', ensureAuthorized, brands.list);
-    app.post('/admin/brands/lists', ensureAuthorized, brands.allBrands);
     app.post('/brands/edit', ensureAuthorized, brands.edit);
     app.post('/brands/savebrand', ensureAuthorized, middlewares.commonUpload(CONFIG.DIRECTORY_BRANDS).fields([{ name: 'image', maxCount: 1 }]), brands.savebrand);
     app.post('/brands/deletebrand', ensureAuthorized, brands.deletebrand);

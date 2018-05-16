@@ -17,7 +17,7 @@ function BrandService($http, $q, Upload) {
     var deferred = $q.defer();
     $http({
       method: 'GET',
-      url: '/brands/list/?' + $.param(data)
+      url: '/brands/list/?' + $.param(data || {})
     }).success(function (response) {
       deferred.resolve(response);
     }).error(function (err) {

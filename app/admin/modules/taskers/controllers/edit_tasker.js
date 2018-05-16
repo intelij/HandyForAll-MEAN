@@ -1,8 +1,8 @@
 angular.module('handyforall.taskers').controller('addTaskerCtrl', addTaskerCtrl);
 
-addTaskerCtrl.$inject = ['taskerAddServiceResolve', '$filter', '$state', 'TaskersService', '$scope', '$modal', 'toastr', 'CategoryServiceResolve', '$timeout', '$http', '$stateParams', '$translate'];
+addTaskerCtrl.$inject = ['taskerAddServiceResolve', '$filter', '$state', 'TaskersService', 'BrandService', '$scope', '$modal', 'toastr', 'CategoryServiceResolve', '$timeout', '$http', '$stateParams', '$translate'];
 
-function addTaskerCtrl(taskerAddServiceResolve, $filter, $state, TaskersService, $scope, $modal, toastr, CategoryServiceResolve, $timeout, $http, $stateParams, $translate) {
+function addTaskerCtrl(taskerAddServiceResolve, $filter, $state, TaskersService, BrandService, $scope, $modal, toastr, CategoryServiceResolve, $timeout, $http, $stateParams, $translate) {
   $scope.render = false;
   var atsc = this;
   if ($stateParams.id) {
@@ -521,6 +521,9 @@ function addTaskerCtrl(taskerAddServiceResolve, $filter, $state, TaskersService,
   TaskersService.getTravelArrangement().then(function (respo) {
     atsc.travel_arrangements = respo;
   });
+  BrandService.getBrandList().then(function (response) {
+    atsc.brands = response[0];
+  });
   atsc.addcat = function () {
     TaskersService.gettaskercategory(atsc.tasker._id).then(function (respo) {
       atsc.taskercategory = respo;
@@ -543,6 +546,9 @@ function addTaskerCtrl(taskerAddServiceResolve, $filter, $state, TaskersService,
         },
         travel_arrangements: function () {
           return atsc.travel_arrangements;
+        },
+        brands: function () {
+          return atsc.brands;
         },
         user: function () {
           // console.log(atsc.tasker._id);
@@ -811,8 +817,9 @@ angular.module('handyforall.taskers').controller('ModalInstanceWorkingDayCtrl', 
   };
 });
 
-angular.module('handyforall.taskers').controller('CategoriesModalInstanceCtrl', function (TaskersService, experiences, travel_arrangements, user, categories, category, toastr, $modalInstance, defaultCurrency) {
+angular.module('handyforall.taskers').controller('CategoriesModalInstanceCtrl', function (TaskersService, experiences, travel_arrangements, brands, user, categories, category, toastr, $modalInstance, defaultCurrency) {
   var acm = this;
+
   if (category) {
     acm.role = 'edit';
   } else {
@@ -823,6 +830,7 @@ angular.module('handyforall.taskers').controller('CategoriesModalInstanceCtrl', 
   acm.categories = categories;
   acm.experiences = experiences;
   acm.travel_arrangements = travel_arrangements;
+  acm.brands = brands;
   acm.defaultcurrency = defaultCurrency;
 
   acm.category = acm.categories.filter(function (obj) {
@@ -843,33 +851,34 @@ angular.module('handyforall.taskers').controller('CategoriesModalInstanceCtrl', 
       acm.selectedCategoryData = acm.user.taskerskills[i];
     }
   }
-  // console.log((acm.selectedCategoryData.hour_rate *acm.defaultcurrency.value).toFixed(2));
-  // acm.selectedCategoryData.hour_rate  = parseFloat(acm.selectedCategoryData.hour_rate * acm.defaultcurrency.value).toFixed(2);
-  // acm.selectedCategoryData.hour_rate = parseFloat((acm.selectedCategoryData.hour_rate * acm.defaultcurrency.value).toFixed(2));
 
   acm.selectedCategoryData.userid = acm.user._id;
-  acm.onChangeCategory = function (_category) {
-    acm.category = acm.categories.filter(function (obj) {
-      return obj._id === _category;
-    })[0];
-  };
-  acm.onChangeCategoryChild = function (_category) {
-    TaskersService.getChild(_category).then(function (response) {
-      acm.MinimumAmount = response.commision;
-    });
-    acm.category = acm.user.taskerskills.filter(function (obj) {
-      if (obj.childid === _category) {
-        toastr.error('Already the Category is Exists');
-        //  $modalInstance.dismiss('cancel');
-        acm.selectedCategoryData = {};
-      }
-    })[0];
-  };
+
   if (acm.selectedCategoryData.childid) {
     TaskersService.getChild(acm.selectedCategoryData.childid).then(function (response) {
       acm.MinimumAmount = response.commision;
     });
   }
+
+  acm.onChangeCategory = function (_category) {
+    acm.category = acm.categories.filter(function (obj) {
+      return obj._id === _category;
+    })[0];
+  };
+
+  acm.onChangeCategoryChild = function (_category) {
+    TaskersService.getChild(_category).then(function (response) {
+      acm.MinimumAmount = response.commision;
+    });
+
+    acm.user.taskerskills.forEach(function (obj) {
+      if (obj.childid === _category) {
+        toastr.error('Already the Category is Exists');
+        //  $modalInstance.dismiss('cancel');
+        acm.selectedCategoryData = {};
+      }
+    });
+  };
 
   acm.ok = function (valid) {
     if (valid) {
@@ -878,6 +887,7 @@ angular.module('handyforall.taskers').controller('CategoriesModalInstanceCtrl', 
       toastr.error('Please enter all values');
     }
   };
+
   acm.cancel = function () {
     $modalInstance.dismiss('cancel');
   };

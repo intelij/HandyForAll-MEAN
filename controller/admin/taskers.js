@@ -849,7 +849,9 @@ module.exports = function (app, io) {
         seo: 1,
         skills: 1,
         slug: 1,
-        status: 1
+        status: 1,
+        level: 1,
+        classification: 1
       }
     }, {
       $project: {
@@ -938,8 +940,11 @@ module.exports = function (app, io) {
 
     data.taskerskills.experience = req.body.experience;
     data.taskerskills.travel_arrangement = req.body.travel_arrangement;
-    data.taskerskills.hour_rate = req.body.hour_rate;
+    data.taskerskills.hour_rate = !req.body.hour_rate ? 0 : req.body.hour_rate;
     data.taskerskills.km_rate = req.body.km_rate;
+    data.taskerskills.price = !req.body.price ? 0 : req.body.price;
+    if (req.body.brand)
+      data.taskerskills.brand = req.body.brand;
     data.taskerskills.quick_pitch = req.body.quick_pitch;
     data.taskerskills.categoryid = req.body.categoryid;
     data.taskerskills.childid = req.body.childid;

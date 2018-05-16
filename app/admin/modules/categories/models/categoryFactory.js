@@ -23,12 +23,17 @@ function CategoryService($http, $q, Upload) {
   return CategoryService;
 
   function getCategoryList(params) {
-    classification = params.classification;
+    if (!params) {
+      params = {};
+      classification = "";
+    } else {
+      classification = params.classification;
+    }
 
     var deferred = $q.defer();
     $http({
       method: 'GET',
-      url: '/categories/list/?' + $.param(params)
+      url: '/categories/list/?' + $.param(params || {})
     }).success(function (data) {
       deferred.resolve(data);
     }).error(function (err) {
@@ -63,7 +68,7 @@ function CategoryService($http, $q, Upload) {
     var deferred = $q.defer();
     $http({
       method: 'GET',
-      url: '/subcategories/list/?' + $.param(params)
+      url: '/subcategories/list/?' + $.param(params || {})
     }).success(function (data) {
       deferred.resolve(data);
     }).error(function (err) {

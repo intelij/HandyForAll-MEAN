@@ -41,15 +41,14 @@ function TaskersService($http, $q, Upload) {
   return object;
 
   function checkphoneno(data) {
-    console.log("datsdsdsda", data)
+    console.log("checking phone no...", data)
     var deferred = $q.defer();
     $http({
       method: 'POST',
       url: '/taskers/checktaskerphoneno',
       data: {data: data}
     }).success(function (response) {
-      console.log("dtat", response)
-      deferred.resolve(data);
+      deferred.resolve(response);
     }).error(function (err) {
       deferred.reject(err);
     });
@@ -62,8 +61,8 @@ function TaskersService($http, $q, Upload) {
       method: 'POST',
       url: '/settings/currency/default',
       data: value
-    }).success(function (data) {
-      deferred.resolve(data);
+    }).success(function (response) {
+      deferred.resolve(response);
     }).error(function (err) {
       deferred.reject(err);
     });
@@ -97,8 +96,8 @@ function TaskersService($http, $q, Upload) {
       method: 'POST',
       url: '/taskers/adduser',
       data: value
-    }).success(function (data) {
-      deferred.resolve(data);
+    }).success(function (response) {
+      deferred.resolve(response);
     }).error(function (err) {
       deferred.reject(err);
     });
@@ -232,8 +231,8 @@ function TaskersService($http, $q, Upload) {
         currentPwdCheck: currentPwdData,
         changeData: value
       }
-    }).success(function (data) {
-      deferred.resolve(data);
+    }).success(function (response) {
+      deferred.resolve(response);
     }).error(function (err) {
       deferred.reject(err);
     });
@@ -293,8 +292,8 @@ function TaskersService($http, $q, Upload) {
           method: 'POST',
           url: '/taskers/saveNew-vehicle',
           data: value
-      }).success(function (data) {
-          deferred.resolve(data);
+      }).success(function (response) {
+          deferred.resolve(response);
       }).error(function (err) {
           deferred.reject(err);
       });
@@ -308,8 +307,8 @@ function TaskersService($http, $q, Upload) {
   //     method: 'POST',
   //     url: '/taskers/get-user-categories',
   //     data: { _id: id }
-  //   }).success(function (data) {
-  //     deferred.resolve(data);
+  //   }).success(function (response) {
+  //     deferred.resolve(response);
   //   }).error(function (err) {
   //     deferred.reject(err);
   //   });
@@ -322,8 +321,8 @@ function TaskersService($http, $q, Upload) {
   //     method: 'POST',
   //     url: '/site/category/getcategory',
   //     data: { _id: id }
-  //   }).success(function (data) {
-  //     deferred.resolve(data);
+  //   }).success(function (response) {
+  //     deferred.resolve(response);
   //   }).error(function (err) {
   //     deferred.reject(err);
   //   });
@@ -336,8 +335,8 @@ function TaskersService($http, $q, Upload) {
       method: 'POST',
       url: '/taskers/gettaskercategory',
       data: { _id: id }
-    }).success(function (data) {
-      deferred.resolve(data);
+    }).success(function (response) {
+      deferred.resolve(response);
     }).error(function (err) {
       deferred.reject(err);
     });
@@ -349,8 +348,8 @@ function TaskersService($http, $q, Upload) {
   //   $http({
   //     method: 'POST',
   //     url: '/taskers/category'
-  //   }).success(function (data) {
-  //     deferred.resolve(data);
+  //   }).success(function (response) {
+  //     deferred.resolve(response);
   //   }).error(function (err) {
   //     deferred.reject(err);
   //   });
@@ -362,8 +361,8 @@ function TaskersService($http, $q, Upload) {
     $http({
       method: 'POST',
       url: '/taskers/getcategories'
-    }).success(function (data) {
-      deferred.resolve(data);
+    }).success(function (response) {
+      deferred.resolve(response);
     }).error(function (err) {
       deferred.reject(err);
     });
@@ -419,8 +418,8 @@ function TaskersService($http, $q, Upload) {
     $http({
       method: 'POST',
       url: '/taskers/getexperience'
-    }).success(function (data) {
-      deferred.resolve(data);
+    }).success(function (response) {
+      deferred.resolve(response);
     }).error(function (err) {
       deferred.reject(err);
     });
@@ -490,8 +489,8 @@ function TaskersService($http, $q, Upload) {
       method: 'POST',
       url: '/taskers/getChild',
       data: { id: id }
-    }).success(function (data) {
-      deferred.resolve(data);
+    }).success(function (response) {
+      deferred.resolve(response);
     }).error(function (err) {
       deferred.reject(err);
     });
@@ -503,8 +502,8 @@ function TaskersService($http, $q, Upload) {
     $http({
       method: 'GET',
       url: '/settings/general'
-    }).success(function (data) {
-      deferred.resolve(data);
+    }).success(function (response) {
+      deferred.resolve(response);
     }).error(function (err) {
       deferred.reject(err);
     });
@@ -516,8 +515,8 @@ function TaskersService($http, $q, Upload) {
     $http({
       method: 'POST',
       url: '/tools/exporttasker'
-    }).success(function (data) {
-      deferred.resolve(data);
+    }).success(function (response) {
+      deferred.resolve(response);
     }).error(function (err) {
       deferred.reject(err);
     });
