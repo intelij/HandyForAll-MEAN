@@ -151,7 +151,7 @@
                     <div class="ico-amt">
                       <figure>
                         <img ng-if="TaskerDetails.avatar && (!TFC.taskbaseinfo.SubCategoryInfo.classification || TFC.taskbaseinfo.SubCategoryInfo.classification == 'service')" err-src ng-src="{{TaskerDetails.avatar}}" style="height:100%; width:100%;">
-                        <img ng-if="TFC.taskbaseinfo.SubCategoryInfo.classification == 'product'" err-src ng-src="{{((TaskerDetails.taskerskills | filter: {childid: TFC.filter.categoryid })[0].product_image)}}" style="height:100%; width:100%;">
+                        <img ng-if="TFC.taskbaseinfo.SubCategoryInfo.classification == 'product'" err-src ng-src="{{TFC.getTaskerSkill(TaskerDetails).product_image}}" style="height:100%; width:100%;">
                         <img ng-src="TaskerDetails.avatar ==''" style="height:100%;width:100%;" alt="empty" err-src>
                         <div class="mob-options">
                           <ul>
@@ -194,6 +194,11 @@
                         </a>
                         <br/>
                         <b>{{TaskerDetails.distance}}</b>
+                        <br/>
+                        <div ng-if="TFC.taskbaseinfo.SubCategoryInfo.classification == 'product'">
+                          <img class="avatar-new-72" src="{{TFC.getBrandById(TFC.getTaskerSkill(TaskerDetails).brand).image}}" err-src="/">
+                          {{TFC.getBrandById(TFC.getTaskerSkill(TaskerDetails).brand).name}}
+                        </div>
                       </div>
                     </div>
                     <div class="tasker-dtl-info">
@@ -215,19 +220,19 @@
                             {{'NO ONE HAS REVIEWED YET' | translate}}
                           </p>
                           <p class="name-tile" style="font-size: 15px">
-                            {{TFC.taskbaseinfo.SubCategoryInfo.name}}: {{}}
+                            {{TFC.taskbaseinfo.SubCategoryInfo.name}}
                           </p>
                         </div>
                         <div class="col-md-5 tsker-rte">
                           <a class="tsk-amt">
                             <span class="muted" ng-if="!TFC.taskbaseinfo.SubCategoryInfo.classification || TFC.taskbaseinfo.SubCategoryInfo.classification == 'service'">
-                              {{rc.DefaultCurrency[0].symbol}}{{((TaskerDetails.taskerskills | filter: {childid: TFC.filter.categoryid })[0].hour_rate) * rc.DefaultCurrency[0].value | number:2}}/hr
+                              {{rc.DefaultCurrency[0].symbol}}{{TFC.getTaskerSkill(TaskerDetails).hour_rate * rc.DefaultCurrency[0].value | number:2}}/hr
                             </span>
                             <span class="muted" ng-if="TFC.taskbaseinfo.SubCategoryInfo.classification == 'product'">
-                              {{rc.DefaultCurrency[0].symbol}}{{((TaskerDetails.taskerskills | filter: {childid: TFC.filter.categoryid })[0].unit_price) * rc.DefaultCurrency[0].value | number:2}}/unit
+                              {{rc.DefaultCurrency[0].symbol}}{{TFC.getTaskerSkill(TaskerDetails).unit_price * rc.DefaultCurrency[0].value | number:2}}/unit
                             </span>
                             <span class="muted">
-                              {{rc.DefaultCurrency[0].symbol}}{{((TaskerDetails.taskerskills | filter: {childid: TFC.filter.categoryid })[0].km_rate) * rc.DefaultCurrency[0].value | number:2}}/km
+                              {{rc.DefaultCurrency[0].symbol}}{{TFC.getTaskerSkill(TaskerDetails).km_rate * rc.DefaultCurrency[0].value | number:2}}/km
                             </span>
                           </a>
                         </div>
@@ -236,7 +241,7 @@
                         <div ng-class="{'col-md-7': TFC.taskbaseinfo.SubCategoryInfo.classification == 'product', 'col-md-12': TFC.taskbaseinfo.SubCategoryInfo.classification !== 'product'}">
                           <h4>{{'HOW_I_CAN_HELP' | translate}}:</h4>
                           <p>
-                            {{((TaskerDetails.taskerskills | filter: {childid: TFC.filter.categoryid })[0].quick_pitch)}}
+                            {{TFC.getTaskerSkill(TaskerDetails).quick_pitch}}
                           </p>
                           <h4 class="name-tile" style="color:#ff6600; font-size: 12px;margin-top: 20px;"
                               ng-if="!TaskerDetails.avarating">{{'TASKER HAS NOT YET GOT ANY REVIEWS'| translate}}</h4>

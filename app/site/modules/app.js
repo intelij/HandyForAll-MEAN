@@ -918,6 +918,9 @@ angular.module('handyforall.site', ['Authentication',
             } else {
               return {};
             }
+          },
+          BrandListResolve: function (accountService) {
+            return accountService.getBrandList();
           }
         }
       })

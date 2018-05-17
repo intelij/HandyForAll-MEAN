@@ -2,15 +2,16 @@ angular.module('handyforall.task').controller('taskFilterCtrl', taskFilterCtrl);
 
 taskFilterCtrl.$inject = ['$scope', '$timeout', '$uibModal', '$rootScope', '$location', '$stateParams', 'SearchResolve', 'TaskService',
   'TaskserviceResolve', 'toastr', '$state', '$filter', 'AuthenticationService', '$modal', 'MainService',
-  'TaskServiceNewResolve', '$translate', 'ngMeta', 'TaskerCountResolve', 'NgMap', '$scope', '$q', '$log'];
+  'TaskServiceNewResolve', '$translate', 'ngMeta', 'TaskerCountResolve', 'NgMap', '$q', '$log', 'BrandListResolve'];
 function taskFilterCtrl($scope, $timeout, $uibModal, $rootScope, $location, $stateParams, SearchResolve, TaskService, TaskserviceResolve,
                         toastr, $state, $filter, AuthenticationService, $modal, MainService, TaskServiceNewResolve,
-                        $translate, ngMeta, TaskerCountResolve, NgMap, $q, $log) {
+                        $translate, ngMeta, TaskerCountResolve, NgMap, $q, $log, BrandListResolve) {
 
   const tfc = this;
   tfc.search = SearchResolve;
   tfc.taskinfo = TaskServiceNewResolve;
   tfc.page = TaskerCountResolve.count;
+  tfc.brands = BrandListResolve;
 
   function init() {
     console.log('init');
@@ -166,6 +167,18 @@ function taskFilterCtrl($scope, $timeout, $uibModal, $rootScope, $location, $sta
     tfc.filter.lat = tfc.location.location.lat;
     tfc.filter.lng = tfc.location.location.lng;
     tfc.getTaskerDetails();
+  };
+
+  tfc.getBrandById = (id) => {
+    var objBrand = tfc.brands.find((item) => item._id === id);
+
+    return objBrand || {};
+  };
+
+  tfc.getTaskerSkill = (objTaskerDetails) => {
+    var objTaskerSkill = objTaskerDetails.taskerskills.find((item) => item.childid === tfc.taskbaseinfo.SubCategoryInfo._id);
+
+    return objTaskerSkill || {};
   };
 
     // .then(res => {
