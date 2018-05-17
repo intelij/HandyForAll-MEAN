@@ -1860,20 +1860,76 @@ module.exports = function (io) {
 
 
   controller.getusercategories = function getusercategories(req, res) {
-    var options = {};
+    const taskerId = req.body._id;
+    const options = {
+      options: {}
+    };
+    // const getCategory = () => {
+    //   db.GetAggregation('tasker', [
+    //     { $match: { 'status': 1, parent: { $exists: false } } },
+    //     { $lookup: { from: 'categories', localField: "_id", foreignField: "parent", as: "category" } },
+    //
+    //   ], function (err, doc) {
+    //     if (err) {
+    //       res.send(err);
+    //     } else {
+    //       res.send(doc);
+    //     }
+    //   });
+    // };
+
+    // db.GetAggregation('tasker', [
+    //   { $match: {"_id": taskerId}}
+    //   // { $lookup: { from: 'task', localField: "tasker", foreignField: "_id", as: "tasks" } },
+    // ], function (err, docdata) {
+    //   if (err || !docdata) {
+    //     res.send(err);
+    //   } else {
+    //     console.log('docdata', docdata, taskerId);
+    //     if (docdata.taskerskills) {
+    //       res.send(docdata.taskerskills);
+    //     } else {
+    //       res.send(docdata);
+    //     }
+    //   }
+    // });
+    const getTasks = (categories) => {
+      const resArray = [];
+      // res.send(categories);
+      async.eachSeries(categories, (edge, done) => {
+        db.GetDocument('task', {tasker: taskerId, category: edge.childid._id}, {}, options, function (err, taskdata) {
+          if (err) {
+            res.send(err);
+            done();
+          } else {
+            let category = JSON.parse(JSON.stringify(edge));
+            category.demands = taskdata;
+            console.log('edge', category);
+            resArray.push(category);
+            done();
+          }
+        });
+      }, (err) => {
+        if (err) res.send(err);
+        if (!err) res.send(resArray);
+      });
+    };
+
     options.populate = 'taskerskills.childid';
-    db.GetOneDocument('tasker', { _id: req.body._id }, { taskerskills: 1 }, options, function (err, docdata) {
+    db.GetOneDocument('tasker', { _id: taskerId }, { taskerskills: 1 }, options, function (err, docdata) {
       if (err || !docdata) {
         res.send(err);
       } else {
         if (docdata.taskerskills) {
-          res.send(docdata.taskerskills);
+          getTasks(docdata.taskerskills);
+          // res.send(docdata.taskerskills);
         } else {
-          res.send(docdata);
+          getTasks(docdata);
+          // res.send(docdata);
         }
       }
     });
-  }
+  };
 
   controller.transcationhis = function transcationhis(req, res) {
     var extension = {
