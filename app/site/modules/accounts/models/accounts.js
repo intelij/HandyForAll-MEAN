@@ -452,7 +452,7 @@ function accountService($http, $q, Upload) {
   }
 
   function getCategoriesofuser(id) {
-    var deferred = $q.defer();
+    const deferred = $q.defer();
     $http({
       method: 'POST',
       url: '/site/account/getcategoriesofuser',

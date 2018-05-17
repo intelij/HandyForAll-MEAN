@@ -677,6 +677,10 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
     }
   };
 
+  acc.imageModal = function (category) {
+    console.log('image modal', category);
+  };
+
   acc.categoryModal = function (category) {
     var modalInstance = $uibModal.open({
       animation: true,

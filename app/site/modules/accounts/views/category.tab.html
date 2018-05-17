@@ -13,10 +13,24 @@
   <div class="admn-details" ng-repeat="category in ACC.usercategories">
     <li>
       <span class="verifyimg_new"></span>
-      <span ng-if="category.status == 1">{{category.childid.name}} <l style="color:green">({{'VERIFIED' | translate}})</l></span>&nbsp;&nbsp;
-      <span ng-if="category.status == 2">{{category.childid.name}} <l style="color:red">({{'NOT VERIFIED' | translate}})</l> </span>
+      <span>{{category.childid.name}}&nbsp;&nbsp;
+        <l ng-if="category.status == 1" style="color:green">({{'VERIFIED' | translate}})</l>
+        <l ng-if="category.status == 2" style="color:red">({{'NOT VERIFIED' | translate}})</l> &nbsp;&nbsp;
+        <l ng-if="category.demand_name" style="color:#bf0101; font-weight: bold">{{category.demand_name}}</l>
+      </span>
+      <a href="#" ng-click="ACC.imageModal(category.childid._id)" class="cat-image">{{'IMAGES' | translate}}</a>&nbsp;&nbsp;
       <a href="#" ng-click="ACC.categoryModal(category.childid._id)" class="cat-edit">{{'EDIT' | translate}}</a>&nbsp;&nbsp;
       <a href="#" ng-click="ACC.deletecategory(category.childid._id,category.childid.name)" class="cat-delete">{{'DELETE' | translate}}</a>
     </li>
   </div>
 </div>
+<style>
+  .cat-image {
+    color: #00a9ff!important;
+  }
+  .cat-image:before {
+    content: "\f1c5";
+    font: normal normal normal 14px/1 FontAwesome;
+    margin: 0px 3px;
+  }
+</style>
