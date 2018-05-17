@@ -101,6 +101,7 @@ TASKER_SCHEMA.TASKER = {
   working_days: [{
     _id: false,
     day: String,
+    value: { type: Number, default: 0 },
     hour: {
       morning: { type: Schema.Types.Mixed, default: false },
       afternoon: { type: Schema.Types.Mixed, default: false },

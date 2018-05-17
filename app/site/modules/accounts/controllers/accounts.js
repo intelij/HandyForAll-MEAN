@@ -1666,15 +1666,13 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
           }
         }
       });
-      modalInstance.result.then(function (WorkingDays) {
-        //acc.workingDays[data.index] = data.working_day;
-        //acc.user.working_days = $filter('filter')(acc.workingDays, { "not_working": false });
-        //acc.user.working_days = acc.workingDays;
-        acc.user.working_days[index] = WorkingDays;
+      modalInstance.result.then(function (data) {
+        console.log('Availability Response', data);
+        acc.user.working_days[data.index] = data.working_day;
+        acc.user.working_days = $filter('filter')(acc.workingDays, { "not_working": false });
       }, function () {
       });
     };
-
 
     acc.emptyLatLng = function (temp_address) {
       if (temp_address != acc.taskerareaaddress) {
@@ -2087,8 +2085,10 @@ angular.module('handyforall.accounts').controller('AvailabilityModalInstanceCtrl
   $scope.days = DaysData;
   $scope.availabilities = accountService.getAvailabilities();
   $scope.WorkingDays.hours = [];
-  // console.log($scope.WorkingDays.value);
   // $scope.WorkingDays.value = 28371;
+
+  // console.log('selected index', selectedIndex);
+  // console.log($scope.WorkingDays.value);
 
   function init() {
     // decimal to boolean array
@@ -2109,19 +2109,25 @@ angular.module('handyforall.accounts').controller('AvailabilityModalInstanceCtrl
   init();
 
   $scope.ok = function () {
-    if ($scope.WorkingDays.hour.morning === true || $scope.WorkingDays.hour.afternoon === true || $scope.WorkingDays.hour.evening === true) {
-      $scope.WorkingDays.not_working = false;
-    } else {
-      $scope.WorkingDays.not_working = true;
-    }
-    // boolean array to decimal
     let binaryStr = '';
     for (const value of $scope.WorkingDays.hours) {
       binaryStr += (value)? '1' : '0';
     }
+
     $scope.WorkingDays.value = parseInt(binaryStr, 2);
-    // console.log($scope.WorkingDays.value);
-    $uibModalInstance.close($scope.WorkingDays, selectedIndex);
+
+    $scope.WorkingDays.not_working = !$scope.WorkingDays.value;
+
+    $scope.WorkingDays.hour.morning = ($scope.WorkingDays.value & 31744) > 0; //0111110000000000
+    $scope.WorkingDays.hour.afternoon = ($scope.WorkingDays.value & 960) > 0; //01111000000
+    $scope.WorkingDays.hour.evening = ($scope.WorkingDays.value & 63) > 0; //0111111
+
+    delete $scope.WorkingDays.hours;
+
+    $uibModalInstance.close({
+      index: selectedIndex,
+      working_day: $scope.WorkingDays
+    });
   };
 
   $scope.cancel = function () {
