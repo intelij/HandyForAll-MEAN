@@ -105,8 +105,8 @@ function taskProfileCtrl($scope, $rootScope, $location, $stateParams, $uibModal,
       tpc.dateConversion = tpc.convertdate.getFullYear();
       tpc.induvidualrating = parseInt(response[1]);
 
-      if (TaskProfileResolve.taskerskills) {
-        angular.forEach(TaskProfileResolve.taskerskills, function (value1, key1) {
+      if (TaskProfileResolve.skills) {
+        angular.forEach(TaskProfileResolve.skills, function (value1, key1) {
           if (value1.childid == $stateParams.sub_id) {
             tpc.experience = value1.experience.name;
 

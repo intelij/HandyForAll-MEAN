@@ -171,7 +171,7 @@ jQuery(function () {
         }
     });
 
-    /*   var taskerskills = {};
+    /*   var skills = {};
       $(".catselect").click(function () {
         console.log('catselect');
           $("#finalbtn").prop('disabled', true);
@@ -189,13 +189,13 @@ jQuery(function () {
               catData.quick_pitch = $(this).closest('ul').children('li').children('.hourpitch').val();
               catData.experience = ($(this).closest('ul').children('li').children('.experience').val()).replace(/^"(.*)"$/, '$1');
               catData.status = 1; //2
-              taskerskills[catData.childid] = catData;
-              $('#selectedcat').val(JSON.stringify(taskerskills));
+              skills[catData.childid] = catData;
+              $('#selectedcat').val(JSON.stringify(skills));
           }
           $("#finalbtn").prop('disabled', false);
       }); */
 
-    var taskerskills = {};
+    var skills = {};
     $(".catselect").click(function () {
         $("#finalbtn").prop('disabled', false);
         var catData = {};
@@ -225,9 +225,9 @@ jQuery(function () {
                             catData.experience = ($(this).closest('ul').children('li').children('.experience').val()).replace(/^"(.*)"$/, '$1');
                             catData.status = 1;
 
-                            taskerskills[catData.childid] = catData;
-                            $('#selectedcat').val(JSON.stringify(taskerskills));
-                            console.log("taskerskills", taskerskills);
+                            skills[catData.childid] = catData;
+                            $('#selectedcat').val(JSON.stringify(skills));
+                            console.log("skills", skills);
                         }//store array
                     }
                     else {
@@ -267,12 +267,12 @@ jQuery(function () {
          }*/
 
         $("#finalbtn").prop('disabled', false);
-        $('#selectedcat').val(JSON.stringify(taskerskills));
-        var skillscount = Object.keys(taskerskills).length;
+        $('#selectedcat').val(JSON.stringify(skills));
+        var skillscount = Object.keys(skills).length;
         console.log("skillscount", skillscount);
 
         // if (language == "en") {
-        if (taskerskills != undefined && skillscount == 0) {
+        if (skills != undefined && skillscount == 0) {
             alert("Please select atleast one category");
             return false;
         } else if (skillscount != 0) {
@@ -280,7 +280,7 @@ jQuery(function () {
             return true;
         }
         // } else {
-        /* if (taskerskills != undefined && skillscount == 0) {
+        /* if (skills != undefined && skillscount == 0) {
              alert("يرجى تحديد فئة واحدة على الأقل");
              return false;
          } else if (skillscount != 0) {

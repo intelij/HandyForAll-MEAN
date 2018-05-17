@@ -70,7 +70,7 @@ function becomeTaskerCtrl($scope, $compile, uiCalendarConfig, $uibModal, $state,
     working_days: workingDays,
     avatar: '',
     next: 'step2',
-    taskerskills: [],
+    skills: [],
     Map: []
   };
   btc.data = $cookieStore.get('TaskerData') || btc.data;
@@ -100,15 +100,15 @@ function becomeTaskerCtrl($scope, $compile, uiCalendarConfig, $uibModal, $state,
   // End Croping
 
   // when page refresh reset the skills page
-  angular.forEach(btc.data.taskerskills, function (taskerskills) {
+  angular.forEach(btc.data.skills, function (skills) {
     angular.forEach(btc.categoryList, function (categoryList) {
-      if (taskerskills.categoryid === categoryList._id) {
-        categoryList.terms = taskerskills.terms;
-        categoryList.quick_pitch = taskerskills.quick_pitch;
-        categoryList.hour_rate = taskerskills.hour_rate;
-        categoryList.experience = taskerskills.experience;
-        // categoryList.file=taskerskills.file;
-        angular.forEach(taskerskills.skills, function (taskerskillArr) {
+      if (skills.categoryid === categoryList._id) {
+        categoryList.terms = skills.terms;
+        categoryList.quick_pitch = skills.quick_pitch;
+        categoryList.hour_rate = skills.hour_rate;
+        categoryList.experience = skills.experience;
+        // categoryList.file=skills.file;
+        angular.forEach(skills.skills, function (taskerskillArr) {
           angular.forEach(categoryList.skills, function (categoryskillArr) {
             if (categoryskillArr.tags === taskerskillArr.tags) {
               categoryskillArr.selected = true;
@@ -525,7 +525,7 @@ function becomeTaskerCtrl($scope, $compile, uiCalendarConfig, $uibModal, $state,
     }
   };
 
-  btc.taskerskills = angular.copy(btc.data.taskerskills);
+  btc.skills = angular.copy(btc.data.skills);
   btc.addskills = function (valid) {
     if (valid) {
       var skills = $filter('filter')(btc.selectedcategory.skills, { "selected": true });
@@ -537,17 +537,17 @@ function becomeTaskerCtrl($scope, $compile, uiCalendarConfig, $uibModal, $state,
       var data = { categoryid: btc.selectedcategory.parent, childid: btc.selectedcategory._id, terms: btc.selectedcategory.terms, quick_pitch: btc.selectedcategory.quick_pitch, hour_rate: (btc.selectedcategory.hour_rate / DefaultCurrency[0].value), experience: btc.selectedcategory.experience, file: btc.selectedcategory.file, skills: skills };
       var insetflag = true;
 
-      angular.forEach(btc.taskerskills, function (value, key) {
+      angular.forEach(btc.skills, function (value, key) {
         if (value.childid === btc.selectedcategory._id) {
           insetflag = false;
-          btc.taskerskills[key] = data;
+          btc.skills[key] = data;
         }
       });
 
       if (insetflag) {
-        btc.taskerskills.push(data);
+        btc.skills.push(data);
       }
-      btc.data.taskerskills = angular.copy(btc.taskerskills);
+      btc.data.skills = angular.copy(btc.skills);
       $cookieStore.put('TaskerData', btc.data);
       $translate('SKILLS UPDATED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
       btc.flag = false;
@@ -617,7 +617,7 @@ function becomeTaskerCtrl($scope, $compile, uiCalendarConfig, $uibModal, $state,
     btc.experiences = respo;
   });
 
-  btc.data.taskerskills = [];
+  btc.data.skills = [];
   btc.selectedCat = [];
   btc.categoryModal = function (category) {
     var modalInstance = $uibModal.open({
@@ -652,20 +652,20 @@ function becomeTaskerCtrl($scope, $compile, uiCalendarConfig, $uibModal, $state,
       delete selectedCategoryData.mode;
 
       if (mode === 'Add') {
-        btc.taskerskills.push(selectedCategoryData);
+        btc.skills.push(selectedCategoryData);
         btc.selectedCat.push(selectedCategoryData.childid);
       } else {
-        for (var i = 0; i < btc.taskerskills.length; i++) {
-          if (btc.taskerskills[i].childid === selectedCategoryData.childid) {
-            btc.taskerskills[i] = selectedCategoryData;
+        for (var i = 0; i < btc.skills.length; i++) {
+          if (btc.skills[i].childid === selectedCategoryData.childid) {
+            btc.skills[i] = selectedCategoryData;
           }
         }
       }
 
-      btc.data.taskerskills = btc.taskerskills;
+      btc.data.skills = btc.skills;
 
       btc.addnewcategories = btc.categories.filter(function (data) {
-        return btc.data.taskerskills.some(function (data2) {
+        return btc.data.skills.some(function (data2) {
           return data2.childid === data._id;
         });
       }).map(function (mapdata) {
@@ -682,9 +682,9 @@ function becomeTaskerCtrl($scope, $compile, uiCalendarConfig, $uibModal, $state,
       if (value._id === data) { btc.addnewcategories.splice(key, 1); }
     });
 
-    angular.forEach(btc.data.taskerskills, function (value, key) {
+    angular.forEach(btc.data.skills, function (value, key) {
       if (value.childid === data) {
-        btc.taskerskills.splice(key, 1);
+        btc.skills.splice(key, 1);
       }
     });
   };
@@ -737,9 +737,9 @@ angular.module('handyforall.becometasker').controller('ModalInstancecategory', f
     });
   }
 
-  for (var i = 0; i < acm.user.taskerskills.length; i++) {
-    if (acm.user.taskerskills[i].childid === category) {
-      acm.selectedCategoryData = angular.copy(acm.user.taskerskills[i]);
+  for (var i = 0; i < acm.user.skills.length; i++) {
+    if (acm.user.skills[i].childid === category) {
+      acm.selectedCategoryData = angular.copy(acm.user.skills[i]);
     }
   }
 

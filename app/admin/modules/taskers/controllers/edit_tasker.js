@@ -136,7 +136,7 @@ function addTaskerCtrl(taskerAddServiceResolve, $filter, $state, TaskersService,
       vechile_type: { v_bike: false, v_car: false, v_van: false, v_truck: false },
       avatar: '',
       next: 'step2',
-      taskerskills: []
+      skills: []
     };
     $scope.today = function () {
       atsc.dob = new Date();
@@ -370,15 +370,15 @@ function addTaskerCtrl(taskerAddServiceResolve, $filter, $state, TaskersService,
   atsc.selectedcategory = [];
   atsc.selectedcategory = atsc.categoryList[0];
 
-  angular.forEach(atsc.tasker.taskerskills, function (taskerskills) {
+  angular.forEach(atsc.tasker.skills, function (skills) {
     angular.forEach(atsc.categoryList, function (categoryList) {
-      if (taskerskills.categoryid === categoryList._id) {
-        categoryList.terms = taskerskills.terms;
-        categoryList.quick_pitch = taskerskills.quick_pitch;
-        categoryList.hour_rate = taskerskills.hour_rate;
-        categoryList.experience = taskerskills.experience;
-        // categoryList.file=taskerskills.file;
-        angular.forEach(taskerskills.skills, function (taskerskillArr) {
+      if (skills.categoryid === categoryList._id) {
+        categoryList.terms = skills.terms;
+        categoryList.quick_pitch = skills.quick_pitch;
+        categoryList.hour_rate = skills.hour_rate;
+        categoryList.experience = skills.experience;
+        // categoryList.file=skills.file;
+        angular.forEach(skills.skills, function (taskerskillArr) {
           angular.forEach(categoryList.skills, function (categoryskillArr) {
             if (categoryskillArr.tags === taskerskillArr.tags) {
               categoryskillArr.selected = true;
@@ -846,9 +846,9 @@ angular.module('handyforall.taskers').controller('CategoriesModalInstanceCtrl', 
     acm.mode = 'Add';
   }
 
-  for (var i = 0; i < acm.user.taskerskills.length; i++) {
-    if (acm.user.taskerskills[i].childid === category) {
-      acm.selectedCategoryData = acm.user.taskerskills[i];
+  for (var i = 0; i < acm.user.skills.length; i++) {
+    if (acm.user.skills[i].childid === category) {
+      acm.selectedCategoryData = acm.user.skills[i];
     }
   }
 
@@ -871,7 +871,7 @@ angular.module('handyforall.taskers').controller('CategoriesModalInstanceCtrl', 
       acm.MinimumAmount = response.commision;
     });
 
-    acm.user.taskerskills.forEach(function (obj) {
+    acm.user.skills.forEach(function (obj) {
       if (obj.childid === _category) {
         toastr.error('Already the Category is Exists');
         //  $modalInstance.dismiss('cancel');

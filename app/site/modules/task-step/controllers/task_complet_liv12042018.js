@@ -190,7 +190,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
 
 						console.log("TFC.TaskerDetails/*/*/*/*/*/*",tfc.TaskerDetails);
 						angular.forEach(tfc.TaskerDetails, function (value, key) {
-							angular.forEach(value.taskerskills, function (value1, key1) {
+							angular.forEach(value.skills, function (value1, key1) {
 								if (value1.childid == tfc.filter.categoryid) {
 									tfc.dummyarrayValue.push(value1);
 								}
@@ -234,7 +234,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
 						tfc.TaskerDetails = response.result;
 						// console.log("tfc.TaskerDetails******",tfc.TaskerDetails);
 						angular.forEach(tfc.TaskerDetails, function (value, key) {
-							angular.forEach(value.taskerskills, function (value1, key1) {
+							angular.forEach(value.skills, function (value1, key1) {
 								if (value1.childid == tfc.filter.categoryid) {
 									tfc.dummyarrayValue.push(value1);
 								}
@@ -471,7 +471,7 @@ function taskFilterCtrl($scope, $rootScope, $location, $stateParams, SearchResol
 			tfc.taskinfo.history.est_reach_date = '';
 			tfc.taskinfo.status = 1;
 
-			angular.forEach(message.tasker.taskerskills, function (value, key) {
+			angular.forEach(message.tasker.skills, function (value, key) {
 				if (value.childid == tfc.taskinfo.category._id)
 					tfc.hour_rate = value.hour_rate;
 			});

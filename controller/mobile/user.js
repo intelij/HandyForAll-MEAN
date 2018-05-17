@@ -2509,7 +2509,7 @@ module.exports = function (io, res) {
               query: {
                 "status": 1,
                 "availability": 1,
-                "taskerskills": {
+                "skills": {
 				$elemMatch: { childid: new mongoose.Types.ObjectId(categoryid), status: 1 }
 				if(minrate && maxrate){
 
@@ -2542,7 +2542,7 @@ module.exports = function (io, res) {
           ];
 
 		  if((minrate != '' || minrate != 'undefined')&&(maxrate != '' || maxrate != 'undefined')) {
-		  taskercondition.push({ "$match": { "taskerskills.hour_rate": { '$gte': minrate, '$lte': maxrate } } });
+		  taskercondition.push({ "$match": { "skills.hour_rate": { '$gte': minrate, '$lte': maxrate } } });
 		  }
 
           if (parseInt(req.body.rating) > 0) {
@@ -2655,20 +2655,20 @@ module.exports = function (io, res) {
                                           providertemp.lng = docdata[0].taskers[i].location.lng;
                                           providertemp.lat = docdata[0].taskers[i].location.lat;
                                           providertemp.reviews = docdata[0].taskers[i].total_review;
-                                          providertemp.hourly_amount = docdata[0].taskers[i].taskerskills.filter(function (ol) {
+                                          providertemp.hourly_amount = docdata[0].taskers[i].skills.filter(function (ol) {
                                             return ol.childid == req.body.category;
                                           }).map(function (ma) {
                                             return ma;
                                           })[0].hour_rate || 0;
                                           providertemp.min_amount = category.commision;
                                           providertemp.rating = docdata[0].taskers[i].avg_review || 0;
-                                          providertemp.company = docdata[0].taskers[i].taskerskills[0].name || "default company";
+                                          providertemp.company = docdata[0].taskers[i].skills[0].name || "default company";
                                           providertemp.availability = docdata[0].taskers[i].mode == "Available" ? 'Yes' : 'No';
 
                                           //Pricing
                                           if (data.price) {
                                             if (parseFloat(providertemp.min_amount) <= parseInt(data.price)) {
-                                              //condition['taskerskills.hour_rate'] = { $gte: 0, $lte:  data.price };
+                                              //condition['skills.hour_rate'] = { $gte: 0, $lte:  data.price };
                                               providerList.push(providertemp);
                                             } else {
                                               docdata[0].count--;
@@ -2889,7 +2889,7 @@ module.exports = function (io, res) {
           query: {
             "status": 1,
             "availability": 1,
-            "taskerskills": { $elemMatch: { childid: new mongoose.Types.ObjectId(categoryid), status: 1, } },
+            "skills": { $elemMatch: { childid: new mongoose.Types.ObjectId(categoryid), status: 1, } },
             "working_days": working_days
           },
           distanceMultiplier: distanceval,
@@ -2930,7 +2930,7 @@ module.exports = function (io, res) {
           "avg_review": 1,
           "location": 1,
     "categoryid":{ $literal: new mongoose.Types.ObjectId(categoryid) },
-          "taskerskills":1,
+          "skills":1,
           "avatar": 1,
           "tasker_area": 1,
           "tasks": 1,
@@ -2953,7 +2953,7 @@ module.exports = function (io, res) {
           "avg_review": 1,
           "location": 1,
     "categoryid":1,
-          "taskerskills": { $filter: { input: "$taskerskills", as: "item", cond: { $eq: ["$$item.childid", "$categoryid"] } } },
+          "skills": { $filter: { input: "$taskerskills", as: "item", cond: { $eq: ["$$item.childid", "$categoryid"] } } },
           "avatar": 1,
           "tasker_area": 1,
           "tasks": 1,
@@ -2974,7 +2974,7 @@ module.exports = function (io, res) {
           "avg_review": { $first: "$avg_review" },
           "location": { $first: "$location" },
     "categoryid": { $first: "$categoryid" },
-          "taskerskills": { $first: "$taskerskills" },
+          "skills": { $first: "$taskerskills" },
           "avatar": { $first: "$avatar" },
           "tasker_area": { $first: "$tasker_area" },
           "booked": { $sum: "$booked" },
@@ -2992,8 +2992,8 @@ module.exports = function (io, res) {
         // }
         // }
       ];
-  // "taskerskills.childid":new mongoose.Types.ObjectId(categoryid),
-      defaultCondition.push({ "$match": { "taskerskills.hour_rate": { '$gte': minrate, '$lte': maxrate } } });
+  // "skills.childid":new mongoose.Types.ObjectId(categoryid),
+      defaultCondition.push({ "$match": { "skills.hour_rate": { '$gte': minrate, '$lte': maxrate } } });
 
       var customCondition = [
         {
@@ -3086,7 +3086,7 @@ module.exports = function (io, res) {
                                         providertemp.reviews = docdata[0].taskers[i].total_review;
 
                                         var ratetypes = {};
-                                        ratetypes.hourly_amount = docdata[0].taskers[i].taskerskills.filter(function (ol) {
+                                        ratetypes.hourly_amount = docdata[0].taskers[i].skills.filter(function (ol) {
                                           return ol.childid == req.body.category;
                                         }).map(function (ma) {
                                           return ma;
@@ -3094,13 +3094,13 @@ module.exports = function (io, res) {
 
                                         providertemp.hourly_amount = ratetypes.hourly_amount || "";
                                         providertemp.rating = docdata[0].taskers[i].avg_review || 0;
-                                        providertemp.company = docdata[0].taskers[i].taskerskills[0].name || "default company";
+                                        providertemp.company = docdata[0].taskers[i].skills[0].name || "default company";
                                         providertemp.availability = docdata[0].taskers[i].mode == "Available" ? 'Yes' : 'No';
 
                                         //Pricing
                                         if (data.price) {
                                           if (providertemp.min_amount <= data.price) {
-                                            condition['taskerskills.hour_rate'] = { $gte: 0, $lte: data.price };
+                                            condition['skills.hour_rate'] = { $gte: 0, $lte: data.price };
                                             providerList.push(providertemp);
                                           } else {
                                             docdata[0].count--;
@@ -3196,7 +3196,7 @@ module.exports = function (io, res) {
                                             providertemp.lng = docdata[0].taskers[i].location.lng;
                                             providertemp.lat = docdata[0].taskers[i].location.lat;
                                             providertemp.reviews = docdata[0].taskers[i].total_review;
-                                            providertemp.hourly_amount = docdata[0].taskers[i].taskerskills.filter(function (ol) {
+                                            providertemp.hourly_amount = docdata[0].taskers[i].skills.filter(function (ol) {
 
                                               return ol.childid == req.body.category;
                                             }).map(function (ma) {
@@ -3204,13 +3204,13 @@ module.exports = function (io, res) {
                                             })[0].hour_rate || 0;
                                             providertemp.min_amount = category.commision;
                                             providertemp.rating = docdata[0].taskers[i].avg_review || 0;
-                                            providertemp.company = docdata[0].taskers[i].taskerskills[0].name || "default company";
+                                            providertemp.company = docdata[0].taskers[i].skills[0].name || "default company";
                                             providertemp.availability = docdata[0].taskers[i].mode == "Available" ? 'Yes' : 'No';
 
                                             //Pricing
                                             if (data.price) {
                                               if (parseFloat(providertemp.min_amount) <= parseInt(data.price)) {
-                                                //condition['taskerskills.hour_rate'] = { $gte: 0, $lte:  data.price };
+                                                //condition['skills.hour_rate'] = { $gte: 0, $lte:  data.price };
                                                 providerList.push(providertemp);
                                               } else {
                                                 docdata[0].count--;
@@ -3388,7 +3388,7 @@ module.exports = function (io, res) {
           near: { type: "Point", coordinates: [parseFloat(pickup_lon), parseFloat(pickup_lat)] },
           distanceField: "distance",
           includeLocs: "location",
-          query: { "status": 1, "availability": 1, "taskerskills": { $elemMatch: { childid: new mongoose.Types.ObjectId(categoryid), status: 1, hour_rate: { '$gte': minrate, '$lte': maxrate } } }, "working_days": working_days, "current_task": { $exists: false } },
+          query: { "status": 1, "availability": 1, "skills": { $elemMatch: { childid: new mongoose.Types.ObjectId(categoryid), status: 1, hour_rate: { '$gte': minrate, '$lte': maxrate } } }, "working_days": working_days, "current_task": { $exists: false } },
           distanceMultiplier: distanceval,
           spherical: true
         }
@@ -3403,7 +3403,7 @@ module.exports = function (io, res) {
           near: { type: "Point", coordinates: [parseFloat(pickup_lon), parseFloat(pickup_lat)] },
           distanceField: "distance",
           includeLocs: "location",
-          query: { "status": 1, "availability": 1, "taskerskills": { $elemMatch: { categoryid: new mongoose.Types.ObjectId(maincategoryid), status: 1, hour_rate: { '$gte': minrate, '$lte': maxrate } } }, "working_days": working_days, "current_task": { $exists: false } },
+          query: { "status": 1, "availability": 1, "skills": { $elemMatch: { categoryid: new mongoose.Types.ObjectId(maincategoryid), status: 1, hour_rate: { '$gte': minrate, '$lte': maxrate } } }, "working_days": working_days, "current_task": { $exists: false } },
           distanceMultiplier: distanceval,
           spherical: true
         }
@@ -3418,7 +3418,7 @@ module.exports = function (io, res) {
           near: { type: "Point", coordinates: [parseFloat(pickup_lon), parseFloat(pickup_lat)] },
           distanceField: "distance",
           includeLocs: "location",
-          query: { "status": 1, "availability": 1, "taskerskills": { $elemMatch: { hour_rate: { '$gte': minrate, '$lte': maxrate } } }, "working_days": working_days, "current_task": { $exists: false } },
+          query: { "status": 1, "availability": 1, "skills": { $elemMatch: { hour_rate: { '$gte': minrate, '$lte': maxrate } } }, "working_days": working_days, "current_task": { $exists: false } },
           distanceMultiplier: distanceval,
           spherical: true
         }
@@ -3528,7 +3528,7 @@ module.exports = function (io, res) {
                         providertemp.hourly_amount = '';
                         providertemp.min_amount = '';
                         if (req.body.category) {
-                          providertemp.hourly_amount = docdata[0].taskers[i].taskerskills.filter(function (ol) {
+                          providertemp.hourly_amount = docdata[0].taskers[i].skills.filter(function (ol) {
                             return ol.childid == req.body.category;
                           }).map(function (ma) {
                             return ma;
@@ -3537,7 +3537,7 @@ module.exports = function (io, res) {
                         }
 
                         providertemp.rating = docdata[0].taskers[i].avg_review || 0;
-                        providertemp.company = docdata[0].taskers[i].taskerskills[0].name || "default company";
+                        providertemp.company = docdata[0].taskers[i].skills[0].name || "default company";
                         providertemp.availability = docdata[0].taskers[i].mode == "Available" ? 'Yes' : 'No';
                         providerList.push(providertemp);
                       }
@@ -3751,7 +3751,7 @@ module.exports = function (io, res) {
 
     if (data.category) {
       if (objectID.isValid(data.category)) {
-        condition.taskerskills = { $elemMatch: { childid: new mongoose.Types.ObjectId(data.category) } };
+        condition.skills = { $elemMatch: { childid: new mongoose.Types.ObjectId(data.category) } };
       } else {
         responseflag = false;
       }
@@ -3850,9 +3850,9 @@ module.exports = function (io, res) {
                         }
                         providertemp.name = docdata[i].name.first_name + ' ' + '(' + docdata[i].username + ')';
                         providertemp.taskerid = docdata[i]._id;
-                        providertemp.min_amount = docdata[i].taskerskills[0].hour_rate || "0";
+                        providertemp.min_amount = docdata[i].skills[0].hour_rate || "0";
                         providertemp.rating = docdata[i].avg_review || 0;
-                        providertemp.company = docdata[i].taskerskills[0].name || "default company";
+                        providertemp.company = docdata[i].skills[0].name || "default company";
                         providertemp.availability = docdata[i].mode == "Available" ? 'Yes' : 'No';
                         providerList.push(providertemp);
                       }
@@ -3954,9 +3954,9 @@ module.exports = function (io, res) {
                 });
               } else {
                 var catid = taskdata.category._id.toString();
-                for (var key = 0; key < taskerData.taskerskills.length; key++) {
-                  if (taskerData.taskerskills[key].childid == catid) {
-                    var rate = taskerData.taskerskills[key].hour_rate;
+                for (var key = 0; key < taskerData.skills.length; key++) {
+                  if (taskerData.skills[key].childid == catid) {
+                    var rate = taskerData.skills[key].hour_rate;
                   }
                 }
 
@@ -4233,9 +4233,9 @@ module.exports = function (io, res) {
                 });
               } else {
                 var catid = taskdata.category._id.toString();
-                for (var key = 0; key < taskerData.taskerskills.length; key++) {
-                  if (taskerData.taskerskills[key].childid == catid) {
-                    var rate = taskerData.taskerskills[key].hour_rate;
+                for (var key = 0; key < taskerData.skills.length; key++) {
+                  if (taskerData.skills[key].childid == catid) {
+                    var rate = taskerData.skills[key].hour_rate;
                   }
                 }
                 db.GetOneDocument('users', { _id: req.body.user_id }, {}, {}, function (useraddresserr, useraddreessdata) {
@@ -5848,8 +5848,8 @@ module.exports = function (io, res) {
           } else
             if (userRespo.length > 0) {
               var extension = {};
-              // extension.populate = { path: 'taskerskills.childid', select: 'name -_id' };
-              extension.populate = { path: 'taskerskills.childid', select: 'name -_id image' };
+              // extension.populate = { path: 'skills.childid', select: 'name -_id' };
+              extension.populate = { path: 'skills.childid', select: 'name -_id image' };
               db.GetDocument('tasker', { _id: req.body.provider_id, role: 'tasker' }, {}, extension, function (proErr, proRespo) {
                 if (proErr) {
                   res.send({
@@ -5892,9 +5892,9 @@ module.exports = function (io, res) {
                       avatarimage = settings.settings.site_url + CONFIG.USER_PROFILE_IMAGE_DEFAULT;
                     }
                     var categoriesdetail = [];
-                    for (var i = 0; i < proRespo[0].taskerskills.length; i++) {
-                      if (proRespo[0].taskerskills[i].childid != null) {
-                        categoriesdetail.push(proRespo[0].taskerskills[i].childid);
+                    for (var i = 0; i < proRespo[0].skills.length; i++) {
+                      if (proRespo[0].skills[i].childid != null) {
+                        categoriesdetail.push(proRespo[0].skills[i].childid);
                       }
                     }
 
@@ -6320,9 +6320,9 @@ module.exports = function (io, res) {
       };
       var provider_hourlyrate = "";
 
-      for (var i = 0; i < tasker.taskerskills.length; i++) {
-        if (typeof tasker.taskerskills[i].childid == typeof task.category) {
-          provider_hourlyrate = tasker.taskerskills[i].hour_rate;
+      for (var i = 0; i < tasker.skills.length; i++) {
+        if (typeof tasker.skills[i].childid == typeof task.category) {
+          provider_hourlyrate = tasker.skills[i].hour_rate;
         }
         else {
           provider_hourlyrate = '';
@@ -8291,9 +8291,9 @@ module.exports = function (io, res) {
                         },
 
                         { $unwind: { path: "$taskerskills", preserveNullAndEmptyArrays: true } },
-                        { $lookup: { from: 'categories', localField: "taskerskills.childid", foreignField: "_id", as: "taskerskills.childid" } },
+                        { $lookup: { from: 'categories', localField: "skills.childid", foreignField: "_id", as: "skills.childid" } },
                         { $unwind: { path: "$taskerskills", preserveNullAndEmptyArrays: true } },
-                        { $group: { "_id": "$_id", 'taskercategory': { '$push': '$taskerskills' }, "taskerskills": { "$first": "$taskerskills" }, "createdAt": { "$first": "$createdAt" } } },
+                        { $group: { "_id": "$_id", 'taskercategory': { '$push': '$taskerskills' }, "skills": { "$first": "$taskerskills" }, "createdAt": { "$first": "$createdAt" } } },
                         { $lookup: { from: 'reviews', localField: "_id", foreignField: "tasker", as: "rate" } },
                         { $unwind: { path: "$rate", preserveNullAndEmptyArrays: true } },
                         { $lookup: { from: 'task', localField: "_id", foreignField: "tasker", as: "task" } },
@@ -8325,7 +8325,7 @@ module.exports = function (io, res) {
                             gender: 1,
                             phone: 1,
                             stripe_connect: 1,
-                            taskerskills: 1,
+                            skills: 1,
                             profile_details: 1,
                             createdAt: 1
                           }

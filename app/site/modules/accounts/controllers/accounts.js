@@ -1018,8 +1018,8 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
       transcation.transcationid = tasktranscationhis.transactions[0];
     }
     transcation.categoryname = tasktranscationhis.category.name;
-    var taskerskills = tasktranscationhis.tasker.taskerskills;
-    angular.forEach(taskerskills, function (key, value) {
+    var skills = tasktranscationhis.tasker.skills;
+    angular.forEach(skills, function (key, value) {
       if (key.childid == tasktranscationhis.category._id) {
         transcation.perHour = key.hour_rate;
       }
@@ -1069,8 +1069,8 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
       transcation.transcationid = tasktranscationhis.transactions[0];
     }
     transcation.categoryname = tasktranscationhis.category.name;
-    var taskerskills = tasktranscationhis.tasker.taskerskills;
-    angular.forEach(taskerskills, function (key, value) {
+    var skills = tasktranscationhis.tasker.skills;
+    angular.forEach(skills, function (key, value) {
       if (key.childid == tasktranscationhis.category._id) {
         transcation.perHour = key.hour_rate;
       }
@@ -1955,7 +1955,7 @@ angular.module('handyforall.accounts').controller('TaskPayModalInstanceCtrl', fu
   tpm.servicetax = Taskinfobyid.settingsdata.settings.service_tax;
   tpm.minimumamount = Taskinfobyid.settingsdata.settings.minimum_amount;
   tpm.taskdescription = Taskinfobyid.taskdata[0].task_description;
-  tpm.hourlyrate = $filter('filter')(Taskinfobyid.taskdata[0].tasker.taskerskills, { "childid": Taskinfobyid.taskdata[0].category._id });
+  tpm.hourlyrate = $filter('filter')(Taskinfobyid.taskdata[0].tasker.skills, { "childid": Taskinfobyid.taskdata[0].category._id });
 
   tpm.totalhour1 = function () {
 
@@ -2035,9 +2035,9 @@ angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl',
     acm.mode = 'ADD';
   }
 
-  for (var i = 0; i < acm.user.taskerskills.length; i++) {
-    if (acm.user.taskerskills[i].childid == category) {
-      acm.selectedCategoryData = acm.user.taskerskills[i];
+  for (var i = 0; i < acm.user.skills.length; i++) {
+    if (acm.user.skills[i].childid == category) {
+      acm.selectedCategoryData = acm.user.skills[i];
     }
   }
 
@@ -2053,7 +2053,7 @@ angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl',
       acm.MinimumAmount = response.commision;
     });
 
-    acm.user.taskerskills.forEach(function (obj) {
+    acm.user.skills.forEach(function (obj) {
       if (obj.childid === category) {
         $translate('ALREADY THE CATEGORY IS EXISTS').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
         $uibModalInstance.dismiss('cancel');

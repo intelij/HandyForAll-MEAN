@@ -44,8 +44,8 @@ module.exports = function (io) {
 	router.taskprofileinfo = function taskprofileinfo(req, res) {
 		var slug = req.body.slug;
 		var options = {};
-		options.populate = 'profile_details.question taskerskills.experience';
-		//options.populate = 'taskerskills.experience';
+		options.populate = 'profile_details.question skills.experience';
+		//options.populate = 'skills.experience';
 		db.GetOneDocument('tasker', { _id: req.body.slug, status: { $ne: 0 } }, {}, options, function (err, taskdata) {
 			if (err || !taskdata) {
 				res.send(err);
@@ -63,9 +63,9 @@ module.exports = function (io) {
 			"$match": { status: { $ne: 0 }, "_id": new mongoose.Types.ObjectId(req.body.slug) }
 		},
 		{ $unwind: { path: "$taskerskills", preserveNullAndEmptyArrays: true } },
-		{ $lookup: { from: 'categories', localField: "taskerskills.childid", foreignField: "_id", as: "taskerskills.childid" } },
+		{ $lookup: { from: 'categories', localField: "skills.childid", foreignField: "_id", as: "skills.childid" } },
 		{ $unwind: { path: "$taskerskills", preserveNullAndEmptyArrays: true } },
-		{ $group: { "_id": "$_id", 'taskercategory': { '$push': '$taskerskills' }, "taskerskills": { "$first": "$taskerskills" }, "createdAt": { "$first": "$createdAt" } } },
+		{ $group: { "_id": "$_id", 'taskercategory': { '$push': '$taskerskills' }, "skills": { "$first": "$taskerskills" }, "createdAt": { "$first": "$createdAt" } } },
 		{ $lookup: { from: 'reviews', localField: "_id", foreignField: "tasker", as: "rate" } },
 		{ $unwind: { path: "$rate", preserveNullAndEmptyArrays: true } },
 		{ $match: { $or: [{ "rate.type": "user" }, { rate: { $exists: false } }] } },
@@ -108,7 +108,7 @@ module.exports = function (io) {
 				gender: 1,
 				phone: 1,
 				vehicle: 1,
-				taskerskills: 1,
+				skills: 1,
 				profile_details: 1,
 				createdAt: 1
 			}
@@ -191,7 +191,7 @@ module.exports = function (io) {
 
 				var projection = {};
 				projection.userDetails = "$$CURRENT";
-				projection.taskerskillsFilter = { $let: { vars: { taskerskills: { $filter: { input: "$taskerskills", as: "taskerskills", cond: { $eq: ["$$taskerskills.categoryid", new mongoose.Types.ObjectId(categoryid)] } } } }, in: { $size: "$$taskerskills" } } };
+				projection.taskerskillsFilter = { $let: { vars: { skills: { $filter: { input: "$taskerskills", as: "skills", cond: { $eq: ["$$taskerskills.categoryid", new mongoose.Types.ObjectId(categoryid)] } } } }, in: { $size: "$$taskerskills" } } };
 
 				projection.workingdaysFilter = {
 					$let: {
@@ -307,7 +307,7 @@ module.exports = function (io) {
 								includeLocs: "location",
 								query: {
 									"status": 1, "availability": 1,
-									"taskerskills": { $elemMatch: { childid: new mongoose.Types.ObjectId(taskData[0].category._id), status: 1 } },
+									"skills": { $elemMatch: { childid: new mongoose.Types.ObjectId(taskData[0].category._id), status: 1 } },
 									"working_days": working_days
 									// "current_task": { $exists: false }
 									// "_id": { '$ne': new mongoose.Types.ObjectId(taskRespo[0].tasker) }
@@ -345,7 +345,7 @@ module.exports = function (io) {
 									"name": 1,
 									"email": 1,
 									"phone": 1,
-									"taskerskills": 1,
+									"skills": 1,
 									"avatar": 1,
 									"tasker_area": 1,
 									"tasks": 1,
@@ -363,7 +363,7 @@ module.exports = function (io) {
 									"name": { $first: "$name" },
 									"email": { $first: "$email" },
 									"phone": { $first: "$phone" },
-									"taskerskills": { $first: "$taskerskills" },
+									"skills": { $first: "$taskerskills" },
 									"avatar": { $first: "$avatar" },
 									"tasker_area": { $first: "$tasker_area" },
 									"booked": { $sum: "$booked" },
@@ -433,9 +433,9 @@ module.exports = function (io) {
 							var amountData = taskerdata[0].taskers;
 							var newArray = [];
 							for (var j = 0; j < amountData.length; j++) {
-								for (var xx = 0; xx < amountData[j].taskerskills.length; xx++) {
-									if (categoryid == amountData[j].taskerskills[xx].childid) {
-										if ((startAmount <= amountData[j].taskerskills[xx].hour_rate) && (endAmount >= amountData[j].taskerskills[xx].hour_rate)) {
+								for (var xx = 0; xx < amountData[j].skills.length; xx++) {
+									if (categoryid == amountData[j].skills[xx].childid) {
+										if ((startAmount <= amountData[j].skills[xx].hour_rate) && (endAmount >= amountData[j].skills[xx].hour_rate)) {
 											newArray.push(amountData[j]);
 											if (newArray[j]) {
 												if (newArray[j].avatar == '' || !newArray[j].avatar) {
@@ -655,7 +655,7 @@ module.exports = function (io) {
 								includeLocs: "location",
 								query: {
 									"status": 1, "availability": 1,
-									"taskerskills": { $elemMatch: { childid: new mongoose.Types.ObjectId(taskData[0].category._id), status: 1 } },
+									"skills": { $elemMatch: { childid: new mongoose.Types.ObjectId(taskData[0].category._id), status: 1 } },
 									"working_days": working_days
 									// "current_task": { $exists: false }
 									// "_id": { '$ne': new mongoose.Types.ObjectId(taskRespo[0].tasker) }
@@ -692,7 +692,7 @@ module.exports = function (io) {
 									"username": 1,
 									"email": 1,
 									"phone": 1,
-									"taskerskills": 1,
+									"skills": 1,
 									"address": 1,
 									"location": 1,
 									"availability_address": 1,
@@ -712,7 +712,7 @@ module.exports = function (io) {
 									"username": { $first: "$username" },
 									"email": { $first: "$email" },
 									"phone": { $first: "$phone" },
-									"taskerskills": { $first: "$taskerskills" },
+									"skills": { $first: "$taskerskills" },
 									"address": { $first: "$address" },
 									"location": { $first: "$location" },
 									"availability_address": { $first: "$availability_address" },
@@ -783,9 +783,9 @@ module.exports = function (io) {
 							var amountData = taskerdata[0].taskers;
 							var newArray = [];
 							for (var j = 0; j < amountData.length; j++) {
-								for (var xx = 0; xx < amountData[j].taskerskills.length; xx++) {
-									if (categoryid == amountData[j].taskerskills[xx].childid) {
-										if ((startAmount <= amountData[j].taskerskills[xx].hour_rate) && (endAmount >= amountData[j].taskerskills[xx].hour_rate)) {
+								for (var xx = 0; xx < amountData[j].skills.length; xx++) {
+									if (categoryid == amountData[j].skills[xx].childid) {
+										if ((startAmount <= amountData[j].skills[xx].hour_rate) && (endAmount >= amountData[j].skills[xx].hour_rate)) {
 											newArray.push(amountData[j]);
 											if (newArray[j]) {
 												if (newArray[j].avatar == '' || !newArray[j].avatar) {
@@ -961,7 +961,7 @@ module.exports = function (io) {
 							includeLocs: "location",
 							query: {
 								"status": 1, "availability": 1,
-								"taskerskills": { $elemMatch: { childid: new mongoose.Types.ObjectId(categoryid), status: 1 } },
+								"skills": { $elemMatch: { childid: new mongoose.Types.ObjectId(categoryid), status: 1 } },
 							},
 							distanceMultiplier: distanceval,
 							spherical: true
@@ -1236,7 +1236,7 @@ module.exports = function (io) {
 									includeLocs: "location",
 									query: {
 										"status": 1, "availability": 1,
-										"taskerskills": { $elemMatch: { childid: new mongoose.Types.ObjectId(task.category._id), status: 1 } },
+										"skills": { $elemMatch: { childid: new mongoose.Types.ObjectId(task.category._id), status: 1 } },
 									},
 									distanceMultiplier: distanceval,
 									spherical: true
@@ -1252,7 +1252,7 @@ module.exports = function (io) {
 								}
 							},
 							{ $unwind: '$taskerskills' },
-							{ $match: { 'taskerskills.childid': new mongoose.Types.ObjectId(task.category._id) } },
+							{ $match: { 'skills.childid': new mongoose.Types.ObjectId(task.category._id) } },
 							{
 								"$group":
 									{
@@ -1686,7 +1686,7 @@ module.exports = function (io) {
 									includeLocs: "location",
 									query: {
 										"status": 1, "availability": 1,
-										"taskerskills": { $elemMatch: { childid: new mongoose.Types.ObjectId(taskDataaa.category), status: 1 } }
+										"skills": { $elemMatch: { childid: new mongoose.Types.ObjectId(taskDataaa.category), status: 1 } }
 									},
 									distanceMultiplier: distanceval,
 									spherical: true

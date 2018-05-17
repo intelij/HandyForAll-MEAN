@@ -353,9 +353,9 @@ module.exports = function (io) {
                 invoice.worked_hours_human = momentHuman;
                 invoice.amount = {};
                 invoice.amount.minimum_cost = parseFloat(task.category.commision);
-                for (var i = 0; i < task.tasker.taskerskills.length; i++) {
-                    if (task.tasker.taskerskills[i].childid == task.booking_information.work_id) {
-                        provider_commision = (task.tasker.taskerskills[i].hour_rate).toFixed(2);
+                for (var i = 0; i < task.tasker.skills.length; i++) {
+                    if (task.tasker.skills[i].childid == task.booking_information.work_id) {
+                        provider_commision = (task.tasker.skills[i].hour_rate).toFixed(2);
                     }
                 }
                 db.GetOneDocument('settings', { 'alias': 'general' }, {}, {}, function (err, settingdata) {

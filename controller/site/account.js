@@ -1886,8 +1886,8 @@ module.exports = function (io) {
     //     res.send(err);
     //   } else {
     //     console.log('docdata', docdata, taskerId);
-    //     if (docdata.taskerskills) {
-    //       res.send(docdata.taskerskills);
+    //     if (docdata.skills) {
+    //       res.send(docdata.skills);
     //     } else {
     //       res.send(docdata);
     //     }
@@ -1915,14 +1915,14 @@ module.exports = function (io) {
       });
     };
 
-    options.populate = 'taskerskills.childid';
-    db.GetOneDocument('tasker', { _id: taskerId }, { taskerskills: 1 }, options, function (err, docdata) {
+    options.populate = 'skills.childid';
+    db.GetOneDocument('tasker', { _id: taskerId }, { skills: 1 }, options, function (err, docdata) {
       if (err || !docdata) {
         res.send(err);
       } else {
-        if (docdata.taskerskills) {
-          // getTasks(docdata.taskerskills);
-          res.send(docdata.taskerskills);
+        if (docdata.skills) {
+          // getTasks(docdata.skills);
+          res.send(docdata.skills);
         } else {
           // getTasks(docdata);
           res.send(docdata);
@@ -3165,38 +3165,38 @@ module.exports = function (io) {
 
   controller.updateCategory = function updateCategory(req, res) {
     var data = {};
-    data.taskerskills = {};
+    data.skills = {};
     var userid = req.body.userid;
     var skills = [];
     if (req.file) {
-      data.taskerskills.file = req.file.destination + req.file.filename;
+      data.skills.file = req.file.destination + req.file.filename;
     }
-    data.taskerskills.experience = req.body.experience;
-    data.taskerskills.travel_arrangement = req.body.travel_arrangement;
-    data.taskerskills.hour_rate = !req.body.hour_rate ? 0 : req.body.hour_rate;
-    data.taskerskills.km_rate = req.body.km_rate;
-    data.taskerskills.unit_price = !req.body.unit_price ? 0 : req.body.unit_price;
-    data.taskerskills.inventory = !req.body.inventory ? 0 : req.body.inventory;
+    data.skills.experience = req.body.experience;
+    data.skills.travel_arrangement = req.body.travel_arrangement;
+    data.skills.hour_rate = !req.body.hour_rate ? 0 : req.body.hour_rate;
+    data.skills.km_rate = req.body.km_rate;
+    data.skills.unit_price = !req.body.unit_price ? 0 : req.body.unit_price;
+    data.skills.inventory = !req.body.inventory ? 0 : req.body.inventory;
     if (req.body.brand)
-      data.taskerskills.brand = req.body.brand;
-    data.taskerskills.quick_pitch = req.body.quick_pitch;
-    data.taskerskills.categoryid = req.body.categoryid;
-    data.taskerskills.childid = req.body.childid;
-    data.taskerskills.skills = req.body.skills;
-    data.taskerskills.terms = req.body.terms;
-    data.taskerskills.status = 1;
+      data.skills.brand = req.body.brand;
+    data.skills.quick_pitch = req.body.quick_pitch;
+    data.skills.categoryid = req.body.categoryid;
+    data.skills.childid = req.body.childid;
+    data.skills.skills = req.body.skills;
+    data.skills.terms = req.body.terms;
+    data.skills.status = 1;
 
     if (req.files && req.files.product_image && req.files.product_image.length > 0) {
-      data.taskerskills.product_image = attachment.get_attachment(req.files.product_image[0].destination, req.files.product_image[0].filename);
+      data.skills.product_image = attachment.get_attachment(req.files.product_image[0].destination, req.files.product_image[0].filename);
     }
 
-    console.log("tasker skills", data.taskerskills);
+    console.log("tasker skills", data.skills);
 
-    db.GetOneDocument('tasker', { _id: userid, 'taskerskills.childid': data.taskerskills.childid }, { taskerskills: 1 }, {}, function (err, docdata) {
+    db.GetOneDocument('tasker', { _id: userid, 'skills.childid': data.skills.childid }, { skills: 1 }, {}, function (err, docdata) {
       if (err) {
         res.send(err);
       } else if (docdata) {
-        db.UpdateDocument('tasker', { _id: userid, 'taskerskills.childid': data.taskerskills.childid }, { $set: { "taskerskills.$": data.taskerskills } }, { multi: true }, function (err, result) {
+        db.UpdateDocument('tasker', { _id: userid, 'skills.childid': data.skills.childid }, { $set: { "skills.$": data.skills } }, { multi: true }, function (err, result) {
           if (err) {
             res.send(err);
           } else {
@@ -3204,7 +3204,7 @@ module.exports = function (io) {
           }
         });
       } else {
-        db.UpdateDocument('tasker', { _id: userid }, { $addToSet: { "taskerskills": data.taskerskills } }, { "multi": true }, function (err, result) {
+        db.UpdateDocument('tasker', { _id: userid }, { $addToSet: { "skills": data.skills } }, { "multi": true }, function (err, result) {
           if (err) {
             res.send(err);
           } else {
@@ -3213,7 +3213,7 @@ module.exports = function (io) {
                 res.send(err);
               }
               else {
-                db.GetDocument('category', { '_id': data.taskerskills.childid }, {}, {}, function (err, categorydocdata) {
+                db.GetDocument('category', { '_id': data.skills.childid }, {}, {}, function (err, categorydocdata) {
                   if (err) {
                     res.send(err);
                   }
@@ -3239,7 +3239,7 @@ module.exports = function (io) {
 
   controller.deleteCategory = function deleteCategory(req, res) {
     console.log(req.body);
-    db.UpdateDocument('tasker', { _id: req.body.userid }, { $pull: { "taskerskills": { childid: req.body.categoryid } } }, function (err, result) {
+    db.UpdateDocument('tasker', { _id: req.body.userid }, { $pull: { "skills": { childid: req.body.categoryid } } }, function (err, result) {
       if (err) {
         res.send(err);
       } else {
@@ -3335,9 +3335,9 @@ module.exports = function (io) {
           "$match": { status: { $ne: 0 }, "_id": new mongoose.Types.ObjectId(data.tasker) }
         },
           { $unwind: { path: "$taskerskills", preserveNullAndEmptyArrays: true } },
-          { $lookup: { from: 'categories', localField: "taskerskills.childid", foreignField: "_id", as: "taskerskills.childid" } },
+          { $lookup: { from: 'categories', localField: "skills.childid", foreignField: "_id", as: "skills.childid" } },
           { $unwind: { path: "$taskerskills", preserveNullAndEmptyArrays: true } },
-          { $group: { "_id": "$_id", 'taskercategory': { '$push': '$taskerskills' }, "taskerskills": { "$first": "$taskerskills" }, "createdAt": { "$first": "$createdAt" } } },
+          { $group: { "_id": "$_id", 'taskercategory': { '$push': '$taskerskills' }, "skills": { "$first": "$taskerskills" }, "createdAt": { "$first": "$createdAt" } } },
           { $lookup: { from: 'reviews', localField: "_id", foreignField: "tasker", as: "rate" } },
           { $unwind: { path: "$rate", preserveNullAndEmptyArrays: true } },
           { $lookup: { from: 'task', localField: "_id", foreignField: "tasker", as: "task" } },
@@ -3369,7 +3369,7 @@ module.exports = function (io) {
               gender: 1,
               phone: 1,
               stripe_connect: 1,
-              taskerskills: 1,
+              skills: 1,
               profile_details: 1,
               createdAt: 1
             }

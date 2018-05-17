@@ -81,7 +81,7 @@ TASKER_SCHEMA.TASKER = {
     question: { type: Schema.ObjectId, ref: 'question' },
     answer: String
   }],
-  taskerskills: [{
+  skills: [{
     _id: false,
     categoryid: { type: Schema.ObjectId, ref: 'categories' },
     childid: { type: Schema.ObjectId, ref: 'categories' },

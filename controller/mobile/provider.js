@@ -626,7 +626,7 @@ module.exports = function (io, i18n) {
                 res.send(data);
             } else {
                 var extension = {};
-                extension.populate = 'taskerskills.childid';
+                extension.populate = 'skills.childid';
                 db.GetOneDocument('tasker', { '_id': request.provider_id }, {}, extension, function (err, providers) {
 
                     if (err) {
@@ -645,7 +645,7 @@ module.exports = function (io, i18n) {
 						 else {
 
                         if (providers) {
-                            var category = providers.taskerskills.map(function (item) {
+                            var category = providers.skills.map(function (item) {
                                 if (item.childid) {
 
 								var catdet = {};
@@ -818,10 +818,10 @@ module.exports = function (io, i18n) {
 
                                 var fullCatList = [];
 
-                                for (var i = 0; i < providers.taskerskills.length; i++) {
+                                for (var i = 0; i < providers.skills.length; i++) {
                                     var cat = {};
-                                    cat._id = providers.taskerskills[i].childid._id;
-                                    cat.name = providers.taskerskills[i].childid.name;
+                                    cat._id = providers.skills[i].childid._id;
+                                    cat.name = providers.skills[i].childid.name;
                                     fullCatList.push(cat);
                                 }
                                 // data.response.category_details = fullCatList;
@@ -3532,9 +3532,9 @@ module.exports = function (io, i18n) {
 
                                     invoice.amount = {};
                                     invoice.amount.minimum_cost = parseFloat(task.category.commision);
-                                    for (var i = 0; i < provider.taskerskills.length; i++) {
-                                        if (provider.taskerskills[i].childid == task.booking_information.work_id) {
-                                            provider_commision = provider.taskerskills[i].hour_rate;
+                                    for (var i = 0; i < provider.skills.length; i++) {
+                                        if (provider.skills[i].childid == task.booking_information.work_id) {
+                                            provider_commision = provider.skills[i].hour_rate;
                                         }
                                     }
 
@@ -4013,7 +4013,7 @@ module.exports = function (io, i18n) {
                                 data.response = res.__("Jobs Not Available");
                                 res.send(data);
                             } else {
-                                // , 'taskerskills.categoryid': category_id
+                                // , 'skills.categoryid': category_id
                                 var category_id = bookings.category;
                                 db.GetOneDocument('tasker', { '_id': request.provider_id }, {}, {}, function (err, provider) {
                                     if (err || !provider) {
@@ -5594,18 +5594,18 @@ module.exports = function (io, i18n) {
         var data = {};
         data.lang = lang;
         data.Tasker = CONFIG.TASKER;
-        if (req.body.taskerskills) {
-            var taskerskillsJSON = JSON.parse(req.body.taskerskills);
+        if (req.body.skills) {
+            var taskerskillsJSON = JSON.parse(req.body.skills);
 
-            var taskerskills = [];
+            var skills = [];
             for (var prop in taskerskillsJSON) {
-                taskerskills.push(taskerskillsJSON[prop]);
+                skills.push(taskerskillsJSON[prop]);
             }
 
             if (!req.session.tasker) {
                 req.session.tasker = {};
             } else {
-                req.session.tasker.taskerskills = taskerskills;
+                req.session.tasker.skills = skills;
                 req.session.taskerStep6 = true;
             }
         }
@@ -6531,8 +6531,8 @@ module.exports = function (io, i18n) {
                 data.response = res.__('Invalid ' + CONFIG.TASKER);
                 res.send(data);
             } else {
-                if (req.body.taskerskills) {
-                    db.UpdateDocument('tasker', { '_id': request.provider_id }, { 'taskerskills': req.body.taskerskills }, {}, function (err, response) {
+                if (req.body.skills) {
+                    db.UpdateDocument('tasker', { '_id': request.provider_id }, { 'skills': req.body.skills }, {}, function (err, response) {
                         if (err || response.nModified == 0) {
                             res.send({
                                 "status": 0,
@@ -6738,18 +6738,18 @@ module.exports = function (io, i18n) {
         responseData.status = '0';
 
         var data = {};
-        data.taskerskills = {};
-        data.taskerskills.experience = req.body.experience;
-        data.taskerskills.hour_rate = req.body.hourrate;
-        data.taskerskills.quick_pitch = req.body.quickpitch;
-        data.taskerskills.categoryid = req.body.parentcategory;
-        data.taskerskills.childid = req.body.childid;
-        data.taskerskills.terms = req.body.terms;
-        data.taskerskills.status = 1;
+        data.skills = {};
+        data.skills.experience = req.body.experience;
+        data.skills.hour_rate = req.body.hourrate;
+        data.skills.quick_pitch = req.body.quickpitch;
+        data.skills.categoryid = req.body.parentcategory;
+        data.skills.childid = req.body.childid;
+        data.skills.terms = req.body.terms;
+        data.skills.status = 1;
 
         var options = {};
-        options.populate = 'taskerskills.childid';
-        db.GetOneDocument('tasker', { _id: userid, 'taskerskills.childid': data.taskerskills.childid }, { taskerskills: 1 }, {}, function (err, docdata) {
+        options.populate = 'skills.childid';
+        db.GetOneDocument('tasker', { _id: userid, 'skills.childid': data.skills.childid }, { skills: 1 }, {}, function (err, docdata) {
             if (docdata) {
                 responseData.status = 0;
                 responseData.response = res.__('Same Category cannot be added more then once');
@@ -6757,7 +6757,7 @@ module.exports = function (io, i18n) {
 
             }
             else {
-                db.UpdateDocument('tasker', { _id: userid }, { $push: { "taskerskills": data.taskerskills } }, function (err, result) {
+                db.UpdateDocument('tasker', { _id: userid }, { $push: { "skills": data.skills } }, function (err, result) {
                     if (err) {
                         responseData.response = res.__('Unable to add your category');
                         res.send(responseData);
@@ -6793,25 +6793,25 @@ module.exports = function (io, i18n) {
         responseData.status = '0';
 
         var data = {};
-        data.taskerskills = {};
-        data.taskerskills.experience = req.body.experience;
-        data.taskerskills.hour_rate = req.body.hourrate;
-        data.taskerskills.quick_pitch = req.body.quickpitch;
-        data.taskerskills.categoryid = req.body.parentcategory;
-        data.taskerskills.childid = req.body.childid;
-        data.taskerskills.terms = req.body.terms;
-        data.taskerskills.status = 1;
+        data.skills = {};
+        data.skills.experience = req.body.experience;
+        data.skills.hour_rate = req.body.hourrate;
+        data.skills.quick_pitch = req.body.quickpitch;
+        data.skills.categoryid = req.body.parentcategory;
+        data.skills.childid = req.body.childid;
+        data.skills.terms = req.body.terms;
+        data.skills.status = 1;
 
         var options = {};
-        options.populate = 'taskerskills.childid';
-        db.GetOneDocument('tasker', { _id: userid, 'taskerskills.childid': data.taskerskills.childid }, { taskerskills: 1 }, {}, function (err, docdata) {
+        options.populate = 'skills.childid';
+        db.GetOneDocument('tasker', { _id: userid, 'skills.childid': data.skills.childid }, { skills: 1 }, {}, function (err, docdata) {
             if (err) {
                 responseData.status = 0;
                 responseData.response = res.__('Unable to Update your category');
                 res.send(responseData);
             }
             else {
-                db.UpdateDocument('tasker', { _id: userid, 'taskerskills.childid': data.taskerskills.childid }, { $set: { "taskerskills.$": data.taskerskills } }, function (err, result) {
+                db.UpdateDocument('tasker', { _id: userid, 'skills.childid': data.skills.childid }, { $set: { "skills.$": data.skills } }, function (err, result) {
                     if (err) {
                         responseData.response = res.__('Unable to update your category');
                         res.send(responseData);
@@ -6840,7 +6840,7 @@ module.exports = function (io, i18n) {
         var data = {};
         data.status = '0';
 
-        db.UpdateDocument('tasker', { _id: req.body.tasker }, { $pull: { "taskerskills": { childid: req.body.category } } }, function (err, result) {
+        db.UpdateDocument('tasker', { _id: req.body.tasker }, { $pull: { "skills": { childid: req.body.category } } }, function (err, result) {
             if (err) {
                 data.response = res.__('Unable to delete category');
                 res.send(data);
@@ -6871,15 +6871,15 @@ module.exports = function (io, i18n) {
         data.status = '0';
 
         var options = {};
-        options.populate = 'taskerskills.childid taskerskills.categoryid taskerskills.experience';
-        db.GetOneDocument('tasker', { _id: req.body.tasker, 'taskerskills.childid': req.body.category }, {}, options, function (err, tasker) {
+        options.populate = 'skills.childid skills.categoryid skills.experience';
+        db.GetOneDocument('tasker', { _id: req.body.tasker, 'skills.childid': req.body.category }, {}, options, function (err, tasker) {
             if (err || !tasker) {
                 data.response = res.__('Invalid ' + CONFIG.TASKER);
                 res.send(data);
             } else {
 
-                if (tasker.taskerskills) {
-                    var category = tasker.taskerskills.filter(function (category) {
+                if (tasker.skills) {
+                    var category = tasker.skills.filter(function (category) {
                         return category.childid._id == req.body.category;
                     });
                     if (category) {

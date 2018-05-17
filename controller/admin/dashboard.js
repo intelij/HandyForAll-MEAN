@@ -76,7 +76,7 @@ module.exports = function () {
                 return item;
             });
 
-            tasker.taskerskills = tasker.taskerskills.map(function (item) {
+            tasker.skills = tasker.skills.map(function (item) {
                 if (item.categoryid) {
                     var newcategoryid = item.categoryid.$oid
                     var newchildid = item.childid.$oid
@@ -103,7 +103,7 @@ module.exports = function () {
                 birthdate: tasker.birthdate,
                 working_days: tasker.working_days,
                 avatar: tasker.avatar,
-                taskerskills: [], //tasker.taskerskills
+                skills: [], //tasker.skills
                 Map: [],
                 location: tasker.location,
                 name: tasker.name,

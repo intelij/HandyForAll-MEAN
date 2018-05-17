@@ -176,7 +176,7 @@ function taskFilterCtrl($scope, $timeout, $uibModal, $rootScope, $location, $sta
   };
 
   tfc.getTaskerSkill = (objTaskerDetails) => {
-    var objTaskerSkill = objTaskerDetails.taskerskills.find((item) => item.childid === tfc.taskbaseinfo.SubCategoryInfo._id);
+    var objTaskerSkill = objTaskerDetails.skills.find((item) => item.childid === tfc.taskbaseinfo.SubCategoryInfo._id);
 
     return objTaskerSkill || {};
   };
@@ -232,7 +232,7 @@ function taskFilterCtrl($scope, $timeout, $uibModal, $rootScope, $location, $sta
 
               // console.log("TFC.TaskerDetails/*/*/*/*/*/*",tfc.TaskerDetails);
               angular.forEach(tfc.TaskerDetails, function (value, key) {
-                angular.forEach(value.taskerskills, function (value1, key1) {
+                angular.forEach(value.skills, function (value1, key1) {
                   if (value1.childid === tfc.filter.categoryid) {
                     tfc.dummyarrayValue.push(value1);
                   }
@@ -276,7 +276,7 @@ function taskFilterCtrl($scope, $timeout, $uibModal, $rootScope, $location, $sta
             tfc.TaskerDetails = response.result;
             // console.log("tfc.TaskerDetails******",tfc.TaskerDetails);
             angular.forEach(tfc.TaskerDetails, function (value, key) {
-              angular.forEach(value.taskerskills, function (value1, key1) {
+              angular.forEach(value.skills, function (value1, key1) {
                 if (value1.childid === tfc.filter.categoryid) {
                   tfc.dummyarrayValue.push(value1);
                 }
@@ -517,7 +517,7 @@ function taskFilterCtrl($scope, $timeout, $uibModal, $rootScope, $location, $sta
       tfc.taskinfo.history.est_reach_date = '';
       tfc.taskinfo.status = 1;
 
-      angular.forEach(message.tasker.taskerskills, function (value, key) {
+      angular.forEach(message.tasker.skills, function (value, key) {
         if (`${value.childid}` === `${tfc.taskinfo.category._id}`) {
           tfc.hour_rate = value.hour_rate;
           tfc.km_rate = value.km_rate;

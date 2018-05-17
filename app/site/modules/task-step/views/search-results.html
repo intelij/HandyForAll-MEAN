@@ -362,9 +362,9 @@
                             </i>
                             <p class="ng-binding">
                               <b class="ng-binding" style="color:#3f4451;font-size:25px;">
-                                {{rc.DefaultCurrency[0].symbol}}{{((selectedCity.tasker.taskerskills | filter: {childid: TFC.filter.categoryid })[0].hour_rate)* rc.DefaultCurrency[0].value | number:2 }}/hr </b>,
+                                {{rc.DefaultCurrency[0].symbol}}{{((selectedCity.tasker.skills | filter: {childid: TFC.filter.categoryid })[0].hour_rate)* rc.DefaultCurrency[0].value | number:2 }}/hr </b>,
                               <b class="ng-binding" style="color:#3f4451;font-size:25px;">
-                                {{rc.DefaultCurrency[0].symbol}}{{((selectedCity.tasker.taskerskills | filter: {childid: TFC.filter.categoryid })[0].km_rate)* rc.DefaultCurrency[0].value | number:2 }}/km </b>
+                                {{rc.DefaultCurrency[0].symbol}}{{((selectedCity.tasker.skills | filter: {childid: TFC.filter.categoryid })[0].km_rate)* rc.DefaultCurrency[0].value | number:2 }}/km </b>
                             </p>
                           </li>
                           <li style="color: #333;">

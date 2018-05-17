@@ -452,7 +452,7 @@ function addNewTaskerCtrl($filter, $state, $scope, $modal, toastr, $timeout, Tas
 
   });
 
-  antsc.tasker.taskerskills = [];
+  antsc.tasker.skills = [];
   antsc.addnewcategories = [];
 
   antsc.categoryModal = function (category) {
@@ -487,10 +487,10 @@ function addNewTaskerCtrl($filter, $state, $scope, $modal, toastr, $timeout, Tas
     });
 
     modalInstance.result.then(function (selectedCategoryData) {
-      antsc.tasker.taskerskills.push(selectedCategoryData);
+      antsc.tasker.skills.push(selectedCategoryData);
       antsc.tasker.imageFile.push(selectedCategoryData.file);
       antsc.addnewcategories = antsc.categories.filter(function (data) {
-        return antsc.tasker.taskerskills.some(function (data2) {
+        return antsc.tasker.skills.some(function (data2) {
           return data2.childid == data._id;
         });
       }).map(function (mapdata) {
@@ -506,9 +506,9 @@ function addNewTaskerCtrl($filter, $state, $scope, $modal, toastr, $timeout, Tas
         toastr.success("Category removed from the selected list");
       }
     });
-    angular.forEach(antsc.tasker.taskerskills, function (value, key) {
+    angular.forEach(antsc.tasker.skills, function (value, key) {
       if (value.childid == data) {
-        antsc.tasker.taskerskills.splice(key, 1);
+        antsc.tasker.skills.splice(key, 1);
       }
     });
 
@@ -819,9 +819,9 @@ angular.module('handyforall.taskers').controller('NewCategoriesModalInstanceCtrl
     nacm.mode = 'Add';
   }
 
-  for (var i = 0; i < nacm.user.taskerskills; i++) {
-    if (nacm.user.taskerskills[i].categoryid == category) {
-      nacm.selectedCategoryData = nacm.user.taskerskills[i];
+  for (var i = 0; i < nacm.user.skills; i++) {
+    if (nacm.user.skills[i].categoryid == category) {
+      nacm.selectedCategoryData = nacm.user.skills[i];
     }
   }
 
@@ -839,7 +839,7 @@ angular.module('handyforall.taskers').controller('NewCategoriesModalInstanceCtrl
       nacm.MinimumAmount = response.commision;
     });
 
-    nacm.user.taskerskills.forEach(function (obj) {
+    nacm.user.skills.forEach(function (obj) {
       if (obj.childid === category) {
         toastr.error('Already the Category is Exists');
         nacm.selectedCategoryData = {};

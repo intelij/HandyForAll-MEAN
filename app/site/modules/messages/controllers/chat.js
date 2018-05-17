@@ -68,7 +68,7 @@ function chatCtrl(ChatServiceResolve, $state, toastr, $filter, AuthenticationSer
 	chat.taskinfo.amount  = parseFloat(chat.taskinfo.hourly_rate).toFixed(2);
 	}
 	else {
-    chat.taskinfo.amount = $filter('filter')(chat.taskerDetails.taskerskills, { "childid": chat.taskinfo.category._id })[0].hour_rate;
+    chat.taskinfo.amount = $filter('filter')(chat.taskerDetails.skills, { "childid": chat.taskinfo.category._id })[0].hour_rate;
 	}
 	
     chat.send = function saveChat(message) {
