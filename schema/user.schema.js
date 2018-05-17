@@ -168,6 +168,28 @@ USERS_SCHEMA.USER = {
     android_notification_mode: String, //socket/gcm
     ios_notification_mode: String, //socket/apns
     //notification_mode: String //socket/apns/gcm
-  }
+  },
+  skills: [{
+    _id: false,
+    categoryid: { type: Schema.ObjectId, ref: 'categories' },
+    childid: { type: Schema.ObjectId, ref: 'categories' },
+    name: String,
+    quick_pitch: String,
+    hour_rate: { type: Number, required: false, default: 0},
+    km_rate: Number,
+    experience: { type: Schema.ObjectId, ref: 'experience' },
+    travel_arrangement: { type: Schema.ObjectId, ref: 'travel_arrangement' },
+    status: { type: Number, default: 1 }
+  }],
+  working_days: [{
+    _id: false,
+    day: String,
+    value: { type: Number, default: 0 },
+    hour: {
+      morning: { type: Schema.Types.Mixed, default: false },
+      afternoon: { type: Schema.Types.Mixed, default: false },
+      evening: { type: Schema.Types.Mixed, default: false }
+    }
+  }]
 };
 module.exports = USERS_SCHEMA;

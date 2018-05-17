@@ -451,12 +451,12 @@ function accountService($http, $q, Upload) {
     return deferred.promise;
   }
 
-  function getCategoriesofuser(id) {
+  function getCategoriesofuser(id, role) {
     const deferred = $q.defer();
     $http({
       method: 'POST',
       url: '/site/account/getcategoriesofuser',
-      data: { _id: id }
+      data: { _id: id, type: !role ? "user" : role }
     }).success(function (data) {
       deferred.resolve(data);
     }).error(function (err) {

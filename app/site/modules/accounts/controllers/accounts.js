@@ -201,12 +201,12 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
     {
       "heading": "CATEGORY",
       "template": "app/site/modules/accounts/views/category.tab.html",
-      "type": "tasker"
+      "type": "common"
     },
     {
       "heading": "AVAILABILITY",
       "template": "app/site/modules/accounts/views/availability.tab.html",
-      "type": "tasker",
+      "type": "common",
       "function": new Availability()
 
     },
@@ -640,12 +640,12 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
     acc.categories = respo;
   });
 
-  accountService.getCategoriesofuser(acc.user._id).then(function (respo) {
+  accountService.getCategoriesofuser(acc.user._id, acc.user.role).then(function (respo) {
     acc.usercategories = respo;
     acc.updatecat = function () {
       console.log(">>>>updatecat");
 
-      accountService.getCategoriesofuser(acc.user._id).then(function (respo) {
+      accountService.getCategoriesofuser(acc.user._id, acc.user.role).then(function (respo) {
         acc.usercategories = respo;
       });
     };
@@ -701,11 +701,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
           return $scope.DefaultCurrency;
         },
         user: function (accountService) {
-          // if (category) {
-          return accountService.edit(acc.user._id);
-          /* } else {
-          return acc.user;
-        } */
+          return accountService.edit(acc.user._id, acc.user.role ? acc.user.role : "user");
         },
         categories: function () {
           return acc.categories;
@@ -718,6 +714,8 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 
     modalInstance.result.then(function (selectedCategoryData, isValid) {
       selectedCategoryData.hour_rate = selectedCategoryData.hour_rate / $scope.DefaultCurrency[0].value;
+      selectedCategoryData.type = acc.user.role;
+
       accountService.updateCategory(selectedCategoryData).then(function (response) {
         $translate('UPDATED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
         acc.updatecat();
@@ -751,6 +749,8 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
     });
 
     modalInstance.result.then(function (deletecategorydata) {
+      deletecategorydata.type = acc.user.role;
+
       accountService.deleteCategory(deletecategorydata).then(function (response) {
         $translate('CATEGORY DELETED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
         acc.updatecat();
