@@ -96,7 +96,11 @@ TASKER_SCHEMA.TASKER = {
     brand: { type: Schema.ObjectId, ref: 'brand', required: false },
     inventory: { type: Number, default: 0, required: false },
     product_image: { type: String, required: false },
-    status: { type: Number, default: 1 }
+    status: { type: Number, default: 1 },
+    demand_name: {type: String, required: false},
+    demand_description: {type: String, required: false},
+    demand_specification: {type: String, required: false},
+    demand_image: {type: String, required: false},
   }],
   working_days: [{
     _id: false,

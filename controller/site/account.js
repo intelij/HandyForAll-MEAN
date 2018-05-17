@@ -1921,11 +1921,11 @@ module.exports = function (io) {
         res.send(err);
       } else {
         if (docdata.taskerskills) {
-          getTasks(docdata.taskerskills);
-          // res.send(docdata.taskerskills);
+          // getTasks(docdata.taskerskills);
+          res.send(docdata.taskerskills);
         } else {
-          getTasks(docdata);
-          // res.send(docdata);
+          // getTasks(docdata);
+          res.send(docdata);
         }
       }
     });
