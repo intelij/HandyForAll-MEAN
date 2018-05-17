@@ -80,8 +80,9 @@ module.exports = function (io) {
         "avatar": 1,
         "type": 1,
         "about": 1,
-        "gender": 1
-
+        "availability_address": 1,
+        "radius": 1,
+        "radiusby": 1
       }
     }], function (err, docdata) {
       if (err || !docdata[0]) {

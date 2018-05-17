@@ -20,7 +20,6 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
     MainService.getDefaultCurrency(),
     accountService.getsettings()
   ]).then(function(responses) {
-    console.log('responses', responses);
     acc.DefaultCurrency = responses[0];
     acc.getsettings = responses[1];
 
@@ -40,27 +39,42 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
       acc.user.gender = acc.user.gender.toLowerCase().replace(/\s+/g, '');
     }
 
-    if (acc.user.role == 'tasker') {
-      acc.availabilityvalue = acc.user.availability == 1;
+    acc.availabilityvalue = acc.user.availability == 1;
 
-      if (acc.user.location) {
-        var latlng = new google.maps.LatLng(acc.user.location.lat, acc.user.location.lng);
-        var geocoder = geocoder = new google.maps.Geocoder();
-        geocoder.geocode({ 'latLng': latlng }, function (results, status) {
-          if (status == google.maps.GeocoderStatus.OK) {
-            if (results[1]) {
-              if (acc.user.availability_address) {
-                acc.taskerareaaddress = acc.user.availability_address;
-                acc.tempTaskAddress = acc.user.availability_address;
-              } else {
-                acc.taskerareaaddress = results[1].formatted_address;
-                acc.tempTaskAddress = results[1].formatted_address;
-              }
-              acc.dummyAddress = 1;
-            }
-          }
+    if (acc.user.role == "user" && (!acc.user.location || !acc.user.location.lat)) {
+      console.log('initializing user location...');
+      var objUserAddress = acc.user.addressList.find(function(item) {
+        return item.status == 3;
+      });
+
+      if (!objUserAddress)
+        objUserAddress = acc.user.addressList.find(function(item) {
+          return item.status == 1;
         });
+
+      if (objUserAddress && objUserAddress.location) {
+        acc.user.location = objUserAddress.location;
+        acc.user.availability_address = objUserAddress.land1;
       }
+    }
+
+    if (acc.user.location) {
+      var latlng = new google.maps.LatLng(acc.user.location.lat, acc.user.location.lng);
+      var geocoder = geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          if (results[1]) {
+            if (acc.user.availability_address) {
+              acc.taskerareaaddress = acc.user.availability_address;
+              acc.tempTaskAddress = acc.user.availability_address;
+            } else {
+              acc.taskerareaaddress = results[1].formatted_address;
+              acc.tempTaskAddress = results[1].formatted_address;
+            }
+            acc.dummyAddress = 1;
+          }
+        }
+      });
     }
   }
 
@@ -84,6 +98,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 
   $scope.maps = [];
   $scope.$on('mapInitialized', function (evt, evtMap) {
+    console.log('map initialized...');
     $scope.maps.push(evtMap);
   });
 
@@ -91,7 +106,9 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
     this.init = function () {
       $timeout(function () {
         google.maps.event.trigger($scope.maps[0], 'resize');
-        $scope.maps[0].setCenter(new google.maps.LatLng(acc.user.location.lat, acc.user.location.lng));
+
+        if (acc.user.location && acc.user.location.lat && acc.user.location.lng)
+          $scope.maps[0].setCenter(new google.maps.LatLng(acc.user.location.lat, acc.user.location.lng));
       }, 100);
     }
   }
@@ -1594,114 +1611,114 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
       });
   };
 
-//Availability Tab
-  if (acc.user.role == 'tasker') {
-    acc.availability = {};
-    acc.availability.days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  // ---------- Availability Tab Start ------------------
+  acc.availability = {};
+  acc.availability.days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 
-    /*acc.workingDays = [{ day: "Sunday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true }, { day: "Monday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true }, { day: "Tuesday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true }, { day: "Wednesday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true }, { day: "Thursday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true }, { day: "Friday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true }, { day: "Saturday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true }];*/
+  /*acc.workingDays = [{ day: "Sunday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true }, { day: "Monday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true }, { day: "Tuesday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true }, { day: "Wednesday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true }, { day: "Thursday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true }, { day: "Friday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true }, { day: "Saturday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true }];*/
 
 
-    var workingDays = [{ day: "Sunday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true },
-      { day: "Monday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true },
-      { day: "Tuesday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true },
-      { day: "Wednesday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true },
-      { day: "Thursday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true },
-      { day: "Friday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true },
-      { day: "Saturday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true }];
+  var workingDays = [{ day: "Sunday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true },
+    { day: "Monday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true },
+    { day: "Tuesday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true },
+    { day: "Wednesday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true },
+    { day: "Thursday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true },
+    { day: "Friday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true },
+    { day: "Saturday", hour: { "morning": false, "afternoon": false, "evening": false }, not_working: true }];
 
-    var workingTimes = {};
-    if ($scope.date) {
-      if ($scope.date.timezone) {
-        workingTimes.morning = {
-          from: moment.tz(new Date(99, 5, 24, 8, 0, 0, 0), $scope.date.timezone).format($scope.date.time_format),
-          to: moment.tz(new Date(99, 5, 24, 12, 0, 0, 0), $scope.date.timezone).format($scope.date.time_format)
-        };
-        workingTimes.afternoon = {
-          from: moment.tz(new Date(99, 5, 24, 12, 0, 0, 0), $scope.date.timezone).format($scope.date.time_format),
-          to: moment.tz(new Date(99, 5, 24, 16, 0, 0, 0), $scope.date.timezone).format($scope.date.time_format)
-        };
-        workingTimes.evening = {
-          from: moment.tz(new Date(99, 5, 24, 16, 0, 0, 0), $scope.date.timezone).format($scope.date.time_format),
-          to: moment.tz(new Date(99, 5, 24, 20, 0, 0, 0), $scope.date.timezone).format($scope.date.time_format)
-        };
-      }
-    }
-
-    acc.workingDays = workingDays;
-    var DaysData = [{ Morning: "MORNING", afternoon: "AFTERNOON", evening: "EVENING", Save: "SAVE" }];
-
-    angular.forEach(acc.workingDays, function (workingDays, key) {
-      angular.forEach(acc.user.working_days, function (UserWorkingdays) {
-        if (UserWorkingdays.day == workingDays.day) {
-          if (UserWorkingdays.hour.morning == true || UserWorkingdays.hour.afternoon == true || UserWorkingdays.hour.evening == true) {
-            UserWorkingdays.not_working = false;
-            acc.workingDays[key] = UserWorkingdays;
-          }
-        }
-      })
-    });
-
-    acc.availabilityModal = function (size, index) {
-      var modalInstance = $uibModal.open({
-        animation: true,
-        backdrop: 'static',
-        keyboard: false,
-        templateUrl: 'app/site/modules/accounts/views/availability.modal.tab.html',
-        controller: 'AvailabilityModalInstanceCtrl',
-        //controllerAs: 'AAM',
-        size: size,
-        resolve: {
-          /*data: function () {
-          return { 'day': day, 'days': acc.availability.days };
-        },*/
-          workingDays: function () {
-            return acc.workingDays;
-          },
-          workingTimes: function () {
-            return workingTimes;
-          },
-          DaysData: function () {
-            return DaysData;
-          },
-          selectedIndex: function () {
-            return index;
-          }
-        }
-      });
-      modalInstance.result.then(function (data) {
-        console.log('Availability Response', data);
-        acc.user.working_days[data.index] = data.working_day;
-        acc.user.working_days = $filter('filter')(acc.workingDays, { "not_working": false });
-      }, function () {
-      });
-    };
-
-    acc.emptyLatLng = function (temp_address) {
-      if (temp_address != acc.taskerareaaddress) {
-        acc.user.location.lat = '';
-        acc.user.location.lng = '';
-      }
-    }
-    acc.saveAvailability = function () {
-      if (acc.user.location.lat == '' || acc.user.location.lng == '') {
-        toastr.error('Invalid Address');
-        return;
-      } else {
-        accountService.saveAvailability(acc.user).then(function (response) {
-          $translate('UPDATED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
-        }, function (err) {
-          if (err.msg) {
-            toastr.error(err.msg);
-          } else {
-            $translate('UNABLE TO SAVE YOUR DATA').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
-          }
-        });
-      }
-
+  var workingTimes = {};
+  if ($scope.date) {
+    if ($scope.date.timezone) {
+      workingTimes.morning = {
+        from: moment.tz(new Date(99, 5, 24, 8, 0, 0, 0), $scope.date.timezone).format($scope.date.time_format),
+        to: moment.tz(new Date(99, 5, 24, 12, 0, 0, 0), $scope.date.timezone).format($scope.date.time_format)
+      };
+      workingTimes.afternoon = {
+        from: moment.tz(new Date(99, 5, 24, 12, 0, 0, 0), $scope.date.timezone).format($scope.date.time_format),
+        to: moment.tz(new Date(99, 5, 24, 16, 0, 0, 0), $scope.date.timezone).format($scope.date.time_format)
+      };
+      workingTimes.evening = {
+        from: moment.tz(new Date(99, 5, 24, 16, 0, 0, 0), $scope.date.timezone).format($scope.date.time_format),
+        to: moment.tz(new Date(99, 5, 24, 20, 0, 0, 0), $scope.date.timezone).format($scope.date.time_format)
+      };
     }
   }
+
+  acc.workingDays = workingDays;
+  var DaysData = [{ Morning: "MORNING", afternoon: "AFTERNOON", evening: "EVENING", Save: "SAVE" }];
+
+  angular.forEach(acc.workingDays, function (workingDays, key) {
+    angular.forEach(acc.user.working_days, function (UserWorkingdays) {
+      if (UserWorkingdays.day == workingDays.day) {
+        if (UserWorkingdays.hour.morning == true || UserWorkingdays.hour.afternoon == true || UserWorkingdays.hour.evening == true) {
+          UserWorkingdays.not_working = false;
+          acc.workingDays[key] = UserWorkingdays;
+        }
+      }
+    })
+  });
+
+  acc.availabilityModal = function (size, index) {
+    var modalInstance = $uibModal.open({
+      animation: true,
+      backdrop: 'static',
+      keyboard: false,
+      templateUrl: 'app/site/modules/accounts/views/availability.modal.tab.html',
+      controller: 'AvailabilityModalInstanceCtrl',
+      //controllerAs: 'AAM',
+      size: size,
+      resolve: {
+        /*data: function () {
+        return { 'day': day, 'days': acc.availability.days };
+      },*/
+        workingDays: function () {
+          return acc.workingDays;
+        },
+        workingTimes: function () {
+          return workingTimes;
+        },
+        DaysData: function () {
+          return DaysData;
+        },
+        selectedIndex: function () {
+          return index;
+        }
+      }
+    });
+    modalInstance.result.then(function (data) {
+      console.log('Availability Response', data);
+      acc.user.working_days[data.index] = data.working_day;
+      acc.user.working_days = $filter('filter')(acc.workingDays, { "not_working": false });
+    }, function () {
+    });
+  };
+
+  acc.emptyLatLng = function (temp_address) {
+    if (temp_address != acc.taskerareaaddress) {
+      acc.user.location.lat = '';
+      acc.user.location.lng = '';
+    }
+  };
+
+  acc.saveAvailability = function () {
+    if (acc.user.location.lat == '' || acc.user.location.lng == '') {
+      toastr.error('Invalid Address');
+      return;
+    } else {
+      accountService.saveAvailability(acc.user).then(function (response) {
+        $translate('UPDATED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
+      }, function (err) {
+        if (err.msg) {
+          toastr.error(err.msg);
+        } else {
+          $translate('UNABLE TO SAVE YOUR DATA').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
+        }
+      });
+    }
+
+  }
+  // ---------- Availability Tab End ------------------
 
 
   acc.availabilityChange = function (value) {

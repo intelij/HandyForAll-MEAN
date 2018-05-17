@@ -190,6 +190,9 @@ USERS_SCHEMA.USER = {
       afternoon: { type: Schema.Types.Mixed, default: false },
       evening: { type: Schema.Types.Mixed, default: false }
     }
-  }]
+  }],
+  availability_address: String,
+  radius: Number,
+  radiusby: String,
 };
 module.exports = USERS_SCHEMA;

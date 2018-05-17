@@ -1205,24 +1205,35 @@ module.exports = function (io) {
   controller.saveAvailability = function saveAvailability(req, res) {
     var user = {};
     user.working_area = req.body.working_area;
-    user.working_days = req.body.working_days;
+    user.working_days = req.body.working_days || [];
     user.working_days = user.working_days.filter(function (n) { return n != undefined });
     user.location = req.body.location;
     user.availability_address = req.body.availability_address;
     user.radiusby = req.body.radiusby;
     user.radius = req.body.radius;
-    db.UpdateDocument('tasker', { _id: req.body._id }, user, function (err, docdata) {
+
+    var model ='tasker';
+    if (req.body.role) {
+      model = req.body.role;
+      if (req.body.role == 'user') {
+        model = 'users'
+      }
+    }
+
+    db.UpdateDocument(model, { _id: req.body._id }, user, function (err, docdata) {
       if (err) {
         res.send(err);
       } else {
         res.send(docdata);
       }
     });
-  }
+  };
+
   controller.updateAvailability = function updateAvailability(req, res) {
     var data = {};
     data.tasker = req.body._id;
     data.availability = req.body.availability;
+
     taskerLibrary.updateAvailability(data, function (err, response) {
       if (err) {
         res.send(err);
@@ -1230,7 +1241,7 @@ module.exports = function (io) {
         res.send(response);
       }
     });
-  }
+  };
 
   controller.edit = function (req, res) {
     var model ='tasker';
