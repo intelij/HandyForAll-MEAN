@@ -150,8 +150,8 @@
                   <li ng-repeat="TaskerDetails in TFC.TaskerDetails">
                     <div class="ico-amt">
                       <figure>
-                        <img ng-if="TaskerDetails.avatar" err-src ng-src="{{TaskerDetails.avatar}}"
-                             style="height:100%;width:100%;">
+                        <img ng-if="TaskerDetails.avatar && (!TFC.taskbaseinfo.SubCategoryInfo.classification || TFC.taskbaseinfo.SubCategoryInfo.classification == 'service')" err-src ng-src="{{TaskerDetails.avatar}}" style="height:100%; width:100%;">
+                        <img ng-if="TFC.taskbaseinfo.SubCategoryInfo.classification == 'product'" err-src ng-src="{{TFC.getTaskerSkill(TaskerDetails).product_image}}" style="height:100%; width:100%;">
                         <img ng-src="TaskerDetails.avatar ==''" style="height:100%;width:100%;" alt="empty" err-src>
                         <div class="mob-options">
                           <ul>
@@ -185,21 +185,28 @@
                            ng-click="TFC.confirmatask({task:TFC.filter.task, tasker:TaskerDetails,childid:TFC.filter.categoryid,bdate:TFC.WorkingDate,btime:TFC.hours})">
                           <span class="muted">{{'CONFIRM' | translate}}</span>
                         </a>
-                        <a class="" href="javascript:void(0)"
+                        <a class="" href="javascript:void(0)" ng-hide="TFC.taskbaseinfo.SubCategoryInfo.classification == 'product'"
                            ui-sref="taskerProfile({taskerId:TaskerDetails._id,slug:TFC.taskbaseinfo.SubCategoryInfo.slug,lat:TFC.filter.lat,lon:TFC.filter.lon,vechile:TFC.filter.vechile,day:TFC.filter.day,hour:TFC.filter.hour,date:TFC.filter.date,minprice:TFC.filter.minvalue,maxprice:TFC.filter.maxvalue,kmmaxvalue:TFC.filter.kmmaxvalue,kmminvalue:TFC.filter.kmminvalue,time:TFC.filter.time,booking_id:TFC.filter.booking_id,task:TFC.filter.task,sub_id:TFC.taskbaseinfo.SubCategoryInfo._id,current_page:TFC.currentPage})">
                           <span class="muted"> {{'VIEW_PROFILE' | translate}}</span>
                         </a><br>
-                        <a class="" href="javascript:void(0)">
+                        <a class="" href="javascript:void(0)" ng-hide="TFC.taskbaseinfo.SubCategoryInfo.classification == 'product'">
                           <span class="muted"> {{'VIEW_DEMAND' | translate}}</span>
                         </a>
                         <br/>
                         <b>{{TaskerDetails.distance}}</b>
+                        <br/>
+                        <div ng-if="TFC.taskbaseinfo.SubCategoryInfo.classification == 'product'">
+                          <img class="avatar-new-72" src="{{TFC.getBrandById(TFC.getTaskerSkill(TaskerDetails).brand).image}}" err-src="/">
+                          {{TFC.getBrandById(TFC.getTaskerSkill(TaskerDetails).brand).name}}
+                        </div>
                       </div>
                     </div>
                     <div class="tasker-dtl-info">
                       <div class="top-bx1">
                         <div class="col-md-7 tsker-ifo">
-                          <h2 class="name-tile">{{TaskerDetails.name.first_name}}({{TaskerDetails.username}}) </h2>
+                          <h2 class="name-tile" ng-if="!TFC.taskbaseinfo.SubCategoryInfo.classification || TFC.taskbaseinfo.SubCategoryInfo.classification == 'service'">
+                            {{TaskerDetails.name.first_name}}({{TaskerDetails.username}})
+                          </h2>
                           <p ng-if="TaskerDetails.taskercount"><span class="glyphicon glyphicon-ok"></span>
                             {{TaskerDetails.taskercount}} {{'COMPLATED_TASKS' | translate}}</p>
                           <p ng-if="!TaskerDetails.taskercount"><span class="glyphicon glyphicon-ok"></span>
@@ -213,51 +220,64 @@
                             {{'NO ONE HAS REVIEWED YET' | translate}}
                           </p>
                           <p class="name-tile" style="font-size: 15px">
-                            {{TFC.taskbaseinfo.SubCategoryInfo.name}}: {{}}
+                            {{TFC.taskbaseinfo.SubCategoryInfo.name}}
                           </p>
                         </div>
                         <div class="col-md-5 tsker-rte">
                           <a class="tsk-amt">
-                            <span class="muted">
-                              {{rc.DefaultCurrency[0].symbol}}{{((TaskerDetails.taskerskills | filter: {childid: TFC.filter.categoryid })[0].hour_rate) * rc.DefaultCurrency[0].value | number:2}}/hr
+                            <span class="muted" ng-if="!TFC.taskbaseinfo.SubCategoryInfo.classification || TFC.taskbaseinfo.SubCategoryInfo.classification == 'service'">
+                              {{rc.DefaultCurrency[0].symbol}}{{TFC.getTaskerSkill(TaskerDetails).hour_rate * rc.DefaultCurrency[0].value | number:2}}/hr
+                            </span>
+                            <span class="muted" ng-if="TFC.taskbaseinfo.SubCategoryInfo.classification == 'product'">
+                              {{rc.DefaultCurrency[0].symbol}}{{TFC.getTaskerSkill(TaskerDetails).unit_price * rc.DefaultCurrency[0].value | number:2}}/unit
                             </span>
                             <span class="muted">
-                              {{rc.DefaultCurrency[0].symbol}}{{((TaskerDetails.taskerskills | filter: {childid: TFC.filter.categoryid })[0].km_rate) * rc.DefaultCurrency[0].value | number:2}}/km
+                              {{rc.DefaultCurrency[0].symbol}}{{TFC.getTaskerSkill(TaskerDetails).km_rate * rc.DefaultCurrency[0].value | number:2}}/km
                             </span>
                           </a>
                         </div>
                       </div>
                       <div class="top-bx2 tsker-ifo-cnt">
-                        <h4>{{'HOW_I_CAN_HELP' | translate}}:</h4>
-                        <p>
-                          {{((TaskerDetails.taskerskills | filter: {childid: TFC.filter.categoryid })[0].quick_pitch)}}
-                        </p>
-                        <h4 class="name-tile" style="color:#ff6600; font-size: 12px;margin-top: 20px;"
-                            ng-if="!TaskerDetails.avarating">{{'TASKER HAS NOT YET GOT ANY REVIEWS'| translate}}</h4>
-                        <div class="rew-cnt" ng-if="TaskerDetails.avarating">
-                          <div class="media--figure">
-                            <img class="avatar-new-72" ng-if="TaskerDetails.recentReview.userdetails.avatar"
-                                 src="{{TaskerDetails.recentReview.userdetails.avatar}}"
-                                 err-src="/">
-                            <img class="avatar-new-72" ng-if="!TaskerDetails.recentReview.userdetails.avatar"
-                                 src="uploads/images/users/user.png" err-src="/">
-                            <div class="us-name">
-                              {{TaskerDetails.recentReview.userdetails.name.first_name}}({{TaskerDetails.recentReview.userdetails.username}})
+                        <div ng-class="{'col-md-7': TFC.taskbaseinfo.SubCategoryInfo.classification == 'product', 'col-md-12': TFC.taskbaseinfo.SubCategoryInfo.classification !== 'product'}">
+                          <h4>{{'HOW_I_CAN_HELP' | translate}}:</h4>
+                          <p>
+                            {{TFC.getTaskerSkill(TaskerDetails).quick_pitch}}
+                          </p>
+                          <h4 class="name-tile" style="color:#ff6600; font-size: 12px;margin-top: 20px;"
+                              ng-if="!TaskerDetails.avarating">{{'TASKER HAS NOT YET GOT ANY REVIEWS'| translate}}</h4>
+                          <div class="rew-cnt" ng-if="TaskerDetails.avarating">
+                            <div class="media--figure">
+                              <img class="avatar-new-72" ng-if="TaskerDetails.recentReview.userdetails.avatar"
+                                   src="{{TaskerDetails.recentReview.userdetails.avatar}}"
+                                   err-src="/">
+                              <img class="avatar-new-72" ng-if="!TaskerDetails.recentReview.userdetails.avatar"
+                                   src="uploads/images/users/user.png" err-src="/">
+                              <div class="us-name">
+                                {{TaskerDetails.recentReview.userdetails.name.first_name}}({{TaskerDetails.recentReview.userdetails.username}})
+                              </div>
                             </div>
-
+                            <div class="media--content reviewed-user-detail">
+                              <div class="recommendations__review-content review-text ">
+                                <rating class="col-md-12" ng-model="TaskerDetails.recentReview.rating" readonly="true">
+                                </rating>
+                              </div>
+                              <div class="recommendations__review-content review-text">
+                                <span class="comment-text">{{TaskerDetails.recentReview.comments}}</span>
+                              </div>
+                              <div class="u-muted review-date">
+                                {{TaskerDetails.recentReview.updatedAt | date:'MMMM dd, yyyy'}}
+                              </div>
+                            </div>
                           </div>
-                          <div class="media--content reviewed-user-detail">
-                            <div class="recommendations__review-content review-text ">
-                              <rating class="col-md-12" ng-model="TaskerDetails.recentReview.rating" readonly="true">
-                              </rating>
-                            </div>
-                            <div class="recommendations__review-content review-text">
-                              <span class="comment-text">{{TaskerDetails.recentReview.comments}}</span>
-                            </div>
-                            <div class="u-muted review-date">
-                              {{TaskerDetails.recentReview.updatedAt | date:'MMMM dd, yyyy'}}
-                            </div>
-                          </div>
+                        </div>
+                        <div class="col-md-5 text-center" ng-show="TFC.taskbaseinfo.SubCategoryInfo.classification == 'product'">
+                          <h2 class="name-tile" style="font-size: 16px">
+                            {{TaskerDetails.name.first_name}} ({{TaskerDetails.username}})
+                          </h2>
+                          <img err-src ng-src="{{TaskerDetails.avatar}}" style="height:100%; width:100%;">
+                          <a class="viewprfl-btn" ui-sref="taskerProfile({taskerId: selectedCity.tasker._id, slug: TFC.taskbaseinfo.SubCategoryInfo.slug, lat: TFC.filter.lat, lon: TFC.filter.lon, vechile: TFC.filter.vechile ,day: TFC.filter.day, hour: TFC.filter.hour, date: TFC.filter.date, booking_id: TFC.filter.booking_id, task: TFC.filter.task})">
+                            <span class="muted"> {{'VIEW_PROFILE' | translate}}</span>
+                          </a>
                         </div>
                       </div>
                     </div>

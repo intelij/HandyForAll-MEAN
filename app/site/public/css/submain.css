@@ -1019,7 +1019,8 @@ td.dtls-info, td.amt-info{
   float: left;
   width: 100%;
 }
-.hire-stp2 .hirestep-2 .tskr-vew a{
+.hire-stp2 .hirestep-2 .tskr-vew a,
+a.viewprfl-btn{
   font-size: 15px;
   color: #f60;
   text-decoration: none;
