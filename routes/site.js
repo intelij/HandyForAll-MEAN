@@ -174,7 +174,10 @@ module.exports = function (app, io) {
 
     app.post('/site/account/usercanceltask', ensureAuthorized, account.usercanceltask);
     app.post('/site/account/ignoreTask', ensureAuthorized, account.ignoreTask);
-    app.post('/site/account/updatecategoryinfo', ensureAuthorized, middlewares.commonUpload(CONFIG.DIRECTORY_PRODUCTS).fields([{ name: 'product_image', maxCount: 1 }]), account.updateCategory);
+    app.post('/site/account/updatecategoryinfo', ensureAuthorized,
+      middlewares.commonUpload(CONFIG.DIRECTORY_PRODUCTS)
+        // .fields([{name: 'product_image', maxCount: 1}]), account.updateCategory);
+        .any(), account.updateCategory);
     app.post('/site/account/deleteCategory', ensureAuthorized, account.deleteCategory);
     app.post('/site/account/deactivateAccount', ensureAuthorized, account.deactivate);
     app.post('/site/account/getReview', account.getReview);  // review are same

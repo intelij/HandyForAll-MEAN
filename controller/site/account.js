@@ -3205,10 +3205,34 @@ module.exports = function (io) {
     data.skills.childid = req.body.childid;
     data.skills.skills = req.body.skills;
     data.skills.terms = req.body.terms;
+    data.skills.capacity_rate = req.body.capacity_rate;
     data.skills.status = 1;
+    // demand
+    data.skills.demand_name = req.body.demand_name;
+    data.skills.demand_description = req.body.demand_description;
+    data.skills.demand_specification = req.body.demand_specification;
 
-    if (req.files && req.files.product_image && req.files.product_image.length > 0) {
-      data.skills.product_image = attachment.get_attachment(req.files.product_image[0].destination, req.files.product_image[0].filename);
+    // if (req.files && req.files.product_image && req.files.product_image.length > 0) {
+    //   data.skills.product_image = attachment.get_attachment(req.files.product_image[0].destination, req.files.product_image[0].filename);
+    // }
+
+    if (req.files.length > 0) {
+      const product_image = [];
+      const demand_images = [];
+      for (const item of req.files) {
+        if (item.fieldname.includes('product_image')) {
+          product_image.push(attachment.get_attachment(item.destination, item.filename));
+        }
+        if (item.fieldname.includes('demand_images')) {
+          demand_images.push(attachment.get_attachment(item.destination, item.filename));
+        }
+      }
+      if (product_image.length > 0) {
+        data.skills.product_image = product_image[0];
+      }
+      if (demand_images.length > 0) {
+        data.skills.demand_images = demand_images;
+      }
     }
 
     var model ='tasker';
