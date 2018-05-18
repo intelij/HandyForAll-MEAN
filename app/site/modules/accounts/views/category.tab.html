@@ -18,7 +18,7 @@
         <l ng-if="category.status == 2" style="color:red">({{'NOT VERIFIED' | translate}})</l> &nbsp;&nbsp;
         <l ng-if="category.demand_name" style="color:#bf0101; font-weight: bold">{{category.demand_name}}</l>
       </span>
-      <a href="#" ng-click="ACC.imageModal(category.childid._id)" class="cat-image">{{'IMAGES' | translate}}</a>&nbsp;&nbsp;
+      <a href="#" ng-click="ACC.imageModal(category)" class="cat-image">{{'IMAGES' | translate}}</a>&nbsp;&nbsp;
       <a href="#" ng-click="ACC.categoryModal(category.childid._id)" class="cat-edit">{{'EDIT' | translate}}</a>&nbsp;&nbsp;
       <a href="#" ng-click="ACC.deletecategory(category.childid._id,category.childid.name)" class="cat-delete">{{'DELETE' | translate}}</a>
     </li>

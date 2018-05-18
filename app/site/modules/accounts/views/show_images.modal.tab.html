@@ -1,0 +1,30 @@
+<!--controller name: CategoryDemandImageModalInstanceCtrl-->
+<div class="modal-header">
+  <h3 class="modal-title">{{'DEMAND_IMAGES' | translate}}</h3>
+</div>
+<div class="modal-body cat-add-pop">
+  <div style="min-height: 225px">
+    <div uib-carousel>
+      <div uib-slide ng-repeat="item in CDIM.images">
+        <img ng-src="{{item}}"
+             onError="this.src='/uploads/images/categories/noimage.jpg'"
+             style="margin:auto;">
+        <!--<div class="carousel-caption">-->
+          <!--<h4>Slide {{slide.id}}</h4>-->
+          <!--<p>{{slide.text}}</p>-->
+        <!--</div>-->
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" type="submit" ng-click="CDIM.ok()">{{'OK' | translate}}</button>
+</div>
+<style>
+  .modal-footer {
+    padding: 19px 20px 20px;
+    /*margin-top: 463px;*/
+    text-align: right;
+
+  }
+</style>
