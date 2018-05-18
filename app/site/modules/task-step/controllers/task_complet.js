@@ -162,6 +162,44 @@ function taskFilterCtrl($scope, $timeout, $uibModal, $rootScope, $location, $sta
     init();
   });
 
+  tfc.getDemanName = (taskDetails) => {
+    let demandName = '';
+    for (const skill of taskDetails.skills) {
+      if (skill.childid === tfc.filter.categoryid) {
+        demandName = skill.demand_name;
+      }
+    }
+    return demandName;
+  };
+
+  tfc.showDemandImages = (taskDetails) => {
+    console.log('taskDetails', taskDetails, tfc.filter.categoryid);
+    let demandImages = [];
+    for (const skill of taskDetails.skills) {
+      if (skill.childid === tfc.filter.categoryid) {
+        demandImages = skill.demand_images || [];
+      }
+    }
+    console.log('taskDetails', demandImages);
+    if (demandImages && demandImages.length > 0) {
+      var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: 'app/site/modules/task-step/views/show_images.modal.tab.html',
+        controller: 'DemandImageModalInstanceCtrl',
+        controllerAs: 'DIM',
+        resolve: {
+          images: function () {
+            return demandImages;
+          }
+        }
+      });
+
+      modalInstance.result.then(function (imageData) {}, function () {});
+    } else {
+      toastr.error('There is no images');
+    }
+  };
+
   tfc.changeLocation = () => {
     console.log('location', tfc.location);
     tfc.filter.lat = tfc.location.location.lat;
@@ -692,6 +730,19 @@ angular.module('handyforall.task').controller('ConfirmtaskModel', function ($uib
     $uibModalInstance.close('ok');
   };
   ccm.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+});
+
+angular.module('handyforall.task').controller('DemandImageModalInstanceCtrl', function (accountService, $uibModalInstance, toastr, images, $translate) {
+  const dim = this;
+
+  dim.images = [];
+
+  dim.images = images;
+  console.log('images', images);
+
+  dim.ok = function () {
     $uibModalInstance.dismiss('cancel');
   };
 });
