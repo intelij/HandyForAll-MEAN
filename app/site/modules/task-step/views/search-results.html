@@ -189,7 +189,7 @@
                            ui-sref="taskerProfile({taskerId:TaskerDetails._id,slug:TFC.taskbaseinfo.SubCategoryInfo.slug,lat:TFC.filter.lat,lon:TFC.filter.lon,vechile:TFC.filter.vechile,day:TFC.filter.day,hour:TFC.filter.hour,date:TFC.filter.date,minprice:TFC.filter.minvalue,maxprice:TFC.filter.maxvalue,kmmaxvalue:TFC.filter.kmmaxvalue,kmminvalue:TFC.filter.kmminvalue,time:TFC.filter.time,booking_id:TFC.filter.booking_id,task:TFC.filter.task,sub_id:TFC.taskbaseinfo.SubCategoryInfo._id,current_page:TFC.currentPage})">
                           <span class="muted"> {{'VIEW_PROFILE' | translate}}</span>
                         </a><br>
-                        <a class="" href="javascript:void(0)" ng-hide="TFC.taskbaseinfo.SubCategoryInfo.classification == 'product'">
+                        <a class="" ng-click="TFC.showDemandImages(TaskerDetails)" href="javascript:void(0)" ng-hide="TFC.taskbaseinfo.SubCategoryInfo.classification == 'product'">
                           <span class="muted"> {{'VIEW_DEMAND' | translate}}</span>
                         </a>
                         <br/>
@@ -220,7 +220,8 @@
                             {{'NO ONE HAS REVIEWED YET' | translate}}
                           </p>
                           <p class="name-tile" style="font-size: 15px">
-                            {{TFC.taskbaseinfo.SubCategoryInfo.name}}
+                            {{TFC.taskbaseinfo.SubCategoryInfo.name}} : 
+                            <span style="font-weight: bold">{{TFC.getDemanName(TaskerDetails)}}</span>
                           </p>
                         </div>
                         <div class="col-md-5 tsker-rte">
