@@ -27,6 +27,7 @@ function accountService($http, $q, Upload) {
     taskerconfirmTask: taskerconfirmTask,
     saveAvailability: saveAvailability,
     getExperience: getExperience,
+    getExperienceYearList: getExperienceYearList,
     getTravelArrangement: getTravelArrangement,
     getBrandList: getBrandList,
     updateCategory: updateCategory,
@@ -438,13 +439,26 @@ function accountService($http, $q, Upload) {
     return deferred.promise;
   }
 
+  function getExperienceYearList() {
+    var deferred = $q.defer();
+    $http({
+      method: 'GET',
+      url: '/site/experience_years/'
+    }).success(function (response) {
+      deferred.resolve(response);
+    }).error(function (err) {
+      deferred.reject(err);
+    });
+    return deferred.promise;
+  }
+
   function getBrandList() {
     var deferred = $q.defer();
     $http({
       method: 'GET',
       url: '/site/brands/'
-    }).success(function (data) {
-      deferred.resolve(data);
+    }).success(function (response) {
+      deferred.resolve(response);
     }).error(function (err) {
       deferred.reject(err);
     });

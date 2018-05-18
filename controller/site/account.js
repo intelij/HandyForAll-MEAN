@@ -27,7 +27,8 @@ module.exports = function (io) {
   var util = require('util');
 
   var controller = {};
-  controller.saveAccount = function saveAccount(req, res) {
+
+  controller.saveAccount = function (req, res) {
 
     var data = {};
     data.address = {};
@@ -87,9 +88,9 @@ module.exports = function (io) {
         res.send(result);
       }
     });
-  }
+  };
 
-  controller.saveforgotpasswordinfo = function saveforgotpasswordinfo(req, res) {
+  controller.saveforgotpasswordinfo = function (req, res) {
     var data = {};
     var request = {};
     request.email = req.body.data;
@@ -116,7 +117,6 @@ module.exports = function (io) {
         });
       }
     ], function (err, user, settings) {
-      console.log("======fgdggfgff==========",settings)
       if (err || !user) {
         data.status = '0';
         data.response = 'Errror!';
@@ -151,8 +151,9 @@ module.exports = function (io) {
         res.send(data);
       }
     });
-  }
-  controller.saveforgotpassworduser = function saveforgotpassworduser(req, res) {
+  };
+
+  controller.saveforgotpassworduser = function (req, res) {
     var data = {};
     var request = {};
     request.email = req.body.data;
@@ -214,9 +215,9 @@ module.exports = function (io) {
         res.send(data);
       }
     });
-  }
+  };
 
-  controller.saveforgotpwdusermail = function saveforgotpwdusermail(req, res) {
+  controller.saveforgotpwdusermail = function (req, res) {
     var id = req.body.data.userid;
     var data = bcrypt.hashSync(req.body.data.formData, bcrypt.genSaltSync(8), null);
     var resetid = req.body.data.resetid;
@@ -227,7 +228,7 @@ module.exports = function (io) {
         res.send(docdata);
       }
     });
-  }
+  };
 
   controller.getuserwallettransaction = function (req, res) {
     var extension = {
@@ -281,8 +282,9 @@ module.exports = function (io) {
         res.send({ count: count, transaction: data });
       }
     });
-  }
-  controller.saveforgotpwdtaskermail = function saveforgotpwdtaskermail(req, res) {
+  };
+
+  controller.saveforgotpwdtaskermail = function (req, res) {
     var id = req.body.data.userid;
     var data = bcrypt.hashSync(req.body.data.formData, bcrypt.genSaltSync(8), null);
     var resetid = req.body.data.resetid;
@@ -293,8 +295,9 @@ module.exports = function (io) {
         res.send(docdata);
       }
     });
-  }
-  controller.paybywallet = function paybywallet(req, res) {
+  };
+
+  controller.paybywallet = function (req, res) {
     db.GetOneDocument('walletReacharge', { "user_id": req.body.userid }, {}, {}, function (err, wallet) {
       if (err) {
         res.send(err);
@@ -960,9 +963,9 @@ module.exports = function (io) {
         }
       }
     });
-  }
+  };
 
-  controller.couponCompletePayment = function couponCompletePayment(req, res) {
+  controller.couponCompletePayment = function (req, res) {
     var request = {};
     request.task = req.body.taskid;
 
@@ -1200,9 +1203,9 @@ module.exports = function (io) {
         });// mail en
       }
     });
-  }
+  };
 
-  controller.saveAvailability = function saveAvailability(req, res) {
+  controller.saveAvailability = function (req, res) {
     var user = {};
     user.working_area = req.body.working_area;
     user.working_days = req.body.working_days || [];
@@ -1229,7 +1232,7 @@ module.exports = function (io) {
     });
   };
 
-  controller.updateAvailability = function updateAvailability(req, res) {
+  controller.updateAvailability = function (req, res) {
     var data = {};
     data.tasker = req.body._id;
     data.availability = req.body.availability;
@@ -1261,8 +1264,7 @@ module.exports = function (io) {
     });
   };
 
-
-  controller.disputeupdateTask = function taskercanceltask(req, res) {
+  controller.disputeupdateTask = function (req, res) {
     var options = {};
     options.populate = 'tasker user';
     db.GetOneDocument('task', { _id: req.body.data }, {}, options, function (err, docdata) {
@@ -1371,11 +1373,9 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
-
-
-  controller.savePassword = function savePassword(req, res) {
+  controller.savePassword = function (req, res) {
     // Validation & Sanitization
     req.checkBody('userId', 'Enter Your Valid Userid').notEmpty();
     req.checkBody('old', 'Enter Your existing password').notEmpty();
@@ -1421,9 +1421,9 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
-  controller.getReview = function getReview(req, res) {
+  controller.getReview = function (req, res) {
     var extension = {
       options: {
         limit: req.body.limit,
@@ -1460,12 +1460,10 @@ module.exports = function (io) {
           });
         }
       });
-
     }
   };
 
-
-  controller.getuserReview = function getuserReview(req, res) {
+  controller.getuserReview = function (req, res) {
 
     var extension = {
       options: {
@@ -1508,11 +1506,9 @@ module.exports = function (io) {
         }
       });
     }
-
   };
 
-
-  controller.getTaskList = function getTaskList(req, res) {
+  controller.getTaskList = function (req, res) {
 
     taskLibrary.taskExpired({}, function (err, response) {
 
@@ -1587,8 +1583,7 @@ module.exports = function (io) {
     });
   };
 
-
-  controller.getTaskDetailsByStaus = function getTaskDetailsByStaus(req, res) {
+  controller.getTaskDetailsByStaus = function (req, res) {
 
     taskLibrary.taskExpired({}, function (err, response) {
 
@@ -1710,7 +1705,7 @@ module.exports = function (io) {
     });
   };
 
-  controller.getTaskDetailsBytaskid = function getTaskDetailsBytaskid(req, res) {
+  controller.getTaskDetailsBytaskid = function (req, res) {
 
     var aggregationData = [
       { $match: { status: { $eq: req.body.status }, _id: new mongoose.Types.ObjectId(req.body.id) } },
@@ -1743,12 +1738,9 @@ module.exports = function (io) {
     } else {
       res.send({ OngoingTaskDetails: [], count: 0 });
     }
+  };
 
-  }
-
-
-
-  controller.getUserTaskDetailsByStaus = function getUserTaskDetailsByStaus(req, res) {
+  controller.getUserTaskDetailsByStaus = function (req, res) {
 
     var limit = 12;
     var skip = 0;
@@ -1833,7 +1825,7 @@ module.exports = function (io) {
     }
   };
 
-  controller.getTaskDetailsBytaskid = function getTaskDetailsBytaskid(req, res) {
+  controller.getTaskDetailsBytaskid = function (req, res) {
 
     var aggregationData = [
       { $match: { status: { $eq: req.body.status }, _id: new mongoose.Types.ObjectId(req.body.id) } },
@@ -1866,12 +1858,9 @@ module.exports = function (io) {
     } else {
       res.send({ OngoingTaskDetails: [], count: 0 });
     }
-
   };
 
-
-
-  controller.getusercategories = function getusercategories(req, res) {
+  controller.getusercategories = function (req, res) {
     const taskerId = req.body._id;
     const options = {
       options: {}
@@ -1952,7 +1941,7 @@ module.exports = function (io) {
     });
   };
 
-  controller.transcationhis = function transcationhis(req, res) {
+  controller.transcationhis = function (req, res) {
     var extension = {
       options: {
         limit: req.body.limit,
@@ -1977,11 +1966,9 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
-
-
-  controller.usertranscation = function usertranscation(req, res) {
+  controller.usertranscation = function (req, res) {
     var extension = {
       options: {
         limit: req.body.limit,
@@ -2004,10 +1991,9 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
-
-  controller.getchild = function getchild(req, res) {
+  controller.getchild = function (req, res) {
 
     db.GetOneDocument('category', { _id: req.body.id }, {}, {}, function (err, docdata) {
       if (err) {
@@ -2016,10 +2002,9 @@ module.exports = function (io) {
         res.send(docdata);
       }
     });
+  };
 
-  }
-
-  controller.getCategories = function getCategories(req, res) {
+  controller.getCategories = function (req, res) {
     db.GetDocument('category', { status: 1 }, {}, {}, function (err, docdata) {
       if (err) {
         res.send(err);
@@ -2027,9 +2012,9 @@ module.exports = function (io) {
         res.send(docdata);
       }
     });
-  }
+  };
 
-  controller.getmaincatname = function getmaincatname(req, res) {
+  controller.getmaincatname = function (req, res) {
     db.GetOneDocument('category', { '_id': new mongoose.Types.ObjectId(req.body.data) }, {}, {}, function (err, docdata) {
       if (err) {
         res.send(err);
@@ -2044,9 +2029,9 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
-  controller.getwalletdetails = function getwalletdetails(req, res) {
+  controller.getwalletdetails = function (req, res) {
     db.GetOneDocument('walletReacharge', { "user_id": req.body.data }, {}, {}, function (err, docdata) {
       if (err) {
         res.send(err);
@@ -2054,9 +2039,9 @@ module.exports = function (io) {
         res.send(docdata);
       }
     });
-  }
+  };
 
-  controller.updatewalletdatapaypal = function updatewalletdatapaypal(req, res) {
+  controller.updatewalletdatapaypal = function (req, res) {
 
     var data = {};
     data.status = 1;
@@ -2160,9 +2145,9 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
-  controller.walletpaypalExecute = function walletpaypalExecute(req, res) {
+  controller.walletpaypalExecute = function (req, res) {
 
     var data = {};
     data.status = 0;
@@ -2228,11 +2213,9 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
-
-
-  controller.getExperience = function getExperience(req, res) {
+  controller.getExperience = function (req, res) {
     db.GetDocument('experience', { status: 1 }, {}, {}, function (err, docdata) {
       if (err) {
         res.send(err);
@@ -2242,7 +2225,17 @@ module.exports = function (io) {
     });
   };
 
-  controller.getTravelArrangementList = function getExperience(req, res) {
+  controller.getExperienceYearList = function (req, res) {
+    db.GetDocument('experience_year', { status: 1 }, {}, {}, function (err, docdata) {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(docdata);
+      }
+    });
+  };
+
+  controller.getTravelArrangementList = function (req, res) {
     db.GetDocument('travel_arrangement', { status: 1 }, {}, {}, function (err, docdata) {
       if (err) {
         res.send(err);
@@ -2252,7 +2245,7 @@ module.exports = function (io) {
     });
   };
 
-  controller.getBrandList = function getExperience(req, res) {
+  controller.getBrandList = function (req, res) {
     db.GetDocument('brand', { status: 1 }, {}, {}, function (err, docdata) {
       if (err) {
         res.send(err);
@@ -2262,7 +2255,7 @@ module.exports = function (io) {
     });
   };
 
-  controller.updatetaskstatus = function updatetaskstatus(req, res) {
+  controller.updatetaskstatus = function (req, res) {
     var dateupdate = {};
     db.GetOneDocument('settings', { 'alias': 'general' }, {}, {}, function (err, settings) {
       if (err || !settings) {
@@ -2410,10 +2403,9 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
-
-  controller.updatetaskstatuscash = function updatetaskstatuscash(req, res) {
+  controller.updatetaskstatuscash = function (req, res) {
 
     var dateupdate = {};
     var extension = {};
@@ -2613,13 +2605,12 @@ module.exports = function (io) {
           });
         } else {
           res.send({ 'error': 'You cannot do this action right now.' });
-
         }
       }
     });
-  }
+  };
 
-  controller.updatewalletdata = function updatewalletdata(req, res) {
+  controller.updatewalletdata = function (req, res) {
     db.GetOneDocument('paymentgateway', { status: { $ne: 0 }, alias: 'stripe' }, {}, {}, function (err, paymentgateway) {
       if (err || !paymentgateway.settings.secret_key) {
         res.status(400).send({ 'message': 'Invalid payment method, Please contact the website administrator' });
@@ -2690,8 +2681,8 @@ module.exports = function (io) {
     });
   };
 
-  controller.updateprofiledetails = function updateprofiledetails(req, res) {
-    db.UpdateDocument('tasker', { _id: req.body._id }, { 'profile_details': req.body.profile_details }, function (err, result) {
+  controller.updateprofiledetails = function (req, res) {
+    db.UpdateDocument('tasker', {_id: req.body._id}, {'profile_details': req.body.profile_details}, function (err, result) {
       if (err) {
         res.send(err);
       } else {
@@ -2700,7 +2691,7 @@ module.exports = function (io) {
     });
   }
 
-  controller.ignoreTask = function ignoreTask(req, res) {
+  controller.ignoreTask = function (req, res) {
     var options = {};
     options.populate = 'tasker task user category';
     db.GetOneDocument('task', { _id: req.body.userid }, {}, options, function (err, docdata) {
@@ -2775,15 +2766,13 @@ module.exports = function (io) {
             mailData2.html.push({ name: 'workingtime', value: job_time });
             mailData2.html.push({ name: 'cancelreason', value: req.body.reason });
             mailcontent.sendmail(mailData2, function (err, response) { });
-
           }
         });
       }
     });
-  }
+  };
 
-
-  controller.taskerconfirmtask = function taskerconfirmtask(req, res) {
+  controller.taskerconfirmtask = function (req, res) {
     var options = {};
     options.populate = 'tasker user category';
     db.GetOneDocument('task', { _id: req.body.taskid }, {}, options, function (err, docdata) {
@@ -2969,16 +2958,14 @@ module.exports = function (io) {
                   });
                 }
               });
-
-
             }
           });
         }
       }
     });
-  }
+  };
 
-  controller.getQuestion = function getQuestion(req, res) {
+  controller.getQuestion = function (req, res) {
     db.GetDocument('question', { status: 1 }, {}, {}, function (err, docdata) {
       if (err) {
         res.send(err);
@@ -2988,7 +2975,7 @@ module.exports = function (io) {
     });
   };
 
-  controller.getsettings = function getsettings(req, res) {
+  controller.getsettings = function (req, res) {
     db.GetOneDocument('settings', { 'alias': 'general' }, {}, {}, function (err, settings) {
       if (err) {
         res.send(err);
@@ -2998,7 +2985,7 @@ module.exports = function (io) {
     });
   };
 
-  controller.updateTaskcompletion = function updateTaskcompletion(req, res) {
+  controller.updateTaskcompletion = function (req, res) {
     taskLibrary.completeTask({ 'task': req.body.taskid, 'request': req.body.newdata }, function (err, response) {
       if (err || !response) {
         res.send(err);
@@ -3016,10 +3003,9 @@ module.exports = function (io) {
         res.send(result);
       }
     });
-  }
+  };
 
-
-  controller.updateTask = function updateTask(req, res) {
+  controller.updateTask = function (req, res) {
     var data = {};
     data.status = 4;
     data.invoice = {};
@@ -3087,14 +3073,11 @@ module.exports = function (io) {
         mailData2.html.push({ name: 'workingtime', value: mailcredentials.taskhour });
         mailData2.html.push({ name: 'description', value: mailcredentials.taskdescription });
         mailcontent.sendmail(mailData2, function (err, response) { });
-
-
       }
     });
-  }
+  };
 
-
-  controller.usercanceltask = function usercanceltask(req, res) {
+  controller.usercanceltask = function (req, res) {
     var options = {};
     options.populate = 'tasker user';
     db.GetOneDocument('task', { _id: req.body.userid }, {}, options, function (err, docdata) {
@@ -3183,8 +3166,7 @@ module.exports = function (io) {
     });
   };
 
-
-  controller.updateCategory = function updateCategory(req, res) {
+  controller.updateCategory = function (req, res) {
     var data = {};
     data.skills = {};
     var userid = req.body.userid;
@@ -3193,9 +3175,11 @@ module.exports = function (io) {
       data.skills.file = req.file.destination + req.file.filename;
     }
     data.skills.experience = req.body.experience;
+    data.skills.experience_year = req.body.experience_year;
     data.skills.travel_arrangement = req.body.travel_arrangement;
     data.skills.hour_rate = !req.body.hour_rate ? 0 : req.body.hour_rate;
-    data.skills.km_rate = req.body.km_rate;
+    data.skills.km_rate = !req.body.km_rate ? 0 : req.body.km_rate;
+    data.skills.salary = !req.body.salary ? 0 : req.body.salary;
     data.skills.unit_price = !req.body.unit_price ? 0 : req.body.unit_price;
     data.skills.inventory = !req.body.inventory ? 0 : req.body.inventory;
     if (req.body.brand) {
@@ -3218,11 +3202,15 @@ module.exports = function (io) {
     // }
 
     if (req.files.length > 0) {
-      const product_image = [];
-      const demand_images = [];
+      let product_image = [];
+      let career_attachment = [];
+      let demand_images = [];
       for (const item of req.files) {
         if (item.fieldname.includes('product_image')) {
           product_image.push(attachment.get_attachment(item.destination, item.filename));
+        }
+        if (item.fieldname.includes('career_attachment')) {
+          career_attachment.push(attachment.get_attachment(item.destination, item.filename));
         }
         if (item.fieldname.includes('demand_images')) {
           demand_images.push(attachment.get_attachment(item.destination, item.filename));
@@ -3230,6 +3218,9 @@ module.exports = function (io) {
       }
       if (product_image.length > 0) {
         data.skills.product_image = product_image[0];
+      }
+      if (career_attachment.length > 0) {
+        data.skills.career_attachment = career_attachment[0];
       }
       if (demand_images.length > 0) {
         data.skills.demand_images = demand_images;
@@ -3290,8 +3281,7 @@ module.exports = function (io) {
     });
   };
 
-
-  controller.deleteCategory = function deleteCategory(req, res) {
+  controller.deleteCategory = function (req, res) {
     var model ='tasker';
     if (req.body.type) {
       model = req.body.type;
@@ -3341,9 +3331,9 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
-  controller.deactivate = function deactivate(req, res) {
+  controller.deactivate = function (req, res) {
     db.GetDocument('users', { _id: req.body.userid }, { username: 1, email: 1, role: 1 }, {}, function (err, docdata) {
       if (err) {
         res.send(err);
@@ -3377,10 +3367,9 @@ module.exports = function (io) {
         });
       }
     });
+  };
 
-  }
-
-  controller.addReview = function addReview(req, res) {
+  controller.addReview = function (req, res) {
     var data = {};
     data.user = req.body.data.user;
     data.tasker = req.body.data.tasker;
@@ -3474,10 +3463,10 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
   //Tasker
-  controller.saveTaskerAccount = function saveTaskerAccount(req, res) {
+  controller.saveTaskerAccount = function (req, res) {
 
     var data = {};
     data.address = {};
@@ -3540,9 +3529,9 @@ module.exports = function (io) {
         res.send(result);
       }
     });
-  }
+  };
 
-  controller.saveTaskerPassword = function saveTaskerPassword(req, res) {
+  controller.saveTaskerPassword = function (req, res) {
     // Validation & Sanitization
     req.checkBody('userId', 'Enter Your Valid Userid').notEmpty();
     req.checkBody('old', 'Enter Your existing password').notEmpty();
@@ -3587,9 +3576,9 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
-  controller.deactivateTasker = function deactivateTasker(req, res) {
+  controller.deactivateTasker = function (req, res) {
 
     db.GetDocument('tasker', { _id: req.body.userid }, { username: 1, email: 1, role: 1 }, {}, function (err, docdata) {
       if (err) {
@@ -3623,10 +3612,9 @@ module.exports = function (io) {
 
       }
     });
+  };
 
-  }
-
-  controller.taskinfo = function taskinfo(req, res) {
+  controller.taskinfo = function (req, res) {
     db.GetDocument('task', { _id: req.body.data }, {}, {}, function (err, docdata) {
       if (err || !docdata) {
         res.send(err);
@@ -3634,9 +3622,9 @@ module.exports = function (io) {
         res.send(docdata);
       }
     });
-  }
+  };
 
-  controller.gettaskbyid = function gettaskbyid(req, res) {
+  controller.gettaskbyid = function (req, res) {
 
     var options = {};
     options.populate = 'category user tasker';
@@ -3665,9 +3653,9 @@ module.exports = function (io) {
         }
       }
     });
-  }
+  };
 
-  controller.confirmtask = function confirmtask(req, res) {
+  controller.confirmtask = function (req, res) {
     db.GetOneDocument('paymentgateway', { status: { $ne: 0 }, alias: 'stripe' }, {}, {}, function (err, paymentgateway) {
       if (err || !paymentgateway.settings.secret_key) {
         res.status(400).send({ 'message': 'Invalid payment method, Please contact the website administrator' });
@@ -3939,11 +3927,9 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
-
-
-  controller.paypalPayment = function paypalPayment(req, res) {
+  controller.paypalPayment = function (req, res) {
 
     var data = {};
     data.status = 1;
@@ -4067,9 +4053,9 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
-  controller.paypalExecute = function paypalExecute(req, res) {
+  controller.paypalExecute = function (req, res) {
 
     var data = {};
     data.status = 0;
@@ -4124,9 +4110,9 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
-  controller.applyCoupon = function applyCoupon(req, res) {
+  controller.applyCoupon = function (req, res) {
     var request = {};
     var date = new Date();
     // var isodate = date.toISOString();
@@ -4308,8 +4294,7 @@ module.exports = function (io) {
     });
   };
 
-
-  controller.removeCoupon = function removeCoupon(req, res) {
+  controller.removeCoupon = function (req, res) {
     db.GetDocument('task', { _id: new mongoose.Types.ObjectId(req.body.task), 'invoice.coupon': req.body.coupon }, {}, {}, function (err, taskdata) {
       var invoice = {};
       invoice.amount = {};
@@ -4330,8 +4315,7 @@ module.exports = function (io) {
     });
   };
 
-
-  controller.removeCouponold = function removeCouponold(req, res) {
+  controller.removeCouponold = function (req, res) {
     var request = {};
     request.task = req.body.taskid;
 
@@ -4365,9 +4349,9 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
-  controller.getTaskDetails = function getTaskDetails(req, res) {
+  controller.getTaskDetails = function (req, res) {
     db.GetDocument('review', { 'user': req.body._id }, {}, {}, function (err, data) {
       if (err) {
         res.send(err);
@@ -4375,9 +4359,9 @@ module.exports = function (io) {
         res.send(data);
       }
     });
-  }
+  };
 
-  controller.gettaskreview = function getTaskDetails(req, res) {
+  controller.gettaskreview = function (req, res) {
     db.GetDocument('review', { 'task': req.body.taskid, 'type': 'user' }, {}, {}, function (err, data) {
       if (err) {
         res.send(err);
@@ -4385,9 +4369,9 @@ module.exports = function (io) {
         res.send(data);
       }
     });
-  }
+  };
 
-  controller.downloadPdf = function downloadPdf(req, res) {
+  controller.downloadPdf = function (req, res) {
     var options = {};
     options.populate = 'tasker user category transactions';
     db.GetOneDocument('task', { _id: req.query.trans }, {}, { options }, function (err, task) {
@@ -4448,9 +4432,9 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
-  controller.userdownloadPdf = function userdownloadPdf(req, res) {
+  controller.userdownloadPdf = function (req, res) {
     console.log("req.query.value", req.query.value)
 
     var options = {};
@@ -4522,10 +4506,9 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
-
-  controller.getcancelreason = function getcancelreason(req, res) {
+  controller.getcancelreason = function (req, res) {
     var query = {};
     if (req.body.type == 'user') {
       query = { 'type': 'user', 'status': 1 }
@@ -4539,7 +4522,7 @@ module.exports = function (io) {
         res.send(data);
       }
     });
-  }
+  };
 
   controller.saveaccountinfo = function (req, res) {
     var request = {};
@@ -4561,9 +4544,9 @@ module.exports = function (io) {
         res.send(response);
       }
     });
-  }
+  };
 
-  controller.paymentmode = function paymentmode(req, res) {
+  controller.paymentmode = function (req, res) {
 
     db.GetDocument('paymentgateway', { $and: [{ status: { $ne: 0 } }, { status: { $ne: 2 } }] }, {}, {}, function (err, docdata) {
       if (err) {
@@ -4592,7 +4575,7 @@ module.exports = function (io) {
         });
       }
     });
-  }
+  };
 
   controller.checkphoneno = function (req, res) {
     db.GetDocument('tasker', { "phone.code": req.body.code, "phone.number": req.body.number }, {}, {}, function (err, docdata) {
@@ -4613,5 +4596,6 @@ module.exports = function (io) {
       }
     });
   };
+
   return controller;
 };

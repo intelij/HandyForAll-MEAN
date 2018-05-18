@@ -669,6 +669,9 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
     accountService.getExperience().then(function (respo) {
       acc.experiences = respo;
     });
+    accountService.getExperienceYearList().then(function (respo) {
+      acc.experience_years = respo;
+    });
     accountService.getTravelArrangement().then(function (respo) {
       acc.travel_arrangements = respo;
     });
@@ -725,6 +728,9 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
       resolve: {
         experiences: function () {
           return acc.experiences;
+        },
+        experience_years: function () {
+          return acc.experience_years;
         },
         travel_arrangements: function () {
           return acc.travel_arrangements;
@@ -2040,7 +2046,7 @@ angular.module('handyforall.accounts').controller('DeactivateCtrl', function ($u
   };
 });
 
-angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl', function (accountService, $uibModalInstance, experiences, travel_arrangements, brands, user, toastr, categories, category, defaultcurrency, $translate) {
+angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl', function (accountService, $uibModalInstance, experiences, experience_years, travel_arrangements, brands, user, toastr, categories, category, defaultcurrency, $translate) {
 
   var acm = this;
   acm.isTasker = false;
@@ -2059,6 +2065,7 @@ angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl',
 
   acm.categories = categories;
   acm.experiences = experiences;
+  acm.experience_years = experience_years;
   acm.travel_arrangements = travel_arrangements;
   acm.brands = brands;
   acm.category = acm.categories.filter(function (obj) {
@@ -2119,9 +2126,19 @@ angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl',
     });
   }
 
+  if (!acm.selectedCategoryData.hour_rate)
+    acm.selectedCategoryData.hour_rate = 0;
+  if (!acm.selectedCategoryData.km_rate)
+    acm.selectedCategoryData.km_rate = 0;
+  if (!acm.selectedCategoryData.unit_price)
+    acm.selectedCategoryData.unit_price = 0;
+  if (!acm.selectedCategoryData.salary)
+    acm.selectedCategoryData.salary = 0;
+
   acm.selectedCategoryData.hour_rate = parseFloat((acm.selectedCategoryData.hour_rate * (!acm.defaultcurrency || !acm.defaultcurrency.length ? 1 : acm.defaultcurrency[0].value)).toFixed(2));
   acm.selectedCategoryData.km_rate = parseFloat((acm.selectedCategoryData.km_rate * (!acm.defaultcurrency || !acm.defaultcurrency.length ? 1 : acm.defaultcurrency[0].value)).toFixed(2));
   acm.selectedCategoryData.unit_price = parseFloat((acm.selectedCategoryData.unit_price * (!acm.defaultcurrency || !acm.defaultcurrency.length ? 1 : acm.defaultcurrency[0].value)).toFixed(2));
+  acm.selectedCategoryData.salary = parseFloat((acm.selectedCategoryData.salary * (!acm.defaultcurrency || !acm.defaultcurrency.length ? 1 : acm.defaultcurrency[0].value)).toFixed(2));
 
   acm.ok = function (valid) {
     if (valid) {

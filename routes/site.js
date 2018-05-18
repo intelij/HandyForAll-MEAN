@@ -210,6 +210,7 @@ module.exports = function (app, io) {
 
     app.get('/site/travel_arrangements', account.getTravelArrangementList);
     app.get('/site/brands/', account.getBrandList);
+    app.get('/site/experience_years/', account.getExperienceYearList);
   } catch (e) {
     console.log('Error On Site', e);
   }

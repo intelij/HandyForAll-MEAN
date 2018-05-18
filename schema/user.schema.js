@@ -175,11 +175,15 @@ USERS_SCHEMA.USER = {
     childid: { type: Schema.ObjectId, ref: 'categories' },
     name: String,
     quick_pitch: String,
+    skills: String,
+    salary: { type: Number, required: false, default: 0},
     hour_rate: { type: Number, required: false, default: 0},
     km_rate: Number,
     experience: { type: Schema.ObjectId, ref: 'experience' },
+    experience_year: { type: Schema.ObjectId, ref: 'experience_year' },
     travel_arrangement: { type: Schema.ObjectId, ref: 'travel_arrangement' },
-    status: { type: Number, default: 1 }
+    status: { type: Number, default: 1 },
+    career_attachment: String
   }],
   working_days: [{
     _id: false,
