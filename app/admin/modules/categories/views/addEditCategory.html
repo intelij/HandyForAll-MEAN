@@ -46,6 +46,8 @@
                 <select id="classification" name="classification" ng-model="ECATC.editCategoryData.classification" class="form-control mb-10" on-blur-validation required>
                   <option value='service' selected="service">Service</option>
                   <option value='product'>Product</option>
+                  <option value='career'>Career</option>
+                  <option value='event'>Event</option>
                   <p class="help-block">
                     <span ng-show="categoryForm.classification.$invalid && !categoryForm.classification.$pristine">Classification is required.</span>
                   </p>

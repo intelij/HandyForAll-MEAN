@@ -63,6 +63,62 @@
               </div>
             </div>
           </div>
+          <div class="col-sm-12 col-xs-12" ng-if="MAC.career_categories && MAC.career_categories.length">
+            <div class="search-wrap">
+              <div class="search-wrap-inner">
+                <form name="searchform" class="frm-fields" submit-validate role="form" novalidate>
+                  <div class="main-cat-search" ng-class="{ 'has-error' : searchform.searchfield.$invalid && !searchform.searchfield.$pristine, 'has-success' : searchform.searchfield.$valid && !searchform.searchfield.$pristine}">
+                    <ui-select name="parent" focus-on="UiSelectParentCategory" ng-model="MAC.searchData.career.parent" theme="selectize" on-select="MAC.getsubcategory(MAC.searchData.career.parent._id, 'career')"
+                               class="" title="Choose a Category">
+                      <ui-select-match placeholder="{{'CHOOSE A CATEGORY' | translate}}">{{$select.selected.name}}</ui-select-match>
+                      <ui-select-choices repeat="item in MAC.career_categories | filter: $select.search">
+                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                      </ui-select-choices>
+                    </ui-select>
+                  </div>
+                  <div class="sub-cat-search">
+                    <ui-select name="child" ng-model="MAC.searchData.career.child" theme="selectize" ng-click="MAC.onfocusSubCat('career')" class="" title="Choose a Subcategory">
+                      <ui-select-match placeholder="{{'CHOOSE A SUBCATEGORY' | translate}}">{{$select.selected.name}}</ui-select-match>
+                      <ui-select-choices repeat="sub_category in MAC.sub_categories.career | filter: $select.search">
+                        <div ng-bind-html="MAC.createTreeView(sub_category) | highlight: $select.search"></div>
+                      </ui-select-choices>
+                    </ui-select>
+                  </div>
+                  <div class="btn-search">
+                    <button type="submit" class="btn btn-block" ng-click="MAC.search(MAC.searchData.career)">{{'SEARCH_CAREERS' | translate}}</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-xs-12" ng-if="MAC.event_categories && MAC.event_categories.length">
+            <div class="search-wrap">
+              <div class="search-wrap-inner">
+                <form name="searchform" class="frm-fields" submit-validate role="form" novalidate>
+                  <div class="main-cat-search" ng-class="{ 'has-error' : searchform.searchfield.$invalid && !searchform.searchfield.$pristine, 'has-success' : searchform.searchfield.$valid && !searchform.searchfield.$pristine}">
+                    <ui-select name="parent" focus-on="UiSelectParentCategory" ng-model="MAC.searchData.event.parent" theme="selectize" on-select="MAC.getsubcategory(MAC.searchData.event.parent._id, 'event')"
+                               class="" title="Choose a Category">
+                      <ui-select-match placeholder="{{'CHOOSE A CATEGORY' | translate}}">{{$select.selected.name}}</ui-select-match>
+                      <ui-select-choices repeat="item in MAC.event_categories | filter: $select.search">
+                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                      </ui-select-choices>
+                    </ui-select>
+                  </div>
+                  <div class="sub-cat-search">
+                    <ui-select name="child" ng-model="MAC.searchData.event.child" theme="selectize" ng-click="MAC.onfocusSubCat('event')" class="" title="Choose a Subcategory">
+                      <ui-select-match placeholder="{{'CHOOSE A SUBCATEGORY' | translate}}">{{$select.selected.name}}</ui-select-match>
+                      <ui-select-choices repeat="sub_category in MAC.sub_categories.event | filter: $select.search">
+                        <div ng-bind-html="MAC.createTreeView(sub_category) | highlight: $select.search"></div>
+                      </ui-select-choices>
+                    </ui-select>
+                  </div>
+                  <div class="btn-search">
+                    <button type="submit" class="btn btn-block" ng-click="MAC.search(MAC.searchData.event)">{{'SEARCH_EVENTS' | translate}}</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

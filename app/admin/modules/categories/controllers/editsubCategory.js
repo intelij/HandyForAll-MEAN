@@ -36,6 +36,8 @@ function editsubCategoryCtrl(categoryEditResolve, CategoryService, toastr, $stat
       ctrl.disbledValue = true;
       data.level = !parent.level ? 2 : (parent.level + 1);
       data.slug = Slug.slugify(data.slug);
+      if (!data.commision)
+        data.commision = 0;
       CategoryService.savesubcategory(data).then(function (response) {
         toastr.success('Category Added Successfully');
         $state.go('app.categories.subcategorylist', { page: $stateParams.page, items: $stateParams.items });
