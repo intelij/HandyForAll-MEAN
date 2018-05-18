@@ -33,6 +33,7 @@ module.exports = function(app, io) {
     var faq = require('../controller/admin/faq.js')(app);
     var postheader = require('../controller/admin/postheader.js')(app);
     var experience = require('../controller/admin/experience.js')(app);
+    var experienceYear = require('../controller/admin/experience-year.js')(app);
     var travelArrangement = require('../controller/admin/travel-arrangement.js')(app);
     var question = require('../controller/admin/question.controller.js')(app);
     var settings = require('../controller/admin/settings.js')(app);
@@ -188,6 +189,11 @@ module.exports = function(app, io) {
     app.post('/experience/edit', ensureAuthorized, experience.edit);
     app.post('/experience/save', ensureAuthorized, experience.save);
     app.post('/experience/delete', ensureAuthorized, experience.delete);
+
+    app.post('/experience-year/list', ensureAuthorized, experienceYear.list);
+    app.post('/experience-year/edit', ensureAuthorized, experienceYear.edit);
+    app.post('/experience-year/save', ensureAuthorized, experienceYear.save);
+    app.post('/experience-year/delete', ensureAuthorized, experienceYear.delete);
 
     app.post('/travel-arrangement/list', ensureAuthorized, travelArrangement.list);
     app.post('/travel-arrangement/edit', ensureAuthorized, travelArrangement.edit);

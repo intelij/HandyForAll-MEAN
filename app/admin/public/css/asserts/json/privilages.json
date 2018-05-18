@@ -326,6 +326,28 @@
     "delete": ""
   }
 }, {
+  "name": "Menu.EXPERIENCE_YEAR",
+  "alias": "experience year",
+  "action": "all",
+  "state": "app.experience-year",
+  "icon": "users",
+  "childs": [ {
+    "name": "SubMenu.ALL_EXPERIENCE_YEAR",
+    "alias": "view",
+    "action": "all",
+    "state": "app.experience-year.list"
+  }, {
+    "name": "SubMenu.ADD_NEW",
+    "action": "add",
+    "state": "app.experience-year.edit"
+  } ],
+  "status": {
+    "view": "",
+    "add": "",
+    "edit": "",
+    "delete": ""
+  }
+}, {
   "name": "Menu.TRAVEL_ARRANGEMENT",
   "alias": "travel arrangement",
   "action": "all",

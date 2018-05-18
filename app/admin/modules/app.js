@@ -12,6 +12,7 @@ angular.module('handyforall.emailTemplate', []);
 angular.module('handyforall.categories', []);
 angular.module('handyforall.faq', []);
 angular.module('handyforall.experience', []);
+angular.module('handyforall.experience-year', []);
 angular.module('handyforall.travel-arrangement', []);
 angular.module('handyforall.question', []);
 angular.module('handyforall.reviews', []);
@@ -68,6 +69,7 @@ angular.module('handyforall.admin', [
   'handyforall.categories',
   'handyforall.faq',
   'handyforall.experience',
+  'handyforall.experience-year',
   'handyforall.travel-arrangement',
   'handyforall.question',
   'handyforall.reviews',
@@ -939,6 +941,39 @@ angular.module('handyforall.admin')
               return ExperienceService.getExperience($stateParams.id);
             } else {
               return ExperienceService.getExperience();
+            }
+          }
+        }
+      })
+      .state('app.tasker_management.experience-year', {
+        url: '/experience-year',
+        action: 'all',
+        template: '<div ui-view></div>'
+      })
+      .state('app.tasker_management.experience-year.list', {
+        url: '/list',
+        action: 'all',
+        controller: 'experienceYearListCtrl',
+        controllerAs: 'ctrl',
+        templateUrl: 'app/admin/modules/experience-year/views/experience-year-list.html',
+        resolve: {
+          experienceYearServiceResolve: function (ExperienceYearService) {
+            return ExperienceYearService.getExperienceYearList(10, 0);
+          }
+        }
+      })
+      .state('app.tasker_management.experience-year.edit', {
+        url: '/edit/:id',
+        action: 'add',
+        controller: 'editExperienceYearCtrl',
+        controllerAs: 'ctrl',
+        templateUrl: 'app/admin/modules/experience-year/views/add-edit-experience-year.html',
+        resolve: {
+          ExperienceYearEditResolve: function (ExperienceYearService, $stateParams) {
+            if ($stateParams.id) {
+              return ExperienceYearService.getExperienceYear($stateParams.id);
+            } else {
+              return { status: 1};
             }
           }
         }

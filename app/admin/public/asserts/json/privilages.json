@@ -302,6 +302,11 @@
     "action": "all",
     "state": "app.tasker_management.experience.list"
   }, {
+    "name": "SubMenu.EXPERIENCE_YEAR",
+    "alias": "view",
+    "action": "all",
+    "state": "app.tasker_management.experience-year.list"
+  }, {
     "name": "SubMenu.TRAVEL_ARRANGEMENT",
     "alias": "view",
     "action": "all",
