@@ -731,5 +731,14 @@
   "pm_8_9": "08:00 PM - 09:00 PM",
   "pm_9_10": "09:00 PM - 10:00 PM",
   "VIEW_DEMAND": "View Demand",
-  "IMAGES": "Images"
+  "IMAGES": "Images",
+  "DEMAND_NAME": "Demand Name",
+  "DEMAND NAME IS REQUIRED": "Demand name is required(Maximum 40 characters allowed)",
+  "DEMAND_DESCRIPTION": "Demand Description",
+  "DEMAND DESCRIPTION IS REQUIRED": "Demand description is required(Maximum 140 characters allowed)",
+  "DEMAND_SPECIFICATION": "Demand Name",
+  "DEMAND SPECIFICATION IS REQUIRED": "Demand specification is required(Maximum 140 characters allowed)",
+  "DEMAND_IMAGES": "Demand Images",
+  "SET_CAPACITY_RATE": "Set Capacity",
+  "CAPACITY RATE IS REQUIRED": "capacity is required"
 }

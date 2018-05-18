@@ -2025,6 +2025,8 @@ angular.module('handyforall.accounts').controller('DeactivateCtrl', function ($u
 angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl', function (accountService, $uibModalInstance, experiences, travel_arrangements, brands, user, toastr, categories, category, defaultcurrency, $translate) {
 
   var acm = this;
+  acm.isTasker = false;
+  acm.demandImagesMaxLimit = false;
   if (category) {
     acm.role = 'Edit';
   }
@@ -2032,6 +2034,9 @@ angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl',
     acm.role = 'New';
   }
   acm.user = user;
+  if (user.role === 'tasker') {
+    acm.isTasker = true;
+  }
   acm.defaultcurrency = defaultcurrency;
 
   acm.categories = categories;
@@ -2045,7 +2050,7 @@ angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl',
 
   acm.selectedCategoryData = {};
   acm.selectedCategoryData.skills = [];
-  acm.selectedCategoryData.hour_rate = 0
+  acm.selectedCategoryData.hour_rate = 0;
   if (acm.category) {
     acm.mode = 'EDIT';
   } else {
@@ -2063,6 +2068,18 @@ angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl',
     acm.category = acm.categories.filter(function (obj) {
       return obj._id === category;
     })[0];
+  };
+
+  acm.onDemandImages = (input) => {
+    console.log('demand images change', input);
+    if (input && input.length > 4) {
+      acm.demandImagesMaxLimit = true;
+      // acm.selectedCategoryData.demand_images.slice(0, 4);
+      // $("[name='demand_images']").files;
+      angular.element("input[name=demand_images]").val(null);
+    } else {
+      acm.demandImagesMaxLimit = false;
+    }
   };
 
   acm.onChangeCategoryChild = function (category) {

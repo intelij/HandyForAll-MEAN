@@ -89,6 +89,7 @@ TASKER_SCHEMA.TASKER = {
     name: String,
     quick_pitch: String,
     hour_rate: { type: Number, required: false, default: 0},
+    capacity_rate: { type: Number, required: false, default: 1},
     km_rate: Number,
     unit_price: { type: Number, required: false, default: 0},
     experience: { type: Schema.ObjectId, ref: 'experience' },
@@ -100,7 +101,7 @@ TASKER_SCHEMA.TASKER = {
     demand_name: {type: String, required: false},
     demand_description: {type: String, required: false},
     demand_specification: {type: String, required: false},
-    demand_image: {type: String, required: false},
+    demand_images: [{type: String, required: false}],
   }],
   working_days: [{
     _id: false,
