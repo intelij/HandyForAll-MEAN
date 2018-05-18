@@ -1,6 +1,7 @@
 var json2csv = require('json2csv');
 var multer = require('multer');
 var fs = require('fs');
+const uuidv1 = require('uuid/v1');  // timestamp version
 
 function jsontocsv(column_header, data, path, callback) {
   json2csv({data: data, fields: column_header}, function (err, csv) {
@@ -22,7 +23,8 @@ function commonUpload(destinationPath) {
     filename: function (req, file, callback) {
       var uploadName = file.originalname.split('.');
       var extension = '.' + uploadName[uploadName.length - 1];
-      var fileName = Date.now().toString();
+      // var fileName = Date.now().toString();
+      var fileName = uuidv1();
       fs.readFile(destinationPath + file.originalname, function (err, res) {
         if (!err) {
           callback(null, fileName + extension);

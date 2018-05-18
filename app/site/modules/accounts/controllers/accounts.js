@@ -696,6 +696,24 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 
   acc.imageModal = function (category) {
     console.log('image modal', category);
+    if (category.demand_images && category.demand_images.length > 0) {
+      var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: 'app/site/modules/accounts/views/show_images.modal.tab.html',
+        controller: 'CategoryDemandImageModalInstanceCtrl',
+        controllerAs: 'CDIM',
+        resolve: {
+          images: function () {
+            return category.demand_images;
+          }
+        }
+      });
+
+      modalInstance.result.then(function (imageData) {}, function () {});
+    } else {
+      toastr.error('There is no images');
+    }
+
   };
 
   acc.categoryModal = function (category) {
@@ -2113,6 +2131,19 @@ angular.module('handyforall.accounts').controller('CategoriesModalInstanceCtrl',
     }
   };
   acm.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+});
+
+angular.module('handyforall.accounts').controller('CategoryDemandImageModalInstanceCtrl', function (accountService, $uibModalInstance, toastr, images, $translate) {
+  const cdim = this;
+
+  cdim.images = [];
+
+  cdim.images = images;
+  console.log('images', images);
+
+  cdim.ok = function () {
     $uibModalInstance.dismiss('cancel');
   };
 });

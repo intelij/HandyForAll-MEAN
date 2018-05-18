@@ -3198,8 +3198,9 @@ module.exports = function (io) {
     data.skills.km_rate = req.body.km_rate;
     data.skills.unit_price = !req.body.unit_price ? 0 : req.body.unit_price;
     data.skills.inventory = !req.body.inventory ? 0 : req.body.inventory;
-    if (req.body.brand)
+    if (req.body.brand) {
       data.skills.brand = req.body.brand;
+    }
     data.skills.quick_pitch = req.body.quick_pitch;
     data.skills.categoryid = req.body.categoryid;
     data.skills.childid = req.body.childid;
