@@ -1,7 +1,7 @@
 angular.module('handyforall.task').controller('taskCtrl', taskCtrl);
 
-taskCtrl.$inject = ['$scope', '$rootScope', '$location', '$stateParams', '$uibModal', 'TaskService', 'TaskserviceResolve', 'toastr', '$state', 'AuthenticationService', 'CurrentUserTaskserviceResolve', 'MainService', '$translate', 'ngMeta','$cookieStore'];
-function taskCtrl($scope, $rootScope, $location, $stateParams, $uibModal, TaskService, TaskserviceResolve, toastr, $state, AuthenticationService, CurrentUserTaskserviceResolve, MainService, $translate, ngMeta, $cookieStore) {
+taskCtrl.$inject = ['$scope', '$rootScope', '$location', '$stateParams', '$uibModal', 'TaskService', 'TaskserviceResolve', 'toastr', '$state', 'AuthenticationService', 'CurrentUserResolve', 'MainService', '$translate', 'ngMeta','$cookieStore'];
+function taskCtrl($scope, $rootScope, $location, $stateParams, $uibModal, TaskService, TaskserviceResolve, toastr, $state, AuthenticationService, CurrentUserResolve, MainService, $translate, ngMeta, $cookieStore) {
   var tac = this;
   var user = AuthenticationService.GetCredentials();
 
@@ -36,11 +36,11 @@ function taskCtrl($scope, $rootScope, $location, $stateParams, $uibModal, TaskSe
     ngMeta.setTitle(TaskserviceResolve[0].SubCategoryInfo.name);
   }
 
-  if (CurrentUserTaskserviceResolve[0]) {
-    tac.currentuserid = CurrentUserTaskserviceResolve[0]._id;
+  if (CurrentUserResolve[0]) {
+    tac.currentuserid = CurrentUserResolve[0]._id;
 
-    if (CurrentUserTaskserviceResolve[0].addressList && CurrentUserTaskserviceResolve[0].addressList.length > 0) {
-      tac.userAddressList = CurrentUserTaskserviceResolve[0].addressList;
+    if (CurrentUserResolve[0].addressList && CurrentUserResolve[0].addressList.length > 0) {
+      tac.userAddressList = CurrentUserResolve[0].addressList;
 
       // look for default address
       for (var i = 0, len = tac.userAddressList.length; i < len; i++) {
@@ -53,8 +53,8 @@ function taskCtrl($scope, $rootScope, $location, $stateParams, $uibModal, TaskSe
       tac.onUserAddressChanged(tac.filter.user_address_index);
     }
 
-    if (CurrentUserTaskserviceResolve[0].deliveryAddressList && CurrentUserTaskserviceResolve[0].deliveryAddressList.length > 0) {
-      tac.deliveryAddressList = CurrentUserTaskserviceResolve[0].deliveryAddressList;
+    if (CurrentUserResolve[0].deliveryAddressList && CurrentUserResolve[0].deliveryAddressList.length > 0) {
+      tac.deliveryAddressList = CurrentUserResolve[0].deliveryAddressList;
 
       // look for default address
       for (var i = 0, len = tac.deliveryAddressList.length; i < len; i++) {
@@ -95,7 +95,7 @@ function taskCtrl($scope, $rootScope, $location, $stateParams, $uibModal, TaskSe
       tac.onDeliveryAddressChanged(-1);
     }
 
-    TaskService.checktaskeravailability(tac.userAddressList[newVal].location, tac.taskbaseinfo.SubCategoryInfo._id).then(function (response) {
+    TaskService.checktaskeravailability(tac.userAddressList[newVal].location, tac.taskbaseinfo.SubCategoryInfo._id, user.currentUser.user_type).then(function (response) {
       if (angular.isDefined(response)) {
         if (response.count > 0) {
           tac.isAvailableAtUserLocation = 1;
@@ -124,17 +124,18 @@ function taskCtrl($scope, $rootScope, $location, $stateParams, $uibModal, TaskSe
 
     tac.isAvailableAtDeliveryLocation = -1;
 
-    TaskService.checktaskeravailability(location, tac.taskbaseinfo.SubCategoryInfo._id).then(function (response) {
-      if (angular.isDefined(response)) {
-        if (response.count > 0) {
-          tac.isAvailableAtDeliveryLocation = 1;
-        } else {
-          tac.isAvailableAtDeliveryLocation = 0;
+    TaskService.checktaskeravailability(location, tac.taskbaseinfo.SubCategoryInfo._id, user.currentUser.user_type)
+      .then(function (response) {
+        if (angular.isDefined(response)) {
+          if (response.count > 0) {
+            tac.isAvailableAtDeliveryLocation = 1;
+          } else {
+            tac.isAvailableAtDeliveryLocation = 0;
+          }
         }
-      }
-    }, function (error) {
-      tac.isAvailableAtDeliveryLocation = 0;
-    });
+      }, function (error) {
+        tac.isAvailableAtDeliveryLocation = 0;
+      });
   }
 
   function fnDeleteAddress (index, isDeliveryAddress) {
@@ -149,13 +150,14 @@ function taskCtrl($scope, $rootScope, $location, $stateParams, $uibModal, TaskSe
         }
       }
     });
+
     modalInstance.result.then(function () {
       TaskService.deleteaddress({
         userid: user.currentUser.user_id,
         id: index,
         isDeliveryAddress: isDeliveryAddress
       }).then(function () {
-        MainService.getCurrentUsers(user.currentUser.username).then(function (refdata) {
+        MainService.getCurrentUsers(user.currentUser.username, user.currentUser.user_type).then(function (refdata) {
           tac.userAddressList = refdata[0].addressList;
           tac.deliveryAddressList = refdata[0].deliveryAddressList;
         });
@@ -169,7 +171,7 @@ function taskCtrl($scope, $rootScope, $location, $stateParams, $uibModal, TaskSe
       add_id: id,
       isDeliveryAddress: isDeliveryAddress
     }).then(function () {
-      MainService.getCurrentUsers(user.currentUser.username).then(function (refdata) {
+      MainService.getCurrentUsers(user.currentUser.username, user.currentUser.user_type).then(function (refdata) {
         tac.userAddressList = refdata[0].addressList;
         tac.deliveryAddressList = refdata[0].deliveryAddressList;
       });
@@ -191,55 +193,52 @@ function taskCtrl($scope, $rootScope, $location, $stateParams, $uibModal, TaskSe
           }
         }
       });
+
       modalInstance.result.then(function (data) {
-        if ((data.addressList.location.lat != "") && (data.addressList.location.lan != 'undefined')) {
-          TaskService.AddAddress(user.currentUser.user_id, data).then(function (response) {
+        if (!data.addressList || !data.addressList.location || !data.addressList.location.lat || !data.addressList.location.lat) {
+          $translate('PLEASE ENTER VALID LOCATION').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
+        } else {
+          TaskService.AddAddress(user.currentUser.user_id, data, user.currentUser.user_type).then(function (response) {
             $translate('ADDRESS ADDED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
-            MainService.getCurrentUsers(user.currentUser.username).then(function (refdata) {
+
+            MainService.getCurrentUsers(user.currentUser.username, user.currentUser.user_type).then(function (refdata) {
               tac.userAddressList = refdata[0].addressList;
             })
           });
         }
-        else {
+      });
+    } else if (CurrentUserResolve[0].addressList.length < 5) {
+      var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: 'app/site/modules/task-step/views/addaddressmodel.html',
+        controller: 'AddAddress',
+        controllerAs: 'ATA',
+        resolve: {
+          user: function () {
+            return tac.userAddressList[index];
+          }
+        }
+      });
+
+      modalInstance.result.then(function (data) {
+        if (!data.addressList || !data.addressList.location || !data.addressList.location.lat || !data.addressList.location.lat) {
           $translate('PLEASE ENTER VALID LOCATION').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
+        } else {
+          TaskService.AddAddress(user.currentUser.user_id, data, user.currentUser.user_type).then(function (response) {
+            if (response.status == 0) {
+              $translate('ADDRESS ALREADY ON YOUR LIST').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+            } else {
+              $translate('ADDRESS ADDED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+
+              MainService.getCurrentUsers(user.currentUser.username, user.currentUser.user_type).then(function (refdata) {
+                tac.userAddressList = refdata[0].addressList;
+              })
+            }
+          });
         }
       });
     } else {
-      MainService.getCurrentUsers(user.currentUser.username).then(function (refdata) {
-        if (refdata[0].addressList.length < 5) {
-          var modalInstance = $uibModal.open({
-            animation: true,
-            templateUrl: 'app/site/modules/task-step/views/addaddressmodel.html',
-            controller: 'AddAddress',
-            controllerAs: 'ATA',
-            resolve: {
-              user: function () {
-                return tac.userAddressList[index];
-              }
-            }
-          });
-          modalInstance.result.then(function (data) {console.log(data,"eeeeee");
-            if ((data.addressList.location.lat != "") && (data.addressList.location.lan != 'undefined')) {
-              TaskService.AddAddress(user.currentUser.user_id, data).then(function (response) {
-                if (response.status == 0) {
-                  $translate('ADDRESS ALREADY ON YOUR LIST').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
-                } else {
-                  $translate('ADDRESS ADDED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
-                  MainService.getCurrentUsers(user.currentUser.username).then(function (refdata) {
-                    tac.userAddressList = refdata[0].addressList;
-                  })
-                }
-              });
-            }
-            else {
-              $translate('PLEASE ENTER VALID LOCATION').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
-            }
-
-          });
-        } else {
-          $translate('SORRY MORE THAN 5 ADDRESS COULD NOT BE ADDED').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
-        }
-      })
+      $translate('SORRY MORE THAN 5 ADDRESS COULD NOT BE ADDED').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
     }
   }
 
@@ -256,55 +255,52 @@ function taskCtrl($scope, $rootScope, $location, $stateParams, $uibModal, TaskSe
           }
         }
       });
+
       modalInstance.result.then(function (data) {
-        if ((data.addressList.location.lat != "") && (data.addressList.location.lan != 'undefined')) {
-          TaskService.AddDeliveryAddress(user.currentUser.user_id, data).then(function (response) {
+        if (!data.addressList || !data.addressList.location || !data.addressList.location.lat || !data.addressList.location.lat) {
+          $translate('PLEASE ENTER VALID LOCATION').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
+        } else {
+          TaskService.AddDeliveryAddress(user.currentUser.user_id, data, user.currentUser.user_type).then(function (response) {
             $translate('ADDRESS ADDED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
-            MainService.getCurrentUsers(user.currentUser.username).then(function (refdata) {
+
+            MainService.getCurrentUsers(user.currentUser.username, user.currentUser.user_type).then(function (refdata) {
               tac.deliveryAddressList = refdata[0].deliveryAddressList;
             })
           });
         }
-        else {
+      });
+    } else if (CurrentUserResolve[0].deliveryAddressList.length < 5) {
+      var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: 'app/site/modules/task-step/views/addaddressmodel.html',
+        controller: 'AddAddress',
+        controllerAs: 'ATA',
+        resolve: {
+          user: function () {
+            return tac.deliveryAddressList[index];
+          }
+        }
+      });
+
+      modalInstance.result.then(function (data) {
+        if (!data.addressList || !data.addressList.location || !data.addressList.location.lat || !data.addressList.location.lat) {
           $translate('PLEASE ENTER VALID LOCATION').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
+        } else {
+          TaskService.AddDeliveryAddress(user.currentUser.user_id, data, user.currentUser.user_type).then(function (response) {
+            if (response.status == 0) {
+              $translate('ADDRESS ALREADY ON YOUR LIST').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+            } else {
+              $translate('ADDRESS ADDED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
+
+              MainService.getCurrentUsers(user.currentUser.username, user.currentUser.user_type).then(function (refdata) {
+                tac.deliveryAddressList = refdata[0].deliveryAddressList;
+              })
+            }
+          });
         }
       });
     } else {
-      MainService.getCurrentUsers(user.currentUser.username).then(function (refdata) {
-        if (refdata[0].addressList.length < 5) {
-          var modalInstance = $uibModal.open({
-            animation: true,
-            templateUrl: 'app/site/modules/task-step/views/addaddressmodel.html',
-            controller: 'AddAddress',
-            controllerAs: 'ATA',
-            resolve: {
-              user: function () {
-                return tac.deliveryAddressList[index];
-              }
-            }
-          });
-          modalInstance.result.then(function (data) {console.log(data,"eeeeee");
-            if ((data.addressList.location.lat != "") && (data.addressList.location.lan != 'undefined')) {
-              TaskService.AddDeliveryAddress(user.currentUser.user_id, data).then(function (response) {
-                if (response.status == 0) {
-                  $translate('ADDRESS ALREADY ON YOUR LIST').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
-                } else {
-                  $translate('ADDRESS ADDED SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
-                  MainService.getCurrentUsers(user.currentUser.username).then(function (refdata) {
-                    tac.deliveryAddressList = refdata[0].deliveryAddressList;
-                  })
-                }
-              });
-            }
-            else {
-              $translate('PLEASE ENTER VALID LOCATION').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
-            }
-
-          });
-        } else {
-          $translate('SORRY MORE THAN 5 ADDRESS COULD NOT BE ADDED').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
-        }
-      })
+      $translate('SORRY MORE THAN 5 ADDRESS COULD NOT BE ADDED').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
     }
   }
 
@@ -333,14 +329,14 @@ function taskCtrl($scope, $rootScope, $location, $stateParams, $uibModal, TaskSe
 
     data.categoryid = tac.taskbaseinfo.SubCategoryInfo._id;
 
-    if (CurrentUserTaskserviceResolve[0].address) {
+    if (CurrentUserResolve[0].address) {
       data.billing_address = {
-        'zipcode': CurrentUserTaskserviceResolve[0].address.zipcode || "",
-        'country': CurrentUserTaskserviceResolve[0].address.country || "",
-        'state': CurrentUserTaskserviceResolve[0].address.state || "",
-        'city': CurrentUserTaskserviceResolve[0].address.city || "",
-        'line2': CurrentUserTaskserviceResolve[0].address.line2 || "",
-        'line1': CurrentUserTaskserviceResolve[0].address.line1 || ""
+        'zipcode': CurrentUserResolve[0].address.zipcode || "",
+        'country': CurrentUserResolve[0].address.country || "",
+        'state': CurrentUserResolve[0].address.state || "",
+        'city': CurrentUserResolve[0].address.city || "",
+        'line2': CurrentUserResolve[0].address.line2 || "",
+        'line1': CurrentUserResolve[0].address.line1 || ""
       };
     } else {
       data.billing_address = {
@@ -372,10 +368,12 @@ function taskCtrl($scope, $rootScope, $location, $stateParams, $uibModal, TaskSe
 
     TaskService.addtask(data).then(function (result) {
       tac.booking_id = result.booking_id;
+
       var option = {
         slug: tac.taskbaseinfo.SubCategoryInfo.slug,
         task: result._id
       };
+
       $state.go('search', option, { reload: false });
     }, function (error) {
       toastr.error(error);

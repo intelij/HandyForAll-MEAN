@@ -6,7 +6,6 @@ taskFilterCtrl.$inject = ['$scope', '$timeout', '$uibModal', '$rootScope', '$loc
 function taskFilterCtrl($scope, $timeout, $uibModal, $rootScope, $location, $stateParams, SearchResolve, TaskService, TaskserviceResolve,
                         toastr, $state, $filter, AuthenticationService, $modal, MainService, TaskServiceNewResolve,
                         $translate, ngMeta, TaskerCountResolve, NgMap, $q, $log, BrandListResolve) {
-
   const tfc = this;
   tfc.search = SearchResolve;
   tfc.taskinfo = TaskServiceNewResolve;
@@ -128,13 +127,11 @@ function taskFilterCtrl($scope, $timeout, $uibModal, $rootScope, $location, $sta
       // tfc.kmmin = 0;
       // tfc.kmmax = 100;
     } else {
-
       // tfc.kmmin = tfc.filter.kmminvalue = tfc.search.kmminRate || 0;
       // tfc.kmmax = tfc.filter.kmmaxvalue = tfc.search.kmmaxRate || 500;
 
       tfc.kmmin = 0;
       tfc.kmmax = 500;
-
     }
 
     tfc.UIslide = [tfc.min, tfc.max];
@@ -145,12 +142,15 @@ function taskFilterCtrl($scope, $timeout, $uibModal, $rootScope, $location, $sta
       tfc.max = (tfc.max).toFixed(2);
     });
 
-    MainService.getCurrentUsers(user.currentUser.username).then(function (result) {
+    MainService.getCurrentUsers(user.currentUser.username, user.currentUser.user_type).then(function (result) {
       tfc.currentUserData = result[0];
-      tfc.location = tfc.currentUserData.addressList[0];
+
       console.log('current user', tfc.currentUserData);
+
+      tfc.location = tfc.currentUserData.addressList[0];
       tfc.filter.lat = tfc.location.location.lat;
       tfc.filter.lng = tfc.location.location.lng;
+
       tfc.filterDate();
     }, function (error) {
       $translate('INIT CURRENT DATA ERROR')

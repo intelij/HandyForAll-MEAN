@@ -148,7 +148,7 @@ USERS_SCHEMA.USER = {
     }
   },
   mode: String,
-  availability: Number,
+  availability: { type: Number, default: 1 },
   bio: String,
   banking: {
     acc_holder_name: String,

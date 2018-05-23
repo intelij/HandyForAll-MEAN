@@ -28,6 +28,42 @@ TASKER_SCHEMA.TASKER = {
     country: String
   },
 
+  addressList: [{
+    line1: String,
+    line2: String,
+    city: String,
+    state: String,
+    zipcode: String,
+    mobile: Number,
+    country: String,
+    location: {
+      lat: Number,
+      lng: Number
+    },
+    street: String,
+    landmark: String,
+    locality: String,
+    status: { type: Number, default: 1 }
+  }],
+
+  deliveryAddressList: [{
+    line1: String,
+    line2: String,
+    city: String,
+    state: String,
+    zipcode: String,
+    mobile: Number,
+    country: String,
+    location: {
+      lat: Number,
+      lng: Number
+    },
+    street: String,
+    landmark: String,
+    locality: String,
+    status: { type: Number, default: 1 }
+  }],
+
   role: String,
   activity: {
     last_login: { type: Date, default: Date.now },

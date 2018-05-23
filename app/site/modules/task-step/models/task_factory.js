@@ -85,14 +85,18 @@ function TaskService($http, $q) {
     return deferred.promise;
   }
 
-  function AddAddress(userid, data) {
+  function AddAddress(userid, data, usertype) {
     var deferred = $q.defer();
     $http({
       method: 'POST',
       url: '/site/task/addaddress/',
-      data: { userid: userid, data: data }
-    }).success(function (data) {
-      deferred.resolve(data);
+      data: {
+        userid: userid,
+        data: data,
+        usertype: !usertype ? 'user' : usertype
+      }
+    }).success(function (response) {
+      deferred.resolve(response);
     }).error(function (err) {
       deferred.reject(err);
     });
@@ -104,9 +108,13 @@ function TaskService($http, $q) {
     $http({
       method: 'POST',
       url: '/site/task/add_delivery_address/',
-      data: { userid: userid, data: data }
-    }).success(function (data) {
-      deferred.resolve(data);
+      data: {
+        userid: userid,
+        data: data,
+        usertype: !usertype ? 'user' : usertype
+      }
+    }).success(function (response) {
+      deferred.resolve(response);
     }).error(function (err) {
       deferred.reject(err);
     });
@@ -141,18 +149,25 @@ function TaskService($http, $q) {
     return deferred.promise;
   }
 
-  function checktaskeravailability(location, categoryId) {
+  function checktaskeravailability(location, categoryId, requester) {
+    var url = '/site/task/taskerAvailabilitybyWorkingAreaCount?' + $.param({
+      lat: location.lat,
+      lon: location.lng,
+      categoryid: categoryId,
+      requester: !requester ? 'user' : requester
+    });
 
-    var url = '/site/task/taskerAvailabilitybyWorkingAreaCount?lat=' + location.lat + '&lon=' + location.lng + '&categoryid=' + categoryId;
     var deferred = $q.defer();
+
     $http({
       method: 'GET',
       url: url
-    }).success(function (data) {
-      deferred.resolve(data);
+    }).success(function (response) {
+      deferred.resolve(response);
     }).error(function (err) {
       deferred.reject(err);
     });
+
     return deferred.promise;
   }
 
@@ -440,14 +455,17 @@ function TaskService($http, $q) {
     return deferred.promise;
   }
 
-  function searchTasker(data) {
+  function searchTasker(task, requester) {
     const deferred = $q.defer();
     $http({
       method: 'POST',
       url: '/site/task/search-tasker',
-      data: { task: data }
-    }).success(function (data) {
-      deferred.resolve(data);
+      data: {
+        task: task,
+        requester: !requester ? 'user' : 'tasker'
+      }
+    }).success(function (response) {
+      deferred.resolve(response);
     }).error(function (err) {
       deferred.reject(err);
     });

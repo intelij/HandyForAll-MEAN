@@ -1215,13 +1215,7 @@ module.exports = function (io) {
     user.radiusby = req.body.radiusby;
     user.radius = req.body.radius;
 
-    var model ='tasker';
-    if (req.body.role) {
-      model = req.body.role;
-      if (req.body.role == 'user') {
-        model = 'users'
-      }
-    }
+    var model = !req.body.type || req.body.type == 'tasker' ? 'tasker' : 'users';
 
     db.UpdateDocument(model, { _id: req.body._id }, user, function (err, docdata) {
       if (err) {
@@ -1233,11 +1227,7 @@ module.exports = function (io) {
   };
 
   controller.updateAvailability = function (req, res) {
-    var data = {};
-    data.tasker = req.body._id;
-    data.availability = req.body.availability;
-
-    taskerLibrary.updateAvailability(data, function (err, response) {
+    taskerLibrary.updateAvailability(req.body, function (err, response) {
       if (err) {
         res.send(err);
       } else {
@@ -1247,13 +1237,7 @@ module.exports = function (io) {
   };
 
   controller.edit = function (req, res) {
-    var model ='tasker';
-    if (req.body.type) {
-      model = req.body.type;
-      if (req.body.type == 'user') {
-        model = 'users'
-      }
-    }
+    var model = !req.body.type || req.body.type == 'tasker' ? 'tasker' : 'users';
 
     db.GetDocument(model, { '_id': req.body.id }, {}, {}, function (err, data) {
       if (err) {
@@ -1866,13 +1850,7 @@ module.exports = function (io) {
       options: {}
     };
 
-    var model ='tasker';
-    if (req.body.type) {
-      model = req.body.type;
-      if (req.body.type == 'user') {
-        model = 'users'
-      }
-    }
+    var model = !req.body.type || req.body.type == 'tasker' ? 'tasker' : 'users';
 
     // const getCategory = () => {
     //   db.GetAggregation('tasker', [
@@ -3227,13 +3205,7 @@ module.exports = function (io) {
       }
     }
 
-    var model ='tasker';
-    if (req.body.type) {
-      model = req.body.type;
-      if (req.body.type == 'user') {
-        model = 'users'
-      }
-    }
+    var model = !req.body.type || req.body.type == 'tasker' ? 'tasker' : 'users';
 
     console.log("skills", data.skills);
 
@@ -3282,13 +3254,7 @@ module.exports = function (io) {
   };
 
   controller.deleteCategory = function (req, res) {
-    var model ='tasker';
-    if (req.body.type) {
-      model = req.body.type;
-      if (req.body.type == 'user') {
-        model = 'users'
-      }
-    }
+    var model = !req.body.type || req.body.type == 'tasker' ? 'tasker' : 'users';
 
     db.UpdateDocument(model, { _id: req.body.userid }, { $pull: { "skills": { childid: req.body.categoryid } } }, function (err, result) {
       if (err) {
