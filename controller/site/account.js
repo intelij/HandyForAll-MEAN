@@ -1215,9 +1215,7 @@ module.exports = function (io) {
     user.radiusby = req.body.radiusby;
     user.radius = req.body.radius;
 
-    var model = !req.body.type || req.body.type == 'tasker' ? 'tasker' : 'users';
-
-    db.UpdateDocument(model, { _id: req.body._id }, user, function (err, docdata) {
+    db.UpdateDocument('users', { _id: req.body._id }, user, function (err, docdata) {
       if (err) {
         res.send(err);
       } else {
@@ -1237,9 +1235,7 @@ module.exports = function (io) {
   };
 
   controller.edit = function (req, res) {
-    var model = !req.body.type || req.body.type == 'tasker' ? 'tasker' : 'users';
-
-    db.GetDocument(model, { '_id': req.body.id }, {}, {}, function (err, data) {
+    db.GetDocument('users', { '_id': req.body.id }, {}, {}, function (err, data) {
       if (err) {
         res.send(err);
       } else {
@@ -1850,8 +1846,6 @@ module.exports = function (io) {
       options: {}
     };
 
-    var model = !req.body.type || req.body.type == 'tasker' ? 'tasker' : 'users';
-
     // const getCategory = () => {
     //   db.GetAggregation('tasker', [
     //     { $match: { 'status': 1, parent: { $exists: false } } },
@@ -1904,7 +1898,7 @@ module.exports = function (io) {
     };
 
     options.populate = 'skills.childid';
-    db.GetOneDocument(model, { _id: taskerId }, { skills: 1 }, options, function (err, docdata) {
+    db.GetOneDocument('users', { _id: taskerId }, { skills: 1 }, options, function (err, docdata) {
       if (err || !docdata) {
         res.send(err);
       } else {
@@ -3205,15 +3199,13 @@ module.exports = function (io) {
       }
     }
 
-    var model = !req.body.type || req.body.type == 'tasker' ? 'tasker' : 'users';
-
     console.log("skills", data.skills);
 
-    db.GetOneDocument(model, { _id: userid, 'skills.childid': data.skills.childid }, { skills: 1 }, {}, function (err, docdata) {
+    db.GetOneDocument('users', { _id: userid, 'skills.childid': data.skills.childid }, { skills: 1 }, {}, function (err, docdata) {
       if (err) {
         res.send(err);
       } else if (docdata) {
-        db.UpdateDocument(model, { _id: userid, 'skills.childid': data.skills.childid }, { $set: { "skills.$": data.skills } }, { multi: true }, function (err, result) {
+        db.UpdateDocument('users', { _id: userid, 'skills.childid': data.skills.childid }, { $set: { "skills.$": data.skills } }, { multi: true }, function (err, result) {
           if (err) {
             res.send(err);
           } else {
@@ -3221,11 +3213,11 @@ module.exports = function (io) {
           }
         });
       } else {
-        db.UpdateDocument(model, { _id: userid }, { $addToSet: { "skills": data.skills } }, { "multi": true }, function (err, result) {
+        db.UpdateDocument('users', { _id: userid }, { $addToSet: { "skills": data.skills } }, { "multi": true }, function (err, result) {
           if (err) {
             res.send(err);
           } else {
-            db.GetOneDocument(model, { _id: userid }, {}, {}, function (err, taskerdocdata) {
+            db.GetOneDocument('users', { _id: userid }, {}, {}, function (err, taskerdocdata) {
               if (err) {
                 res.send(err);
               }
@@ -3254,14 +3246,12 @@ module.exports = function (io) {
   };
 
   controller.deleteCategory = function (req, res) {
-    var model = !req.body.type || req.body.type == 'tasker' ? 'tasker' : 'users';
-
-    db.UpdateDocument(model, { _id: req.body.userid }, { $pull: { "skills": { childid: req.body.categoryid } } }, function (err, result) {
+    db.UpdateDocument('users', { _id: req.body.userid }, { $pull: { "skills": { childid: req.body.categoryid } } }, function (err, result) {
       if (err) {
         res.send(err);
       } else {
         res.send(result);
-        db.GetOneDocument(model, { _id: req.body.userid }, {}, {}, function (err, docdata) {
+        db.GetOneDocument('users', { _id: req.body.userid }, {}, {}, function (err, docdata) {
           if (err) {
             res.send(err);
           } else {
@@ -3405,7 +3395,7 @@ module.exports = function (io) {
             }
           }];
 
-        db.GetAggregation(model, getQuery, function (err, docdata) {
+        db.GetAggregation('users', getQuery, function (err, docdata) {
           if (err) {
             res.send(err);
           } else {
@@ -3413,7 +3403,7 @@ module.exports = function (io) {
               var avgreview = parseFloat(docdata[0].avg);
               var totalreview = docdata[0].documentData[0].task.length;
 
-              db.UpdateDocument(model, { _id: data.tasker }, { "avg_review": avgreview, "total_review": totalreview }, function (err, tasker) {
+              db.UpdateDocument('users', { _id: data.tasker }, { "avg_review": avgreview, "total_review": totalreview }, function (err, tasker) {
                 if (err) {
                   res.send(err);
                 }

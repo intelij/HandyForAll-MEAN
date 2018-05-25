@@ -191,10 +191,12 @@ function TaskService($http, $q) {
     let categoryid = "";
     let taskid = "";
     let date = "";
+    let time = "";
+    const requester = !filter.requester || filter.requester == 'user' ? 'user' : 'tasker';
+
     if (angular.isDefined(filter.date)) {
       date = filter.date;
     }
-    let time = "";
     if (angular.isDefined(filter.time)) {
       time = filter.time;
     }
@@ -242,12 +244,6 @@ function TaskService($http, $q) {
     const lng = filter.lng || '';
     const categoryname = filter.categoryname || '';
 
-    // if (page) {
-    //   const skip = (parseInt(page) - 1) * itemsPerPage;
-    //   url = `/site/task/taskeravailabilitybyWorkingArea?page=${page}&skip=${skip}&limit=${itemsPerPage}&vechile=${vechile}&categoryid=${categoryid}&day=${day}&hour=${hour}&time=${time}&task=${taskid}&date=${date}&minvalue=${minvalue}&maxvalue=${maxvalue}&kmminvalue=${kmminvalue}&kmmaxvalue=${kmmaxvalue}`;
-    // } else {
-    //   url = '/site/task/taskeravailabilitybyWorkingArea?page=' + 0 + '&skip=' + 0 + '&limit=' + itemsPerPage + '&vechile=' + vechile + '&categoryid=' + categoryid + '&day=' + day + '&hour=' + hour + '&time=' + time + '&task=' + taskid + '&date=' + date + '&minvalue=' + minvalue + '&maxvalue=' + maxvalue + '&kmminvalue=' + kmminvalue + '&kmmaxvalue=' + kmmaxvalue;
-    // }
     if (taskid) {
       if (page) {
         let skip = (parseInt(page) - 1) * itemsPerPage;
@@ -263,6 +259,9 @@ function TaskService($http, $q) {
         url = `/site/task/tasker_availability_by_category?page=${page}&skip=0&limit=${itemsPerPage}&vechile=${vechile}&categoryid=${categoryid}&day=${day}&hour=${hour}&time=${time}&date=${date}&minvalue=${minvalue}&maxvalue=${maxvalue}&kmminvalue=${kmminvalue}&kmmaxvalue=${kmmaxvalue}&lat=${lat}&lng=${lng}&categoryname=${categoryname}`;
       }
     }
+
+    url += '&requester=' + requester;
+
     const deferred = $q.defer();
     let result =1;
     if (result === 1) {
@@ -462,7 +461,7 @@ function TaskService($http, $q) {
       url: '/site/task/search-tasker',
       data: {
         task: task,
-        requester: !requester ? 'user' : 'tasker'
+        requester: !requester || requester == 'user' ? 'user' : 'tasker'
       }
     }).success(function (response) {
       deferred.resolve(response);

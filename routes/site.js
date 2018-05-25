@@ -108,7 +108,6 @@ module.exports = function (app, io) {
     app.post('/site/task/gettaskuser', task.gettaskuser);
     app.post('/site/task/taskprofileinfo', task.taskprofileinfo);
     app.post('/site/task/taskerreviews', task.taskerreviews);
-    //app.post('/site/task/taskerprofile', task.taskerprofile); // not used
     app.post('/site/task/search-tasker', task.searchTasker);
     app.post('/site/task/addnewtask', task.addnewtask);
     app.post('/site/task/gettaskdetailsbyid', task.gettaskdetailsbyid);

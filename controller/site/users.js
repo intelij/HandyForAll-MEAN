@@ -82,7 +82,8 @@ module.exports = function (io) {
         "about": 1,
         "availability_address": 1,
         "radius": 1,
-        "radiusby": 1
+        "radiusby": 1,
+        "availability": 1
       }
     }], function (err, docdata) {
       if (err || !docdata[0]) {
