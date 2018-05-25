@@ -107,20 +107,13 @@ angular.module('handyforall.site', ['Authentication',
   $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
     var userdata = AuthenticationService.GetCredentials();
 
-    if (userdata.currentUser) {
-      if (toState.name === "hirestep1" && userdata.currentUser.user_type === 'tasker') {
-        $state.transitionTo("login");
-        toastr.error("Tasker Cannot  access");
-        event.preventDefault();
-      }
-    }
-
     if (toState.name === "hirestep1" || toState.name === "chat") {
       if (!$rootScope.siteglobals.currentUser) {
         $state.transitionTo("login");
         event.preventDefault();
       }
     }
+
     if (toState.authenticate && !AuthenticationService.isAuthenticated()) {
       $state.transitionTo("login");
       event.preventDefault();
@@ -864,12 +857,13 @@ angular.module('handyforall.site', ['Authentication',
           }
         },
         resolve: {
-          TaskserviceResolve: function (TaskService, $stateParams, AuthenticationService) {
+          TaskserviceResolve: function (TaskService, $stateParams) {
             return TaskService.taskbaseinfo($stateParams.slug);
           },
-          CurrentUserTaskserviceResolve: function (MainService, AuthenticationService) {
+          CurrentUserResolve: function (MainService, AuthenticationService) {
             var user = AuthenticationService.GetCredentials();
-            return MainService.getCurrentUsers(user.currentUser.username);
+
+            return MainService.getCurrentUsers(user.currentUser.username, user.currentUser.user_type);
           }
         }
       })
@@ -889,9 +883,11 @@ angular.module('handyforall.site', ['Authentication',
           }
         },
         resolve: {
-          SearchResolve: function (TaskService, $stateParams) {
+          SearchResolve: function (TaskService, $stateParams, AuthenticationService) {
+            var user = AuthenticationService.GetCredentials();
+
             if ($stateParams.task) {
-              return TaskService.searchTasker($stateParams.task);
+              return TaskService.searchTasker($stateParams.task, user.currentUser.user_type);
             } else {
               return {};
             }
@@ -899,12 +895,12 @@ angular.module('handyforall.site', ['Authentication',
           TaskserviceResolve: function (TaskService, $stateParams) {
             return TaskService.taskbaseinfo($stateParams.slug);
           },
-          CurrentUserTaskserviceResolve: function (MainService, AuthenticationService) {
+          /*CurrentUserTaskserviceResolve: function (MainService, AuthenticationService) {
             var user = AuthenticationService.GetCredentials();
             if (user.currentUser.username) {
-              return MainService.getCurrentUsers(user.currentUser.username);
+              return MainService.getCurrentUsers(user.currentUser.username, user.currentUser.user_type);
             }
-          },
+          },*/
           TaskServiceNewResolve: function (TaskService, $stateParams) {
             if ($stateParams.task) {
               return TaskService.getTaskDetailsbyid($stateParams.task);
@@ -1330,7 +1326,7 @@ angular.module('handyforall.site', ['Authentication',
               $scope.schedulingForTimeout(latLng);
             }
           }, function(failure) {
-            console.log("failure", failure);
+            // console.log("failure", failure);
             $.getJSON('https://ipinfo.io/geo', function(response) {
               var loc = response.loc.split(',');
               latLng = { lat: loc[0], lng: loc[1] }

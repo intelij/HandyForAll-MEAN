@@ -16,7 +16,7 @@ TASK_SCHEMA.TASK = {
 	cancelled: Object,
 	payment_mode: String,
 	payment_type: String,
-    bookingmode: String,
+	bookingmode: String,
 	usertaskcancellationreason: String,
 	status: { type: Number, default: 1 },
 	reject_job: [{

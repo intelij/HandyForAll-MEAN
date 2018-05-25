@@ -1356,12 +1356,10 @@ module.exports = function (io) {
           res.send({ count: taskerdata[0].count, result: newArray, avgrating: avgratingdata, taskercount: documentData, countall: newtaskercount });
         }
       });
-    }
-    else {
+    } else {
       res.send({ count: 0, result: [] });
     }
-
-  }
+  };
 
 
 
@@ -1369,26 +1367,19 @@ module.exports = function (io) {
     var pickup_lat = req.query.lat;
     var pickup_lon = req.query.lon;
     var categoryid = req.query.categoryid;
-    var condition = { status: 1, availability: 1 };
-    var hour = req.query.hour;
-    var day = req.query.day;
+    var model = !req.query.requester || req.query.requester == 'user' ? 'tasker' : 'users';
 
     db.GetOneDocument('settings', { 'alias': 'general' }, {}, {}, function (err, settingData) {
-
       if (err) {
         var data = {};
         data.response = 'Configure your website setting';
         data.status = 0;
         res.send(data);
-      }
+      } else {
+        var distanceval = 0.001;
 
-      else {
-
-        if (settingData.settings.distanceby == 'km') {
-          var distanceval = 0.001;
-        }
-        else {
-          var distanceval = 0.000621371;
+        if (settingData.settings.distanceby !== 'km') {
+          distanceval = 0.000621371;
         }
 
         var taskercondition = [
@@ -1414,7 +1405,6 @@ module.exports = function (io) {
               }
             }
           },
-
           {
             "$group":
               {
@@ -1423,20 +1413,18 @@ module.exports = function (io) {
                 taskers: { $push: "$$ROOT" }
               }
           }
-
         ];
-        db.GetAggregation('tasker', taskercondition, function (err, docdata) {
 
-          if (err || docdata.length == 0) {
+        db.GetAggregation(model, taskercondition, function (err, docdata) {
+          if (err || !docdata || !docdata.length) {
             res.send(err);
           } else {
             res.send({ dac: docdata, count: docdata[0].count });
-
           }
         });
       }
     });
-  }
+  };
 
 
   router.getaddressdata = function getaddressdata(req, res) {
@@ -1533,8 +1521,10 @@ module.exports = function (io) {
   };
 
   router.addaddress = function addaddress(req, res) {
+    var model = !req.body.usertype || req.body.usertype == 'user' ? 'users' : 'tasker';
+
     if (req.body.data.editaddressdata.sat == 1) {
-      db.UpdateDocument('users', { _id: req.body.userid, 'addressList._id': req.body.data.editaddressdata._id },
+      db.UpdateDocument(model, { _id: req.body.userid, 'addressList._id': req.body.data.editaddressdata._id },
         {
           "addressList.$.line1": req.body.data.editaddressdata.line1, "addressList.$.country": req.body.data.editaddressdata.country, "addressList.$.street": req.body.data.editaddressdata.street,
           "addressList.$.city": req.body.data.editaddressdata.city, "addressList.$.landmark": req.body.data.editaddressdata.landmark, "addressList.$.status": req.body.data.editaddressdata.status, "addressList.$.state": req.body.data.editaddressdata.state, "addressList.$.locality": req.body.data.editaddressdata.locality,
@@ -1547,9 +1537,8 @@ module.exports = function (io) {
             res.send(docdata);
           }
         });
-    }
-    else {
-      db.GetOneDocument('users', { '_id': req.body.userid, addressList: { $elemMatch: { "location.lng": req.body.data.addressList.location.lng, "location.lat": req.body.data.addressList.location.lat } } }, {}, {}, function (addErr, addRespo) {
+    } else {
+      db.GetOneDocument(model, { '_id': req.body.userid, addressList: { $elemMatch: { "location.lng": req.body.data.addressList.location.lng, "location.lat": req.body.data.addressList.location.lat } } }, {}, {}, function (addErr, addRespo) {
         if (addErr || addRespo) {
           res.send({ status: 0, message: 'Address already added on the list' });
         } else {
@@ -1566,7 +1555,7 @@ module.exports = function (io) {
           };
           if (req.body.data.editaddressdata._id) {
             if (req.body.data.addressList.location.lng == '' || req.body.data.addressList.location.lat == '') {
-              db.UpdateDocument('users', { _id: req.body.userid, 'addressList._id': req.body.data.editaddressdata._id },
+              db.UpdateDocument(model, { _id: req.body.userid, 'addressList._id': req.body.data.editaddressdata._id },
                 {
                   "addressList.$.line1": req.body.data.editaddressdata.line1, "addressList.$.country": req.body.data.editaddressdata.country, "addressList.$.street": req.body.data.editaddressdata.street,
                   "addressList.$.city": req.body.data.editaddressdata.city, "addressList.$.landmark": req.body.data.editaddressdata.landmark, "addressList.$.status": req.body.data.editaddressdata.status, "addressList.$.state": req.body.data.editaddressdata.state, "addressList.$.locality": req.body.data.editaddressdata.locality,
@@ -1579,7 +1568,7 @@ module.exports = function (io) {
                   }
                 });
             } else {
-              db.UpdateDocument('users', { _id: req.body.userid, 'addressList._id': req.body.data.editaddressdata._id },
+              db.UpdateDocument(model, { _id: req.body.userid, 'addressList._id': req.body.data.editaddressdata._id },
                 {
                   "addressList.$.line1": req.body.data.editaddressdata.line1, "addressList.$.country": req.body.data.editaddressdata.country, "addressList.$.street": req.body.data.editaddressdata.street,
                   "addressList.$.city": req.body.data.editaddressdata.city, "addressList.$.landmark": req.body.data.editaddressdata.landmark, "addressList.$.status": req.body.data.editaddressdata.status, "addressList.$.locality": req.body.data.editaddressdata.locality,
@@ -1593,8 +1582,7 @@ module.exports = function (io) {
                 });
             }
           } else {
-
-            db.UpdateDocument('users', { _id: req.body.userid }, { "$push": { 'addressList': address } }, {}, function (err, docdata) {
+            db.UpdateDocument(model, { _id: req.body.userid }, { "$push": { 'addressList': address } }, {}, function (err, docdata) {
               if (err) {
                 res.send(err);
               } else {
@@ -1603,14 +1591,15 @@ module.exports = function (io) {
             });
           }
         }
-
       });
     }
   };
 
   router.addDeliveryAddress = function addaddress(req, res) {
+    var model = !req.body.usertype || req.body.usertype == 'user' ? 'users' : 'tasker';
+
     if (req.body.data.editaddressdata.sat == 1) {
-      db.UpdateDocument('users', { _id: req.body.userid, 'deliveryAddressList._id': req.body.data.editaddressdata._id },
+      db.UpdateDocument(model, { _id: req.body.userid, 'deliveryAddressList._id': req.body.data.editaddressdata._id },
         {
           "deliveryAddressList.$.line1": req.body.data.editaddressdata.line1, "deliveryAddressList.$.country": req.body.data.editaddressdata.country, "deliveryAddressList.$.street": req.body.data.editaddressdata.street,
           "deliveryAddressList.$.city": req.body.data.editaddressdata.city, "deliveryAddressList.$.landmark": req.body.data.editaddressdata.landmark, "deliveryAddressList.$.status": req.body.data.editaddressdata.status, "deliveryAddressList.$.state": req.body.data.editaddressdata.state, "deliveryAddressList.$.locality": req.body.data.editaddressdata.locality,
@@ -1624,7 +1613,7 @@ module.exports = function (io) {
           }
         });
     } else {
-      db.GetOneDocument('users', { '_id': req.body.userid, deliveryAddressList: { $elemMatch: { "location.lng": req.body.data.addressList.location.lng, "location.lat": req.body.data.addressList.location.lat } } }, {}, {}, function (addErr, addRespo) {
+      db.GetOneDocument(model, { '_id': req.body.userid, deliveryAddressList: { $elemMatch: { "location.lng": req.body.data.addressList.location.lng, "location.lat": req.body.data.addressList.location.lat } } }, {}, {}, function (addErr, addRespo) {
         if (addErr || addRespo) {
           res.send({ status: 0, message: 'Address already added on the list' });
         } else {
@@ -1639,9 +1628,10 @@ module.exports = function (io) {
             'zipcode': req.body.data.editaddressdata.zipcode || "",
             'location': req.body.data.addressList.location || ""
           };
+
           if (req.body.data.editaddressdata._id) {
             if (req.body.data.addressList.location.lng == '' || req.body.data.addressList.location.lat == '') {
-              db.UpdateDocument('users', { _id: req.body.userid, 'deliveryAddressList._id': req.body.data.editaddressdata._id },
+              db.UpdateDocument(model, { _id: req.body.userid, 'deliveryAddressList._id': req.body.data.editaddressdata._id },
                 {
                   "deliveryAddressList.$.line1": req.body.data.editaddressdata.line1, "deliveryAddressList.$.country": req.body.data.editaddressdata.country, "deliveryAddressList.$.street": req.body.data.editaddressdata.street,
                   "deliveryAddressList.$.city": req.body.data.editaddressdata.city, "deliveryAddressList.$.landmark": req.body.data.editaddressdata.landmark, "deliveryAddressList.$.status": req.body.data.editaddressdata.status, "deliveryAddressList.$.state": req.body.data.editaddressdata.state, "deliveryAddressList.$.locality": req.body.data.editaddressdata.locality,
@@ -1654,7 +1644,7 @@ module.exports = function (io) {
                   }
                 });
             } else {
-              db.UpdateDocument('users', { _id: req.body.userid, 'deliveryAddressList._id': req.body.data.editaddressdata._id },
+              db.UpdateDocument(model, { _id: req.body.userid, 'deliveryAddressList._id': req.body.data.editaddressdata._id },
                 {
                   "deliveryAddressList.$.line1": req.body.data.editaddressdata.line1, "deliveryAddressList.$.country": req.body.data.editaddressdata.country, "deliveryAddressList.$.street": req.body.data.editaddressdata.street,
                   "deliveryAddressList.$.city": req.body.data.editaddressdata.city, "deliveryAddressList.$.landmark": req.body.data.editaddressdata.landmark, "deliveryAddressList.$.status": req.body.data.editaddressdata.status, "deliveryAddressList.$.locality": req.body.data.editaddressdata.locality,
@@ -1668,8 +1658,7 @@ module.exports = function (io) {
                 });
             }
           } else {
-
-            db.UpdateDocument('users', { _id: req.body.userid }, { "$push": { 'deliveryAddressList': address } }, {}, function (err, docdata) {
+            db.UpdateDocument(model, { _id: req.body.userid }, { "$push": { 'deliveryAddressList': address } }, {}, function (err, docdata) {
               if (err) {
                 res.send(err);
               } else {
@@ -1678,7 +1667,6 @@ module.exports = function (io) {
             });
           }
         }
-
       });
     }
   };
@@ -1731,30 +1719,26 @@ module.exports = function (io) {
   };
 
   router.searchTasker = function searchTasker(req, res) {
-
     var taskId = req.body.task;
     var options = {};
+    var model = !req.body.requester || req.body.requester == 'user' ? 'tasker' : 'users';
     options.populate = 'user category';
+
     db.GetOneDocument('task', { _id: taskId }, {}, options, function (err, task) {
       if (err || !task) {
         res.send(err);
       } else {
-
         db.GetOneDocument('settings', { 'alias': 'general' }, {}, {}, function (err, settingData) {
-
           if (err) {
             var data = {};
             data.response = 'Configure your website setting';
             data.status = 0;
             res.send(data);
-          }
-          else {
+          } else {
+            var distanceval = 0.001;
 
-            if (settingData.settings.distanceby == 'km') {
-              var distanceval = 0.001;
-            }
-            else {
-              var distanceval = 0.000621371;
+            if (settingData.settings.distanceby !== 'km') {
+              distanceval = 0.000621371;
             }
 
             var taskercondition = [
@@ -1790,11 +1774,11 @@ module.exports = function (io) {
                     minRate: { $min: "$taskerskills.hour_rate" },
                     kmminRate: { $min: "$radius" },
                     kmmaxRate: { $max: "$radius" }
-
                   }
               }
             ];
-            db.GetAggregation('tasker', taskercondition, function (err, docdata) {
+
+            db.GetAggregation(model, taskercondition, function (err, docdata) {
               if (err || docdata.length <= 0) {
                 res.send(err);
               } else {

@@ -107,6 +107,7 @@ module.exports = function (io) {
         "name": 1,
         "address": 1,
         "addressList": 1,
+        "deliveryAddressList": 1,
         "activity": 1,
         "refer_history": 1,
         "unique_code": 1,
@@ -154,6 +155,12 @@ module.exports = function (io) {
           if (!docdata[0].avatar) {
             docdata[0].avatar = './' + CONFIG.USER_PROFILE_IMAGE_DEFAULT;
           }
+
+          if (!docdata[0].addressList)
+            docdata[0].addressList = [];
+
+          if (!docdata[0].deliveryAddressList)
+            docdata[0].deliveryAddressList = [];
         }
         res.send(docdata);
       }

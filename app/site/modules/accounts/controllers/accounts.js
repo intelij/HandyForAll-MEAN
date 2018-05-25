@@ -1746,15 +1746,14 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 
 
   acc.availabilityChange = function (value) {
-    acc.data = {};
-    if (value == false) {
-      acc.data.availability = 0;
-    } else {
-      acc.data.availability = 1;
-    }
-    acc.data._id = acc.user._id;
+    acc.data = {
+      _id: acc.user._id,
+      availability: !value ? 0 : 1,
+      usertype: acc.user.role
+    };
+
     accountService.updateAvailability(acc.data).then(function (response) {
-      $translate('TASKER AVAILABILITY UPDATED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
+      $translate('AVAILABILITY UPDATED SUCCESSFULLY').then(function (headline) { toastr.info(headline); }, function (error) { console.error(error); });
     }, function (err) {
       if (err.msg) {
         toastr.error(err.msg);
@@ -1762,8 +1761,8 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
         $translate('UNABLE TO SAVE YOUR DATA').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
       }
     });
-
   };
+
   acc.deactivate = function (deactivateAcc) {
     var modalInstance = $uibModal.open({
       animation: true,

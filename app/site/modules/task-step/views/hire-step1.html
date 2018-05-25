@@ -29,7 +29,7 @@
               <div ng-if="TAC.userAddressList" ng-repeat="address in TAC.userAddressList track by $index" class="selectadd col-sm-4">
                 <div class="shipping-address">
                   <div class="seleted-addr">
-                    <input type="radio" ng-model="TAC.filter.user_address_index" ng-change="TAC.onUserAddressChanged(TAC.filter.user_address_index)" ng-value="$index" name="selectaddress"
+                    <input type="radio" ng-model="TAC.filter.user_address_index" ng-click="TAC.onUserAddressChanged(TAC.filter.user_address_index)" ng-value="$index" name="selectaddress"
                            title="Select Address " data-toggle="tooltip" data-placement="top" tooltip class="addr-selc">
                     <div class="check">
                       <div class="inside"></div>
@@ -77,10 +77,10 @@
               </a>
             </div>
             <div>
-              <div ng-if="TAC.userAddressList && TAC.filter.user_address_index != -1" class="selectadd col-sm-4">
+              <div ng-if="TAC.userAddressList && TAC.userAddressList.length && TAC.filter.user_address_index != -1" class="selectadd col-sm-4">
                 <div class="shipping-address">
                   <div class="seleted-addr">
-                    <input type="radio" ng-model="TAC.filter.delivery_address_index" ng-change="TAC.onDeliveryAddressChanged(TAC.filter.delivery_address_index)" value="-1" name="selectaddress"
+                    <input type="radio" ng-model="TAC.filter.delivery_address_index" ng-click="TAC.onDeliveryAddressChanged(TAC.filter.delivery_address_index)" value="-1" name="selectaddress"
                            title="Select Address " data-toggle="tooltip" data-placement="top" tooltip class="addr-selc">
                     <div class="check">
                       <div class="inside"></div>
@@ -106,7 +106,7 @@
               <div ng-if="TAC.deliveryAddressList" ng-repeat="address in TAC.deliveryAddressList track by $index" class="selectadd col-sm-4">
                 <div class="shipping-address">
                   <div class="seleted-addr">
-                    <input type="radio" ng-model="TAC.filter.delivery_address_index" ng-change="TAC.onDeliveryAddressChanged(TAC.filter.delivery_address_index)" ng-value="$index" name="selectaddress"
+                    <input type="radio" ng-model="TAC.filter.delivery_address_index" ng-click="TAC.onDeliveryAddressChanged(TAC.filter.delivery_address_index)" ng-value="$index" name="selectaddress"
                            title="Select Address " data-toggle="tooltip" data-placement="top" tooltip class="addr-selc">
                     <div class="check">
                       <div class="inside"></div>
