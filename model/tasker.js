@@ -40,47 +40,49 @@ module.exports = function (io) {
             });
           }
         ], function (err, settings, template) {
-          var name;
-          if (result.name) {
-            name = result.name.first_name + " (" + result.username + ")";
-          } else {
-            name = result.username;
-          }
-          var html = template[0].email_content;
-          html = html.replace(/{{username}}/g, name);
-          html = html.replace(/{{privacy}}/g, settings.site_url + 'pages/privacypolicy');
-          html = html.replace(/{{terms}}/g, settings.site_url + 'pages/termsandconditions');
-          html = html.replace(/{{senderemail}}/g, template[0].sender_email);
-          html = html.replace(/{{logo}}/g, settings.site_url + settings.logo);
-          html = html.replace(/{{site_title}}/g, settings.site_title);
-          html = html.replace(/{{site_url}}/g, settings.site_url);
-          html = html.replace(/{{email}}/g, dat.email);
-          var mailOptions = {
-            from: template[0].sender_email,
-            to: settings.email_address,
-            subject: template[0].email_subject,
-            text: html,
-            html: html
-          };
-          mail.send(mailOptions, function (err, response) { });
+          if (template && Array.isArray(template)) {
+            var name;
+            if (result.name) {
+              name = result.name.first_name + " (" + result.username + ")";
+            } else {
+              name = result.username;
+            }
+            var html = template[0].email_content;
+            html = html.replace(/{{username}}/g, name);
+            html = html.replace(/{{privacy}}/g, settings.site_url + 'pages/privacypolicy');
+            html = html.replace(/{{terms}}/g, settings.site_url + 'pages/termsandconditions');
+            html = html.replace(/{{senderemail}}/g, template[0].sender_email);
+            html = html.replace(/{{logo}}/g, settings.site_url + settings.logo);
+            html = html.replace(/{{site_title}}/g, settings.site_title);
+            html = html.replace(/{{site_url}}/g, settings.site_url);
+            html = html.replace(/{{email}}/g, dat.email);
+            var mailOptions = {
+              from: template[0].sender_email,
+              to: settings.email_address,
+              subject: template[0].email_subject,
+              text: html,
+              html: html
+            };
+            mail.send(mailOptions, function (err, response) { });
 
-          var html1 = template[1].email_content;
-          html1 = html1.replace(/{{username}}/g, name);
-          html1 = html1.replace(/{{privacy}}/g, settings.site_url + 'pages/privacypolicy');
-          html1 = html1.replace(/{{terms}}/g, settings.site_url + 'pages/termsandconditions');
-          html1 = html1.replace(/{{senderemail}}/g, template[1].sender_email);
-          html1 = html1.replace(/{{logo}}/g, settings.site_url + settings.logo);
-          html1 = html1.replace(/{{site_title}}/g, settings.site_title);
-          html1 = html1.replace(/{{site_url}}/g, settings.site_url);
-          html1 = html1.replace(/{{email}}/g, dat.email);
-          var mailOptions1 = {
-            from: template[1].sender_email,
-            to: dat.email,
-            subject: template[1].email_subject,
-            text: html1,
-            html: html1
-          };
-          mail.send(mailOptions1, function (err, response) { });
+            var html1 = template[1].email_content;
+            html1 = html1.replace(/{{username}}/g, name);
+            html1 = html1.replace(/{{privacy}}/g, settings.site_url + 'pages/privacypolicy');
+            html1 = html1.replace(/{{terms}}/g, settings.site_url + 'pages/termsandconditions');
+            html1 = html1.replace(/{{senderemail}}/g, template[1].sender_email);
+            html1 = html1.replace(/{{logo}}/g, settings.site_url + settings.logo);
+            html1 = html1.replace(/{{site_title}}/g, settings.site_title);
+            html1 = html1.replace(/{{site_url}}/g, settings.site_url);
+            html1 = html1.replace(/{{email}}/g, dat.email);
+            var mailOptions1 = {
+              from: template[1].sender_email,
+              to: dat.email,
+              subject: template[1].email_subject,
+              text: html1,
+              html: html1
+            };
+            mail.send(mailOptions1, function (err, response) { });
+          }
 
           //var to = dat.phone.code + dat.phone.number;
           //var message = 'Dear ' + req.body.username + '! Thank you for registering with' + settings.site_title;

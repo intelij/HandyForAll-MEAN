@@ -80,18 +80,18 @@ module.exports = function (app, passport, io) {
       res.send(req.session.flash.error);
     });
 
-    app.post('/site', passport.authenticate('local-site-login', {
+    app.post('/auth/login', passport.authenticate('local-login', {
       failureRedirect: '/site-failure',
       failureFlash: true
     }), AuthService.handleLocalLogin);
 
-    app.post('/site/taskerlogin', passport.authenticate('local-taskersite-login', {
-      failureRedirect: '/tasker-error',
-      failureFlash: true
-    }), AuthService.handleLocalLogin);
+    // app.post('/site/taskerlogin', passport.authenticate('local-taskersite-login', {
+    //   failureRedirect: '/tasker-error',
+    //   failureFlash: true
+    // }), AuthService.handleLocalLogin);
 
     // This is also used to get the current user.
-    app.get('/site-success', function (req, res) {
+    app.get('/auth/current', function (req, res) {
       if (req.session.passport && req.session.passport.user) {
         global.name = req.session.passport.user._id;
         res.cookie('username', req.session.passport.header || req.session.passport.user.token);
@@ -191,7 +191,7 @@ module.exports = function (app, passport, io) {
       });
     });
 
-    app.post('/site-logout', function (req, res) {
+    app.post('/auth/logout', function (req, res) {
       var roles = req.body.currentUser.user_type;
       var userid = req.body.currentUser.user_id;
       if (roles) {

@@ -15,7 +15,7 @@ module.exports = function (io) {
 
   var router = {};
 
-  router.taskbaseinfo = function taskbaseinfo(req, res) {
+  router.taskbaseinfo = function (req, res) {
     var slug = req.body.slug;
     // var VehicleStatus = 1;
     if (slug != '' && slug != '0' && typeof slug != 'undefined') {
@@ -33,7 +33,7 @@ module.exports = function (io) {
         $unwind: { path: "$categorydetails", preserveNullAndEmptyArrays: true }
       }], function (err, doc) {
         if (err) {
-          res.send(err);
+          res.status(500).send(err);
         } else {
           if (!doc[0].categorydetails.marker) {
             doc[0].categorydetails.marker = './' + CONFIG.MARKER_DEFAULT_IMAGE;
@@ -46,14 +46,14 @@ module.exports = function (io) {
     }
   };
 
-  router.taskprofileinfo = function taskprofileinfo(req, res) {
+  router.taskprofileinfo = function (req, res) {
     var slug = req.body.slug;
     var options = {};
     options.populate = 'profile_details.question skills.experience';
     //options.populate = 'skills.experience';
     db.GetOneDocument('tasker', { _id: req.body.slug, status: { $ne: 0 } }, {}, options, function (err, taskdata) {
       if (err || !taskdata) {
-        res.send(err);
+        res.status(500).send(err);
       } else {
         if (!taskdata.avatar) {
           taskdata.avatar = './' + CONFIG.USER_PROFILE_IMAGE_DEFAULT;
@@ -63,14 +63,14 @@ module.exports = function (io) {
     });
   };
 
-  router.taskerreviews = function taskerreviews(req, res) {
+  router.taskerreviews = function (req, res) {
     var getQuery = [{
       "$match": { status: { $ne: 0 }, "_id": new mongoose.Types.ObjectId(req.body.slug) }
     },
-      { $unwind: { path: "$taskerskills", preserveNullAndEmptyArrays: true } },
+      { $unwind: { path: "$skills", preserveNullAndEmptyArrays: true } },
       { $lookup: { from: 'categories', localField: "skills.childid", foreignField: "_id", as: "skills.childid" } },
-      { $unwind: { path: "$taskerskills", preserveNullAndEmptyArrays: true } },
-      { $group: { "_id": "$_id", 'taskercategory': { '$push': '$taskerskills' }, "skills": { "$first": "$taskerskills" }, "createdAt": { "$first": "$createdAt" } } },
+      { $unwind: { path: "$skills", preserveNullAndEmptyArrays: true } },
+      { $group: { "_id": "$_id", 'taskercategory': { '$push': '$skills' }, "skills": { "$first": "$skills" }, "createdAt": { "$first": "$createdAt" } } },
       { $lookup: { from: 'reviews', localField: "_id", foreignField: "tasker", as: "rate" } },
       { $unwind: { path: "$rate", preserveNullAndEmptyArrays: true } },
       { $match: { $or: [{ "rate.type": "user" }, { rate: { $exists: false } }] } },
@@ -136,7 +136,7 @@ module.exports = function (io) {
 
     db.GetAggregation('tasker', getQuery, function (err, docdata) {
       if (err) {
-        res.send(err);
+        res.status(500).send(err);
       } else {
         if (docdata.length != 0) {
 
@@ -150,7 +150,7 @@ module.exports = function (io) {
 
 
 
-  router.taskerprofile = function taskerprofile(req, res) {
+  router.taskerprofile = function (req, res) {
     var slug = req.body.slug;
     db.GetAggregation('users', [{
         $match: {
@@ -159,7 +159,7 @@ module.exports = function (io) {
       }],
       function (err, taskdata) {
         if (err) {
-          res.send(err);
+          res.status(500).send(err);
         } else {
           res.send(taskdata);
         }
@@ -169,7 +169,7 @@ module.exports = function (io) {
 
 
 
-  router.gettaskuser = function gettaskuser(req, res) {
+  router.gettaskuser = function (req, res) {
     var categoryid = req.body.categoryid;
     var user = req.body.user;
     var loginUser = req.body.loginUser;
@@ -196,7 +196,7 @@ module.exports = function (io) {
 
         var projection = {};
         projection.userDetails = "$$CURRENT";
-        projection.taskerskillsFilter = { $let: { vars: { skills: { $filter: { input: "$taskerskills", as: "skills", cond: { $eq: ["$$taskerskills.categoryid", new mongoose.Types.ObjectId(categoryid)] } } } }, in: { $size: "$$taskerskills" } } };
+        projection.taskerskillsFilter = { $let: { vars: { skills: { $filter: { input: "$skills", as: "skills", cond: { $eq: ["$$skills.categoryid", new mongoose.Types.ObjectId(categoryid)] } } } }, in: { $size: "$$skills" } } };
 
         projection.workingdaysFilter = {
           $let: {
@@ -216,7 +216,7 @@ module.exports = function (io) {
 
         db.GetAggregation('tasker', condition, function (err, doc) {
           if (err) {
-            res.send(err);
+            res.status(500).send(err);
           } else {
             res.send(doc);
           }
@@ -230,7 +230,7 @@ module.exports = function (io) {
     }
   };
 
-  router.taskerAvailabilitybyCategory = function taskerAvailabilitybyCategory(req, res) {
+  router.taskerAvailabilitybyCategory = function (req, res) {
     const taskid = req.query.task;
     const lat = req.query.lat;
     const lng = req.query.lng;
@@ -388,7 +388,6 @@ module.exports = function (io) {
                   "name": { $first: "$name" },
                   "email": { $first: "$email" },
                   "phone": { $first: "$phone" },
-                  // "skills": { $first: "$taskerskills" },
                   "skills": { $first: "$skills" },
                   "avatar": { $first: "$avatar" },
                   "location": { $first: "$location" },
@@ -537,7 +536,7 @@ module.exports = function (io) {
           ];
           db.GetAggregation('task', getQuery, function (err, documentData) {
             if (err) {
-              res.send(err);
+              res.status(500).send(err);
             } else {
               callback(err, settingData, newtaskercount, taskData, taskerdata, newArray, docdata, documentData);
             }
@@ -594,7 +593,7 @@ module.exports = function (io) {
 
           db.GetAggregation('review', getQuery, function (err, avgratingdata) {
             if (err) {
-              res.send(err);
+              res.status(500).send(err);
             } else {
               if (avgratingdata.length) {
                 if (avgratingdata[0].documentData) {
@@ -611,7 +610,7 @@ module.exports = function (io) {
         }
       ], function (err, settingData, newtaskercount, taskData, docdata, taskerdata, newArray, documentData, avgratingdata) {
         if (err) {
-          res.send(err);
+          res.status(500).send(err);
         } else {
           res.send({ count: taskerdata[0].count, result: newArray, avgrating: avgratingdata, taskercount: documentData, countall: newtaskercount });
         }
@@ -622,7 +621,7 @@ module.exports = function (io) {
     }
   };
 
-  router.taskerAvailabilitybyWorkingArea = function taskerAvailabilitybyWorkingArea(req, res) {
+  router.taskerAvailabilitybyWorkingArea = function (req, res) {
     const taskid = req.query.task;
     const categoryid = req.query.categoryid;
     const date = req.query.date;
@@ -657,7 +656,6 @@ module.exports = function (io) {
     recentupdate.task_day = req.query.day;
     recentupdate.task_date = req.query.date;
     recentupdate.task_hour = req.query.hour;
-
     recentupdate.booking_information = {};
 
     if (!req.query.time) {
@@ -707,7 +705,9 @@ module.exports = function (io) {
                 distanceField: "distance",
                 includeLocs: "location",
                 query: {
-                  "status": 1, "availability": 1,
+                  "status": 1,
+                  "availability": 1,
+                  "role": !req.query.requester || req.query.requester == 'user' ? 'tasker' : 'user',
                   "skills": { $elemMatch: { childid: new mongoose.Types.ObjectId(taskData[0].category._id), status: 1 } },
                   "working_days": working_days
                   // "current_task": { $exists: false }
@@ -766,7 +766,7 @@ module.exports = function (io) {
                   "name": { $first: "$name" },
                   "email": { $first: "$email" },
                   "phone": { $first: "$phone" },
-                  "skills": { $first: "$taskerskills" },
+                  "skills": { $first: "$skills" },
                   "avatar": { $first: "$avatar" },
                   "location": { $first: "$location" },
                   "address": { $first: "$address" },
@@ -832,8 +832,8 @@ module.exports = function (io) {
             } else {
               let amountData = taskerdata[0].taskers;
               let newArray = [];
-              for (let j = 0; j < amountData.length; j++) {
-                for (let xx = 0; xx < amountData[j].skills.length; xx++) {
+              for (let j = 0, len1 = amountData.length; j < len1; j++) {
+                for (let xx = 0, len2 = amountData[j].skills && amountData[j].skills.length ? amountData[j].skills.length : 0; xx < len2; xx++) {
                   if (categoryid.toString() === amountData[j].skills[xx].childid.toString()) {
                     if ((startAmount <= amountData[j].skills[xx].hour_rate) && (endAmount >= amountData[j].skills[xx].hour_rate)) {
                       newArray.push(amountData[j]);
@@ -908,7 +908,7 @@ module.exports = function (io) {
           ];
           db.GetAggregation('task', getQuery, function (err, documentData) {
             if (err) {
-              res.send(err);
+              res.status(500).send(err);
             } else {
               callback(err, settingData, newtaskercount, taskData, taskerdata, newArray, docdata, documentData);
             }
@@ -965,7 +965,7 @@ module.exports = function (io) {
 
           db.GetAggregation('review', getQuery, function (err, avgratingdata) {
             if (err) {
-              res.send(err);
+              res.status(500).send(err);
             } else {
               if (avgratingdata.length) {
                 if (avgratingdata[0].documentData) {
@@ -982,7 +982,7 @@ module.exports = function (io) {
         }
       ], function (err, settingData, newtaskercount, taskData, docdata, taskerdata, newArray, documentData, avgratingdata) {
         if (err) {
-          res.send(err);
+          res.status(500).send(err);
         } else {
           res.send({ count: taskerdata[0].count, result: newArray, avgrating: avgratingdata, taskercount: documentData, countall: newtaskercount });
         }
@@ -994,7 +994,7 @@ module.exports = function (io) {
   };
 
   // 											---------------- Map ----------------------
-  router.taskerAvailabilitybyWorkingAreaMap = function taskerAvailabilitybyWorkingAreaMap(req, res) {
+  router.taskerAvailabilitybyWorkingAreaMap = function (req, res) {
 
     var taskid = req.query.task;
     var categoryid = req.query.categoryid;
@@ -1072,7 +1072,9 @@ module.exports = function (io) {
                 distanceField: "distance",
                 includeLocs: "location",
                 query: {
-                  "status": 1, "availability": 1,
+                  "status": 1,
+                  "availability": 1,
+                  "role": !req.query.requester || req.query.requester == 'user' ? 'tasker' : 'user',
                   "skills": { $elemMatch: { childid: new mongoose.Types.ObjectId(taskData[0].category._id), status: 1 } },
                   "working_days": working_days
                   // "current_task": { $exists: false }
@@ -1130,7 +1132,7 @@ module.exports = function (io) {
                   "username": { $first: "$username" },
                   "email": { $first: "$email" },
                   "phone": { $first: "$phone" },
-                  "skills": { $first: "$taskerskills" },
+                  "skills": { $first: "$skills" },
                   "address": { $first: "$address" },
                   "location": { $first: "$location" },
                   "availability_address": { $first: "$availability_address" },
@@ -1277,7 +1279,7 @@ module.exports = function (io) {
           ];
           db.GetAggregation('task', getQuery, function (err, documentData) {
             if (err) {
-              res.send(err);
+              res.status(500).send(err);
             } else {
               callback(err, settingData, newtaskercount, taskData, taskerdata, newArray, docdata, documentData);
             }
@@ -1334,7 +1336,7 @@ module.exports = function (io) {
           ];
           db.GetAggregation('review', getQuery, function (err, avgratingdata) {
             if (err) {
-              res.send(err);
+              res.status(500).send(err);
             } else {
               if (avgratingdata.length) {
                 if (avgratingdata[0].documentData) {
@@ -1351,7 +1353,7 @@ module.exports = function (io) {
         }
       ], function (err, settingData, newtaskercount, taskData, docdata, taskerdata, newArray, documentData, avgratingdata) {
         if (err) {
-          res.send(err);
+          res.status(500).send(err);
         } else {
           res.send({ count: taskerdata[0].count, result: newArray, avgrating: avgratingdata, taskercount: documentData, countall: newtaskercount });
         }
@@ -1363,11 +1365,10 @@ module.exports = function (io) {
 
 
 
-  router.taskerAvailabilitybyWorkingAreaCount = function taskerAvailabilitybyWorkingAreaCount(req, res) {
+  router.taskerAvailabilitybyWorkingAreaCount = function (req, res) {
     var pickup_lat = req.query.lat;
     var pickup_lon = req.query.lon;
     var categoryid = req.query.categoryid;
-    var model = !req.query.requester || req.query.requester == 'user' ? 'tasker' : 'users';
 
     db.GetOneDocument('settings', { 'alias': 'general' }, {}, {}, function (err, settingData) {
       if (err) {
@@ -1389,7 +1390,9 @@ module.exports = function (io) {
               distanceField: "distance",
               includeLocs: "location",
               query: {
-                "status": 1, "availability": 1,
+                "status": 1,
+                "availability": 1,
+                "role": !req.query.requester || req.query.requester == 'user' ? 'tasker' : 'user',
                 "skills": { $elemMatch: { childid: new mongoose.Types.ObjectId(categoryid), status: 1 } },
               },
               distanceMultiplier: distanceval,
@@ -1415,9 +1418,11 @@ module.exports = function (io) {
           }
         ];
 
-        db.GetAggregation(model, taskercondition, function (err, docdata) {
-          if (err || !docdata || !docdata.length) {
-            res.send(err);
+        db.GetAggregation('users', taskercondition, function (err, docdata) {
+          if (err) {
+            res.status(500).send(err);
+          } else if (!docdata || !docdata.length) {
+            res.send({ dac: null, count: 0 });
           } else {
             res.send({ dac: docdata, count: docdata[0].count });
           }
@@ -1427,7 +1432,7 @@ module.exports = function (io) {
   };
 
 
-  router.getaddressdata = function getaddressdata(req, res) {
+  router.getaddressdata = function (req, res) {
     db.GetDocument('users', { '_id': req.body.userid }, {}, {}, function (addErr, addRespo) {
       if (addErr || addRespo.length == 0) {
         res.send({
@@ -1444,10 +1449,10 @@ module.exports = function (io) {
     });
   };
 
-  router.getuserdata = function getuserdata(req, res) {
+  router.getuserdata = function (req, res) {
     db.GetDocument('users', { '_id': req.body.data.user }, {}, {}, function (addErr, userrespo) {
       if (addErr || userrespo.length == 0) {
-        res.send(err);
+        res.status(500).send(err);
       } else {
 
         if (!userrespo[0].avatar) {
@@ -1464,7 +1469,7 @@ module.exports = function (io) {
     if (!req.body.isDeliveryAddress) {
       db.UpdateDocument('users', { '_id': req.body.userid, 'addressList.status': 3 }, { "addressList.$.status": 1 }, { multi: true }, function (err) {
         if (err) {
-          res.send(err);
+          res.status(500).send(err);
         } else {
           db.UpdateDocument('users', { '_id': req.body.userid, 'addressList._id': req.body.add_id }, { "addressList.$.status": 3 }, {}, function (error, objUpdatedUser) {
             if (error) {
@@ -1478,7 +1483,7 @@ module.exports = function (io) {
     } else {
       db.UpdateDocument('users', { '_id': req.body.userid, 'deliveryAddressList.status': 3 }, { "deliveryAddressList.$.status": 1 }, { multi: true }, function (err) {
         if (err) {
-          res.send(err);
+          res.status(500).send(err);
         } else {
           db.UpdateDocument('users', { '_id': req.body.userid, 'deliveryAddressList._id': req.body.add_id }, { "deliveryAddressList.$.status": 3 }, {}, function (error, objUpdatedUser) {
             if (error) {
@@ -1492,7 +1497,7 @@ module.exports = function (io) {
     }
   };
 
-  router.deleteaddress = function deleteaddress(req, res) {
+  router.deleteaddress = function (req, res) {
 
     db.GetDocument('users', { '_id': req.body.userid }, {}, {}, function (err, users) {
       if (err || !users || !users.length) {
@@ -1520,25 +1525,23 @@ module.exports = function (io) {
     });
   };
 
-  router.addaddress = function addaddress(req, res) {
-    var model = !req.body.usertype || req.body.usertype == 'user' ? 'users' : 'tasker';
-
+  router.addaddress = function (req, res) {
     if (req.body.data.editaddressdata.sat == 1) {
-      db.UpdateDocument(model, { _id: req.body.userid, 'addressList._id': req.body.data.editaddressdata._id },
+      db.UpdateDocument('users', { _id: req.body.userid, 'addressList._id': req.body.data.editaddressdata._id },
         {
           "addressList.$.line1": req.body.data.editaddressdata.line1, "addressList.$.country": req.body.data.editaddressdata.country, "addressList.$.street": req.body.data.editaddressdata.street,
           "addressList.$.city": req.body.data.editaddressdata.city, "addressList.$.landmark": req.body.data.editaddressdata.landmark, "addressList.$.status": req.body.data.editaddressdata.status, "addressList.$.state": req.body.data.editaddressdata.state, "addressList.$.locality": req.body.data.editaddressdata.locality,
           "addressList.$.zipcode": req.body.data.editaddressdata.zipcode
         }, {}, function (err, docdata) {
           if (err) {
-            res.send(err);
+            res.status(500).send(err);
           }
           else {
             res.send(docdata);
           }
         });
     } else {
-      db.GetOneDocument(model, { '_id': req.body.userid, addressList: { $elemMatch: { "location.lng": req.body.data.addressList.location.lng, "location.lat": req.body.data.addressList.location.lat } } }, {}, {}, function (addErr, addRespo) {
+      db.GetOneDocument('users', { '_id': req.body.userid, addressList: { $elemMatch: { "location.lng": req.body.data.addressList.location.lng, "location.lat": req.body.data.addressList.location.lat } } }, {}, {}, function (addErr, addRespo) {
         if (addErr || addRespo) {
           res.send({ status: 0, message: 'Address already added on the list' });
         } else {
@@ -1554,37 +1557,37 @@ module.exports = function (io) {
             'location': req.body.data.addressList.location || ""
           };
           if (req.body.data.editaddressdata._id) {
-            if (req.body.data.addressList.location.lng == '' || req.body.data.addressList.location.lat == '') {
-              db.UpdateDocument(model, { _id: req.body.userid, 'addressList._id': req.body.data.editaddressdata._id },
+            if (!req.body.data.addressList || !req.body.data.addressList.location || !req.body.data.addressList.location.lng || !req.body.data.addressList.location.lat) {
+              db.UpdateDocument('users', { _id: req.body.userid, 'addressList._id': req.body.data.editaddressdata._id },
                 {
                   "addressList.$.line1": req.body.data.editaddressdata.line1, "addressList.$.country": req.body.data.editaddressdata.country, "addressList.$.street": req.body.data.editaddressdata.street,
                   "addressList.$.city": req.body.data.editaddressdata.city, "addressList.$.landmark": req.body.data.editaddressdata.landmark, "addressList.$.status": req.body.data.editaddressdata.status, "addressList.$.state": req.body.data.editaddressdata.state, "addressList.$.locality": req.body.data.editaddressdata.locality,
                   "addressList.$.zipcode": req.body.data.editaddressdata.zipcode
                 }, {}, function (err, docdata) {
                   if (err) {
-                    res.send(err);
+                    res.status(500).send(err);
                   } else {
                     res.send(docdata);
                   }
                 });
             } else {
-              db.UpdateDocument(model, { _id: req.body.userid, 'addressList._id': req.body.data.editaddressdata._id },
+              db.UpdateDocument('users', { _id: req.body.userid, 'addressList._id': req.body.data.editaddressdata._id },
                 {
                   "addressList.$.line1": req.body.data.editaddressdata.line1, "addressList.$.country": req.body.data.editaddressdata.country, "addressList.$.street": req.body.data.editaddressdata.street,
                   "addressList.$.city": req.body.data.editaddressdata.city, "addressList.$.landmark": req.body.data.editaddressdata.landmark, "addressList.$.status": req.body.data.editaddressdata.status, "addressList.$.locality": req.body.data.editaddressdata.locality,
                   "addressList.$.zipcode": req.body.data.editaddressdata.zipcode, "addressList.$.location.lat": req.body.data.addressList.location.lat, "addressList.$.location.lng": req.body.data.addressList.location.lng
                 }, { multi: true }, function (err, docdata) {
                   if (err) {
-                    res.send(err);
+                    res.status(500).send(err);
                   } else {
                     res.send(docdata);
                   }
                 });
             }
           } else {
-            db.UpdateDocument(model, { _id: req.body.userid }, { "$push": { 'addressList': address } }, {}, function (err, docdata) {
+            db.UpdateDocument('users', { _id: req.body.userid }, { "$push": { 'addressList': address } }, {}, function (err, docdata) {
               if (err) {
-                res.send(err);
+                res.status(500).send(err);
               } else {
                 res.send(docdata);
               }
@@ -1595,25 +1598,23 @@ module.exports = function (io) {
     }
   };
 
-  router.addDeliveryAddress = function addaddress(req, res) {
-    var model = !req.body.usertype || req.body.usertype == 'user' ? 'users' : 'tasker';
-
+  router.addDeliveryAddress = function (req, res) {
     if (req.body.data.editaddressdata.sat == 1) {
-      db.UpdateDocument(model, { _id: req.body.userid, 'deliveryAddressList._id': req.body.data.editaddressdata._id },
+      db.UpdateDocument('users', { _id: req.body.userid, 'deliveryAddressList._id': req.body.data.editaddressdata._id },
         {
           "deliveryAddressList.$.line1": req.body.data.editaddressdata.line1, "deliveryAddressList.$.country": req.body.data.editaddressdata.country, "deliveryAddressList.$.street": req.body.data.editaddressdata.street,
           "deliveryAddressList.$.city": req.body.data.editaddressdata.city, "deliveryAddressList.$.landmark": req.body.data.editaddressdata.landmark, "deliveryAddressList.$.status": req.body.data.editaddressdata.status, "deliveryAddressList.$.state": req.body.data.editaddressdata.state, "deliveryAddressList.$.locality": req.body.data.editaddressdata.locality,
           "deliveryAddressList.$.zipcode": req.body.data.editaddressdata.zipcode
         }, {}, function (err, docdata) {
           if (err) {
-            res.send(err);
+            res.status(500).send(err);
           }
           else {
             res.send(docdata);
           }
         });
     } else {
-      db.GetOneDocument(model, { '_id': req.body.userid, deliveryAddressList: { $elemMatch: { "location.lng": req.body.data.addressList.location.lng, "location.lat": req.body.data.addressList.location.lat } } }, {}, {}, function (addErr, addRespo) {
+      db.GetOneDocument('users', { '_id': req.body.userid, deliveryAddressList: { $elemMatch: { "location.lng": req.body.data.addressList.location.lng, "location.lat": req.body.data.addressList.location.lat } } }, {}, {}, function (addErr, addRespo) {
         if (addErr || addRespo) {
           res.send({ status: 0, message: 'Address already added on the list' });
         } else {
@@ -1630,37 +1631,37 @@ module.exports = function (io) {
           };
 
           if (req.body.data.editaddressdata._id) {
-            if (req.body.data.addressList.location.lng == '' || req.body.data.addressList.location.lat == '') {
-              db.UpdateDocument(model, { _id: req.body.userid, 'deliveryAddressList._id': req.body.data.editaddressdata._id },
+            if (!req.body.data.deliveryAddressList || !req.body.data.deliveryAddressList.location || !req.body.data.deliveryAddressList.location.lng || !req.body.data.req.body.data.deliveryAddressList.location.lat) {
+              db.UpdateDocument('users', { _id: req.body.userid, 'deliveryAddressList._id': req.body.data.editaddressdata._id },
                 {
                   "deliveryAddressList.$.line1": req.body.data.editaddressdata.line1, "deliveryAddressList.$.country": req.body.data.editaddressdata.country, "deliveryAddressList.$.street": req.body.data.editaddressdata.street,
                   "deliveryAddressList.$.city": req.body.data.editaddressdata.city, "deliveryAddressList.$.landmark": req.body.data.editaddressdata.landmark, "deliveryAddressList.$.status": req.body.data.editaddressdata.status, "deliveryAddressList.$.state": req.body.data.editaddressdata.state, "deliveryAddressList.$.locality": req.body.data.editaddressdata.locality,
                   "deliveryAddressList.$.zipcode": req.body.data.editaddressdata.zipcode
                 }, {}, function (err, docdata) {
                   if (err) {
-                    res.send(err);
+                    res.status(500).send(err);
                   } else {
                     res.send(docdata);
                   }
                 });
             } else {
-              db.UpdateDocument(model, { _id: req.body.userid, 'deliveryAddressList._id': req.body.data.editaddressdata._id },
+              db.UpdateDocument('users', { _id: req.body.userid, 'deliveryAddressList._id': req.body.data.editaddressdata._id },
                 {
                   "deliveryAddressList.$.line1": req.body.data.editaddressdata.line1, "deliveryAddressList.$.country": req.body.data.editaddressdata.country, "deliveryAddressList.$.street": req.body.data.editaddressdata.street,
                   "deliveryAddressList.$.city": req.body.data.editaddressdata.city, "deliveryAddressList.$.landmark": req.body.data.editaddressdata.landmark, "deliveryAddressList.$.status": req.body.data.editaddressdata.status, "deliveryAddressList.$.locality": req.body.data.editaddressdata.locality,
                   "deliveryAddressList.$.zipcode": req.body.data.editaddressdata.zipcode, "deliveryAddressList.$.location.lat": req.body.data.addressList.location.lat, "deliveryAddressList.$.location.lng": req.body.data.addressList.location.lng
                 }, { multi: true }, function (err, docdata) {
                   if (err) {
-                    res.send(err);
+                    res.status(500).send(err);
                   } else {
                     res.send(docdata);
                   }
                 });
             }
           } else {
-            db.UpdateDocument(model, { _id: req.body.userid }, { "$push": { 'deliveryAddressList': address } }, {}, function (err, docdata) {
+            db.UpdateDocument('users', { _id: req.body.userid }, { "$push": { 'deliveryAddressList': address } }, {}, function (err, docdata) {
               if (err) {
-                res.send(err);
+                res.status(500).send(err);
               } else {
                 res.send(docdata);
               }
@@ -1671,7 +1672,7 @@ module.exports = function (io) {
     }
   };
 
-  router.addnewtask = function addnewtask(req, res) {
+  router.addnewtask = function (req, res) {
     var data = {};
     data.category = req.body.categoryid;
     data.address = req.body.address;
@@ -1682,15 +1683,16 @@ module.exports = function (io) {
     data.location = req.body.location
     data.status = 10;
     data.payee_status = 0;
+
     db.GetOneDocument('settings', { 'alias': 'general' }, {}, {}, function (err, settingdata) {
       if (err || !settingdata) {
-        res.send(err);
+        res.status(500).send(err);
       } else {
         if (settingdata.settings.bookingIdPrefix) {
           data.booking_id = settingdata.settings.bookingIdPrefix + '-' + Math.floor(100000 + Math.random() * 900000);
           db.InsertDocument('task', data, function (err, docdata) {
             if (err) {
-              res.send(err);
+              res.status(500).send(err);
             } else {
               res.send(docdata);
             }
@@ -1702,38 +1704,37 @@ module.exports = function (io) {
     });
   };
 
-
-
-  router.gettaskdetailsbyid = function gettaskdetailsbyid(req, res) {
+  router.gettaskdetailsbyid = function (req, res) {
     var data = {};
     data.taskid = req.body.id;
     var options = {};
     options.populate = 'category user tasker';
     db.GetDocument('task', { _id: req.body.id }, {}, options, function (err, taskdata) {
       if (err) {
-        res.send(err);
+        res.status(500).send(err);
       } else {
         res.send(taskdata[0]);
       }
     });
   };
 
-  router.searchTasker = function searchTasker(req, res) {
+  router.searchTasker = function (req, res) {
     var taskId = req.body.task;
-    var options = {};
-    var model = !req.body.requester || req.body.requester == 'user' ? 'tasker' : 'users';
-    options.populate = 'user category';
+    var options = {
+      populate: 'user category'
+    };
 
     db.GetOneDocument('task', { _id: taskId }, {}, options, function (err, task) {
-      if (err || !task) {
-        res.send(err);
+      if (err) {
+        res.status(500).send(err);
+      } else if (!task) {
+        res.status(404).send({status:0, response: 'Task Not Found'});
       } else {
         db.GetOneDocument('settings', { 'alias': 'general' }, {}, {}, function (err, settingData) {
           if (err) {
-            var data = {};
-            data.response = 'Configure your website setting';
-            data.status = 0;
-            res.send(data);
+            res.status(500).send(err);
+          } else if (!settingData) {
+            res.status(404).send({status:0, response: 'Configure your website setting'});
           } else {
             var distanceval = 0.001;
 
@@ -1748,7 +1749,9 @@ module.exports = function (io) {
                   distanceField: "distance",
                   includeLocs: "location",
                   query: {
-                    "status": 1, "availability": 1,
+                    "status": 1,
+                    "availability": 1,
+                    "role": !req.body.requester || req.body.requester === 'user' ? 'tasker' : 'user',
                     "skills": { $elemMatch: { childid: new mongoose.Types.ObjectId(task.category._id), status: 1 } },
                   },
                   distanceMultiplier: distanceval,
@@ -1764,23 +1767,25 @@ module.exports = function (io) {
                   }
                 }
               },
-              { $unwind: '$taskerskills' },
+              { $unwind: '$skills' },
               { $match: { 'skills.childid': new mongoose.Types.ObjectId(task.category._id) } },
               {
                 "$group":
                   {
                     _id: null,
-                    maxRate: { $max: "$taskerskills.hour_rate" },
-                    minRate: { $min: "$taskerskills.hour_rate" },
+                    maxRate: { $max: "$skills.hour_rate" },
+                    minRate: { $min: "$skills.hour_rate" },
                     kmminRate: { $min: "$radius" },
                     kmmaxRate: { $max: "$radius" }
                   }
               }
             ];
 
-            db.GetAggregation(model, taskercondition, function (err, docdata) {
-              if (err || docdata.length <= 0) {
-                res.send(err);
+            db.GetAggregation('users', taskercondition, function (err, docdata) {
+              if (err) {
+                res.status(500).send(err);
+              } else if (!docdata || !docdata.length) {
+                res.status(404).send({status:0, response: 'Match Not Found'})
               } else {
                 res.send(docdata[0]);
               }
@@ -1791,23 +1796,23 @@ module.exports = function (io) {
     });
   };
 
-  router.confirmtask = function confirmtask(req, res) {
+  router.confirmtask = function (req, res) {
     if (req.body.data.status == 2) {
       data = req.body.data;
       var history = {};
       db.GetOneDocument('settings', { 'alias': 'general' }, {}, {}, function (err, settingdata) {
         if (err || !settingdata) {
-          res.send(err);
+          res.status(500).send(err);
         } else {
           db.GetDocument('task', { _id: req.body.data._id }, { booking_information: 1 }, {}, function (err, dateDate) {
             if (err) {
-              res.send(err);
+              res.status(500).send(err);
             } else {
               data.booking_information.booking_date = dateDate[0].booking_information.booking_date;
               //new code
               db.GetOneDocument('task', { '_id': req.body.data._id }, {}, {}, function (err, taskdetails) {
                 if (err || !taskdetails) {
-                  res.send(err);
+                  res.status(500).send(err);
                 } else {
                   db.GetAggregation('task', [
                     {
@@ -1817,7 +1822,7 @@ module.exports = function (io) {
                     }
                   ], function (err, taskdata) {
                     if (err || !taskdata) {
-                      res.send(err);
+                      res.status(500).send(err);
                     } else {
                       var trueValue = true;
                       if (taskdata.length != 0) {
@@ -1831,17 +1836,17 @@ module.exports = function (io) {
                           // new code
                           db.UpdateDocument('task', { _id: req.body.data._id }, data, {}, function (err, docdata) {
                             if (err) {
-                              res.send(err);
+                              res.status(500).send(err);
                             } else {
                               var options = {};
                               options.populate = 'user tasker category';
                               db.GetDocument('task', { _id: req.body.data._id }, {}, options, function (err, taskdata) {
                                 if (err) {
-                                  res.send(err);
+                                  res.status(500).send(err);
                                 } else {
                                   db.GetOneDocument('category', { _id: taskdata[0].category.parent }, {}, options, function (err, category) {
                                     if (err) {
-                                      res.send(err);
+                                      res.status(500).send(err);
                                     } else {
                                       var job_date = timezone.tz(taskdata[0].booking_information.booking_date, settingdata.settings.time_zone).format(settingdata.settings.date_format);
                                       var job_time = timezone.tz(taskdata[0].booking_information.booking_date, settingdata.settings.time_zone).format(settingdata.settings.time_format);
@@ -1938,15 +1943,15 @@ module.exports = function (io) {
                         //var time = timezone.tz(formatedDate, settingData.settings.time_zone);
                         db.UpdateDocument('task', { _id: req.body.data._id }, { status: 2, 'history.provider_assigned': time }, function (err, result) {
                           if (err) {
-                            res.send(err);
+                            res.status(500).send(err);
                           } else {
                             db.GetDocument('task', { _id: req.body.data._id }, {}, {}, function (err, taskdata) {
                               if (err) {
-                                res.send(err);
+                                res.status(500).send(err);
                               } else {
                                 db.GetOneDocument('category', { _id: taskdata[0].category.parent }, {}, {}, function (err, category) {
                                   if (err) {
-                                    res.send(err);
+                                    res.status(500).send(err);
                                   } else {
 
                                     var mailcredentials = {};
@@ -2049,28 +2054,28 @@ module.exports = function (io) {
       data = req.body.data;
       db.GetOneDocument('settings', { 'alias': 'general' }, {}, {}, function (err, settingdata) {
         if (err || !settingdata) {
-          res.send(err);
+          res.status(500).send(err);
         } else {
           db.GetDocument('task', { _id: req.body.data._id }, { booking_information: 1 }, {}, function (err, dateDate) {
             if (err) {
-              res.send(err);
+              res.status(500).send(err);
             } else {
               //var formatedDate = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
               //data.history.job_booking_time = timezone.tz(formatedDate, settingdata.settings.time_zone);
               data.booking_information.booking_date = dateDate[0].booking_information.booking_date;
               db.UpdateDocument('task', { _id: req.body.data._id }, data, {}, function (err, docdata) {
                 if (err) {
-                  res.send(err);
+                  res.status(500).send(err);
                 } else {
                   var options = {};
                   options.populate = 'user tasker category';
                   db.GetDocument('task', { _id: req.body.data._id }, {}, options, function (err, taskdata) {
                     if (err) {
-                      res.send(err);
+                      res.status(500).send(err);
                     } else {
                       db.GetOneDocument('category', { _id: taskdata[0].category.parent }, {}, options, function (err, category) {
                         if (err) {
-                          res.send(err);
+                          res.status(500).send(err);
                         } else {
                           var job_date = timezone.tz(taskdata[0].booking_information.booking_date, settingdata.settings.time_zone).format(settingdata.settings.date_format);
                           var job_time = timezone.tz(taskdata[0].booking_information.booking_date, settingdata.settings.time_zone).format(settingdata.settings.time_format);
@@ -2164,14 +2169,14 @@ module.exports = function (io) {
 
   };
 
-  router.taskerCount = function taskerCount(req, res) {
+  router.taskerCount = function (req, res) {
     var taskid = req.query.task;
     var categoryname = req.query.categoryname;
     var limit = parseInt(req.query.limit) || 2;
     var skip = parseInt(req.query.skip) || 0;
     db.GetOneDocument('task', { _id: new mongoose.Types.ObjectId(taskid) }, {}, {}, function (err, taskDataaa) {
       if (err || !taskDataaa) {
-        res.send(err);
+        res.status(500).send(err);
       } else {
 
         db.GetOneDocument('settings', { 'alias': 'general' }, {}, {}, function (err, settingData) {
@@ -2240,41 +2245,41 @@ module.exports = function (io) {
   };
 
 
-  router.gettask = function gettask(req, res) {
+  router.gettask = function (req, res) {
     var options = {};
     options.populate = 'category user';
     db.GetDocument('task', { _id: req.body.task }, {}, options, function (err, docdata) {
       if (err || !docdata) {
-        res.send(err);
+        res.status(500).send(err);
       } else {
         res.send(docdata);
       }
     })
   }
 
-  router.profileConfirm = function profileConfirm(req, res) {
+  router.profileConfirm = function (req, res) {
     db.GetOneDocument('settings', { 'alias': 'general' }, {}, {}, function (err, settingdata) {
       if (err || !settingdata) {
-        res.send(err);
+        res.status(500).send(err);
       } else {
         console.log(req.body.history);
         db.GetOneDocument('task', { _id: req.body._id }, { booking_information: 1 }, {}, function (err, docdata) {
           if (err) {
-            res.send(err);
+            res.status(500).send(err);
           } else {
             db.UpdateDocument('task', { _id: req.body._id }, { 'booking_information.est_reach_date': '', 'booking_information.reach_date': '', 'booking_information.instruction': req.body.booking_information.instruction, 'booking_information.work_id': req.body.booking_information.work_id, 'booking_information.location': req.body.booking_information.location, 'history': req.body.history, 'invoice': req.body.invoice, 'tasker': req.body.tasker, 'hourly_rate': req.body.hourly_rate, 'status': req.body.status }, {}, function (err, docdata) {
               if (err) {
-                res.send(err);
+                res.status(500).send(err);
               } else {
                 var options = {};
                 options.populate = 'user tasker category';
                 db.GetDocument('task', { _id: req.body._id }, {}, options, function (err, taskdata) {
                   if (err) {
-                    res.send(err);
+                    res.status(500).send(err);
                   } else {
                     db.GetOneDocument('category', { _id: taskdata[0].category.parent }, {}, options, function (err, category) {
                       if (err) {
-                        res.send(err);
+                        res.status(500).send(err);
                       } else {
                         var job_date = timezone.tz(taskdata[0].booking_information.booking_date, settingdata.settings.time_zone).format(settingdata.settings.date_format);
                         var job_time = timezone.tz(taskdata[0].booking_information.booking_date, settingdata.settings.time_zone).format(settingdata.settings.time_format);

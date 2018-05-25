@@ -10,7 +10,6 @@ USERS_SCHEMA.USER = {
   phone: {
     code: String,
     number: String,
-    // number: { type: String, index: { unique: true } }
   },
   otp: String,
   gender: String,
@@ -19,6 +18,10 @@ USERS_SCHEMA.USER = {
     first_name: String,
     last_name: String
   },
+
+  avg_review: { type: Number, default: 0 },
+  total_review: { type: Number, default: 0 },
+
   address: {
     line1: String,
     line2: String,
@@ -71,7 +74,8 @@ USERS_SCHEMA.USER = {
   role: String,
   activity: {
     last_login: { type: Date, default: Date.now },
-    last_logout: { type: Date, default: Date.now }
+    last_logout: { type: Date, default: Date.now },
+    last_active_time: { type: Date, default: Date.now }
   },
   referal_code: String,
   refer_history: [{
@@ -133,6 +137,11 @@ USERS_SCHEMA.USER = {
     month: Number,
     date: Number
   },
+  profile_details: [{
+    _id: false,
+    question: { type: Schema.ObjectId, ref: 'question' },
+    answer: String
+  }],
   reset_code: String,
   emergency_contact: {
     name: String,
@@ -198,5 +207,15 @@ USERS_SCHEMA.USER = {
   availability_address: String,
   radius: Number,
   radiusby: String,
+  provider_location: {
+    provider_lng: Number,
+    provider_lat: Number
+  },
+  current_task: { type: Schema.ObjectId, ref: 'task' },
+  // working_area: Object,
+  tasker_area: {
+    lat: Number,
+    lng: Number
+  },
 };
 module.exports = USERS_SCHEMA;

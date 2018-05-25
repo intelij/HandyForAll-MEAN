@@ -237,7 +237,6 @@ function taskFilterCtrl($scope, $timeout, $uibModal, $rootScope, $location, $sta
   };
 
   tfc.getTaskerDetails = function () {
-    console.log('getTaskerDetails init');
     if (tfc.UIslide) {
       tfc.filter.minvalue = tfc.UIslide[0];
       tfc.filter.maxvalue = tfc.UIslide[1];
@@ -246,6 +245,8 @@ function taskFilterCtrl($scope, $timeout, $uibModal, $rootScope, $location, $sta
       tfc.filter.kmminvalue = tfc.UIkmslide[0];
       tfc.filter.kmmaxvalue = tfc.UIkmslide[1];
     }
+    tfc.filter.requester = tfc.currentUserData.role;
+
     tfc.TaskerDetails = [];
     tfc.getTaskerDetailsResponse = false;
 

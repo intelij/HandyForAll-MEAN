@@ -4,7 +4,7 @@ var bcrypt = require('bcrypt-nodejs');
 /*---new db schema----*/
 var config_admin_schema = require('../schema/administrators.schema.js');
 var config_user_schema = require('../schema/user.schema.js');
-var config_tasker_schema = require('../schema/tasker.schema.js');
+var config_tasker_schema = require('../schema/user.schema.js');
 var config_pages_schema = require('../schema/page.schema.js');
 var config_email_template_schema = require('../schema/emailtemplate.schema.js');
 var config_slider_schema = require('../schema/sliders.schema.js');
@@ -39,7 +39,7 @@ var config_peoplecmd_schema = require('../schema/peoplecmd.schema.js');
 // define the schema for our user model
 var adminSchema = mongoose.Schema(config_admin_schema.ADMIN, { timestamps: true, versionKey: false });
 var userSchema = mongoose.Schema(config_user_schema.USER, { timestamps: true, versionKey: false });
-var taskerSchema = mongoose.Schema(config_tasker_schema.TASKER, { timestamps: true, versionKey: false });
+var taskerSchema = mongoose.Schema(config_tasker_schema.USER, { timestamps: true, versionKey: false });
 var pageschema = mongoose.Schema(config_pages_schema.PAGES, { timestamps: true, versionKey: false });
 var emailtemplateSchema = mongoose.Schema(config_email_template_schema.template, { timestamps: true, versionKey: false });
 var sliderSchema = mongoose.Schema(config_slider_schema.SLIDERS, { timestamps: true, versionKey: false });
@@ -105,7 +105,7 @@ adminSchema.methods.validPassword = function (password) {
 // create the model for users and expose it to our app
 var admins = mongoose.model('administrators', adminSchema, 'administrators');
 var users = mongoose.model('users', userSchema, 'users');
-var tasker = mongoose.model('tasker', taskerSchema, 'tasker');
+var tasker = mongoose.model('tasker', taskerSchema, 'users');
 var pages = mongoose.model('pages', pageschema, 'pages');
 var emailtemplate = mongoose.model('email_template', emailtemplateSchema, 'email_template');
 var slider = mongoose.model('sliders', sliderSchema, 'sliders');
