@@ -736,12 +736,12 @@
   "VIEW_DEMAND": "View Demand",
   "IMAGES": "Images",
   "DEMAND_NAME": "Demand Name",
-  "DEMAND NAME IS REQUIRED": "Demand name is required(Maximum 40 characters allowed)",
+  "DEMAND NAME IS REQUIRED": "Demand name is required",
   "DEMAND_DESCRIPTION": "Demand Description",
-  "DEMAND DESCRIPTION IS REQUIRED": "Demand description is required(Maximum 140 characters allowed)",
-  "DEMAND_SPECIFICATION": "Demand Name",
-  "DEMAND SPECIFICATION IS REQUIRED": "Demand specification is required(Maximum 140 characters allowed)",
+  "DEMAND DESCRIPTION IS REQUIRED": "Demand description is required",
+  "DEMAND_SPECIFICATION": "Demand Specification",
+  "DEMAND SPECIFICATION IS REQUIRED": "Demand specification is required",
   "DEMAND_IMAGES": "Demand Images",
   "SET_CAPACITY_RATE": "Set Capacity",
-  "CAPACITY RATE IS REQUIRED": "capacity is required"
+  "CAPACITY RATE IS REQUIRED": "Capacity is required"
 }
