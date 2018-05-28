@@ -334,6 +334,8 @@
   "YOUR_TASK_LOCATION": "Your Task Location",
   "YOUR_LOCATION": "Your Location",
   "DELIVERY_LOCATION": "Delivery Location",
+  "WHERE_YOU_ARE_LOCATED": "Where you and goods are currently located",
+  "WHERE_SERVICE_OR_GOODS_SHOULD_BE_DELIVERED": "Where service or goods should be delivered",
   "BASED_ON_THE_DETAILS_ENTERED_BELOW": "Based on the details entered below, we'll show you relevant Taskers for you to choose from",
   "CHANGE": "Change",
   "FIND_A_TASKER_FOR": "Find a Tasker for ",

@@ -15,9 +15,14 @@
         <div class="task-spcd">
           <div class="task-spcd col-sm-12">
             <span class="tas-list">{{'YOUR_LOCATION' | translate}}</span>
-            <div class="borm-detlsectio">
-              <label ng-if="TAC.isAvailableAtUserLocation == 1" class="cont-tex "><i ng-if="TAC.isAvailableAtUserLocation == 1" class="fa fa-check " style="font-size: 23px; margin-right: 10px"></i>{{'GOOD_NEWS' | translate}} {{rc.title}} {{'IS_AVAILABLE_IN_YOUR_AREA' | translate}}</label>
-              <label style="color:red" ng-if="TAC.isAvailableAtUserLocation == 0" class="cont-tex"><i ng-if="TAC.isAvailableAtUserLocation != 1" class="fa fa-times  " style="font-size: 23px; margin-right: 10px"></i>{{'WE ARE SORRY YET WE DONT HAVE TASKER IN YOUR AREA' | translate}}</label>
+            <div style="display: table; width: 100%">
+              <div style="display: table-cell; width: 50%; vertical-align: middle">
+                <span>({{'WHERE_YOU_ARE_LOCATED' | translate}})</span>
+              </div>
+              <div style="display: table-cell; width: 50%">
+                <label ng-if="TAC.isAvailableAtUserLocation == 1" class="cont-tex "><i ng-if="TAC.isAvailableAtUserLocation == 1" class="fa fa-check " style="font-size: 23px; margin-right: 10px"></i>{{'GOOD_NEWS' | translate}} {{rc.title}} {{'IS_AVAILABLE_IN_YOUR_AREA' | translate}}</label>
+                <label style="color:red" ng-if="TAC.isAvailableAtUserLocation == 0" class="cont-tex"><i ng-if="TAC.isAvailableAtUserLocation != 1" class="fa fa-times  " style="font-size: 23px; margin-right: 10px"></i>{{'WE ARE SORRY YET WE DONT HAVE TASKER IN YOUR AREA' | translate}}</label>
+              </div>
             </div>
             <div class="selectadd col-sm-4">
               <a class="btn icon-btn " href="#" ng-click="TAC.editAddress()">
@@ -66,9 +71,14 @@
           </div>
           <div class="task-spcd col-sm-12">
             <span class="tas-list">{{'DELIVERY_LOCATION' | translate}}</span>
-            <div class="borm-detlsectio">
-              <label ng-if="TAC.isAvailableAtDeliveryLocation == 1" class="cont-tex "><i ng-if="TAC.isAvailableAtDeliveryLocation == 1" class="fa fa-check " style="font-size: 23px; margin-right: 10px"></i>{{'GOOD_NEWS' | translate}} {{rc.title}} {{'IS_AVAILABLE_IN_YOUR_AREA' | translate}}</label>
-              <label style="color:red" ng-if="TAC.isAvailableAtDeliveryLocation == 0" class="cont-tex"><i ng-if="TAC.isAvailableAtDeliveryLocation != 1" class="fa fa-times  " style="font-size: 23px; margin-right: 10px"></i>{{'WE ARE SORRY YET WE DONT HAVE TASKER IN YOUR AREA' | translate}}</label>
+            <div style="display: table; width: 100%">
+              <div style="display: table-cell; width: 50%; vertical-align: middle">
+                <span>({{'WHERE_SERVICE_OR_GOODS_SHOULD_BE_DELIVERED' | translate}})</span>
+              </div>
+              <div style="display: table-cell; width: 50%">
+                <label ng-if="TAC.isAvailableAtDeliveryLocation == 1" class="cont-tex "><i ng-if="TAC.isAvailableAtDeliveryLocation == 1" class="fa fa-check " style="font-size: 23px; margin-right: 10px"></i>{{'GOOD_NEWS' | translate}} {{rc.title}} {{'IS_AVAILABLE_IN_YOUR_AREA' | translate}}</label>
+                <label style="color:red" ng-if="TAC.isAvailableAtDeliveryLocation == 0" class="cont-tex"><i ng-if="TAC.isAvailableAtDeliveryLocation != 1" class="fa fa-times  " style="font-size: 23px; margin-right: 10px"></i>{{'WE ARE SORRY YET WE DONT HAVE TASKER IN YOUR AREA' | translate}}</label>
+              </div>
             </div>
             <div class="selectadd col-sm-4">
               <a class="btn icon-btn " href="#" ng-click="TAC.editDeliveryAddress()">
