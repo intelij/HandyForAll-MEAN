@@ -52,10 +52,10 @@
                     <p class="ng-binding"><strong>{{'STATE' | translate}}</strong>: {{address.state}}</p>
                     <p class="ng-binding"><strong>{{'ZIPCODE' | translate}}</strong>: {{address.zipcode}}</p>
                   </div>
-                  <button type="button" class="edit_address button_se" ng-disabled="$index == TAC.filter.user_address_index" ng-click="TAC.editAddress($index)">
+                  <button type="button" class="edit_address button_se" ng-hide="$index == TAC.filter.user_address_index" ng-click="TAC.editAddress($index)">
                     <i class="fa fa-edit"></i> {{'EDIT' | translate}}
                   </button>
-                  <button type="button" class="button_se" ng-disabled="$index == TAC.filter.user_address_index" ng-click="TAC.deleteAddress($index, false)">
+                  <button type="button" class="button_se" ng-hide="$index == TAC.filter.user_address_index" ng-click="TAC.deleteAddress($index, false)">
                     <i class="fa fa-trash"></i> {{'DELETE' | translate}}
                   </button>
                 </div>
@@ -134,10 +134,10 @@
                     <p class="ng-binding"><strong>{{'STATE' | translate}}</strong>: {{address.state}}</p>
                     <p class="ng-binding"><strong>{{'ZIPCODE' | translate}}</strong>: {{address.zipcode}}</p>
                   </div>
-                  <button type="button" class="edit_address button_se" ng-disabled="$index == TAC.filter.delivery_address_index" ng-click="TAC.editDeliveryAddress($index)">
+                  <button type="button" class="edit_address button_se" ng-hide="$index == TAC.filter.delivery_address_index" ng-click="TAC.editDeliveryAddress($index)">
                     <i class="fa fa-edit"></i> {{'EDIT' | translate}}
                   </button>
-                  <button type="button" class="button_se" ng-disabled="$index == TAC.filter.delivery_address_index" ng-click="TAC.deleteAddress($index, true)">
+                  <button type="button" class="button_se" ng-hide="$index == TAC.filter.delivery_address_index" ng-click="TAC.deleteAddress($index, true)">
                     <i class="fa fa-trash"></i> {{'DELETE' | translate}}
                   </button>
                 </div>
