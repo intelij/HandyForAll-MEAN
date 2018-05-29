@@ -1536,7 +1536,7 @@ module.exports = function (io) {
       var aggregationData = [
         { $match: { 'status': { "$in": status }, 'user': new mongoose.Types.ObjectId(req.body._id) } },
         { $lookup: { from: "categories", localField: "category", foreignField: "_id", as: "category" } },
-        { $lookup: { from: "tasker", localField: "tasker", foreignField: "_id", as: "tasker" } },
+        { $lookup: { from: "users", localField: "tasker", foreignField: "_id", as: "tasker" } },
         { $sort: { updatedAt: -1 } },
         { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
         { $unwind: { path: "$tasker", preserveNullAndEmptyArrays: true } },
