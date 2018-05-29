@@ -511,7 +511,6 @@ function taskFilterCtrl($scope, $timeout, $uibModal, $rootScope, $location, $sta
   };
 
   tfc.confirmatask = function confirmatask(message) {
-    //
     const modalInstance = $uibModal.open({
       animation: true,
       templateUrl: 'app/site/modules/task-step/views/ConfirmtaskModel.html',
