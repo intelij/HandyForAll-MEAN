@@ -60,7 +60,6 @@ module.exports = function () {
   };
 
   router.courierGuy = function courierGuy(req, res) {
-    console.log('courier guy');
     const waybill = req.body.waybill;
     const url = `http://tracking.parcelperfect.com/waybill.php?ppcust=2500.2500.3364&waybill=${waybill}`;
 
@@ -73,7 +72,6 @@ module.exports = function () {
         events: [],
       };
       const dataBody = $('table tbody tr', htmlData).next().html();
-      // const $ = cheerio.load(dataBody);
       // 1: Waybill Details, 2:POD Details, 3: third body
       const waybillBody = $('table', dataBody).get(1);
       const podBody = $('table', dataBody).get(2);
