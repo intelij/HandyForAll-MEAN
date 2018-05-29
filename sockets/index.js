@@ -66,7 +66,7 @@ module.exports = function (io) {
               data.messages.push(messages);
 
               db.GetDocument('settings', { alias: 'mobile' }, {}, {}, function (err, docdata) {
-                if (docdata) {
+                if (docdata && docdata.length && docdata[0].settings && docdata[0].settings.apns) {
 
                   if (docdata[0].settings.apns.mode == 1) {
                     docdata[0].settings.apns.mode = true;
