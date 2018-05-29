@@ -23,13 +23,13 @@
       <li ng-if="ACC.user.address">
         <i class="fa fa-map-marker"></i>
         <span class="address">
-                <span ng-if="ACC.user.address.line1">{{ACC.user.address.line1}}</span>
-                <span ng-if="ACC.user.address.line2">{{ACC.user.address.line2}}</span>
-                <span ng-if="ACC.user.address.city">{{ACC.user.address.city}}</span>
-                <span ng-if="ACC.user.address.state">{{ACC.user.address.state}}</span>
-                <span ng-if="ACC.user.address.country">{{ACC.user.address.country}}</span>
-                <span ng-if="ACC.user.address.zipcode">{{ACC.user.address.zipcode}}</span>
-                </span>
+          <span ng-if="ACC.user.address.line1">{{ACC.user.address.line1}}</span>
+          <span ng-if="ACC.user.address.line2">{{ACC.user.address.line2}}</span>
+          <span ng-if="ACC.user.address.city">{{ACC.user.address.city}}</span>
+          <span ng-if="ACC.user.address.state">{{ACC.user.address.state}}</span>
+          <span ng-if="ACC.user.address.country">{{ACC.user.address.country}}</span>
+          <span ng-if="ACC.user.address.zipcode">{{ACC.user.address.zipcode}}</span>
+        </span>
       </li>
     </ul>
   </div>
@@ -50,7 +50,7 @@
                ng-class="{ 'has-error' : accountForm.fname.$invalid && !accountForm.fname.$pristine, 'has-success' : accountForm.fname.$valid && !accountForm.fname.$pristine}">
             <label for="fname">{{'FIRST_NAME' | translate}} </label>
             <input type="text" name="fname" class="form-control" ng-pattern="/^[a-zA-Z ]*$/"
-                   ng-model="ACC.user.name.first_name"
+                   ng-model="ACC.user.name.first_name" id="fname"
                    on-blur-validation required>
             <p class="help-block">
               <span ng-show="accountForm.fname.$invalid && !accountForm.fname.$pristine">{{'Enter the first name' | translate}}</span>
@@ -63,7 +63,7 @@
                ng-class="{ 'has-error' : accountForm.lname.$invalid && !accountForm.lname.$pristine, 'has-success' : accountForm.lname.$valid && !accountForm.lname.$pristine}">
             <label for="lname">{{'LAST_NAME' | translate}}</label>
             <input type="text" name="lname" class="form-control" ng-pattern="/^[a-zA-Z ]*$/"
-                   ng-model="ACC.user.name.last_name"
+                   ng-model="ACC.user.name.last_name" id="lname"
                    on-blur-validation required>
             <p class="help-block">
               <span ng-show="accountForm.lname.$invalid && !accountForm.lname.$pristine">{{'Enter the last name' | translate}}</span>
@@ -76,7 +76,7 @@
                ng-class="{ 'has-error' : accountForm.email.$invalid && !accountForm.email.$pristine, 'has-success' : accountForm.email.$valid && !accountForm.email.$pristine}">
             <label for="email">{{'EMAIL'| translate}}</label>
             <input type="email" name="email" class="form-control" ng-disabled={{isDisabled}} ng-model="ACC.user.email"
-                   on-blur-validation
+                   on-blur-validation id="email"
                    required>
             <p class="help-block">
               <span
@@ -150,10 +150,9 @@
           <div class="form-group"
                ng-class="{ 'has-error' : accountForm.line1.$invalid && !accountForm.line1.$pristine, 'has-success' : accountForm.line1.$valid && !accountForm.line1.$pristine}">
             <label for="line1">{{'ADDRESS_LINE_1'| translate}}</label>
-            <input type="text" name="line1" class="form-control" placeholder="{{'ENTER YOUR LOCATION'| translate}}"
-                   required
+            <input name="line1" class="form-control" placeholder="{{'ENTER YOUR LOCATION'| translate}}"
                    type="text" places-auto-complete size=80 ng-model="ACC.temp_address" types="['address']"
-                   on-place-changed="ACC.placeChanged()"
+                   on-place-changed="ACC.placeChanged()" id="line1"
                    on-blur-validation required>
             <p class="help-block">
               <span ng-show="accountForm.line1.$invalid && !accountForm.line1.$pristine">{{'ENTER THE VALID PLACE' | translate}}</span>
@@ -163,14 +162,14 @@
         <li class="col-sm-12">
           <div class="form-group">
             <label for="line2">{{'ADDRESS_LINE_2'| translate}}</label>
-            <input type="text" name="line2" class="form-control" ng-model="ACC.user.address.line2">
+            <input type="text" name="line2" class="form-control" ng-model="ACC.user.address.line2" id="line2">
           </div>
         </li>
         <li class="col-sm-12">
           <div class="form-group">
             <!-- ng-class="{ 'has-error' : accountForm.city.$invalid && !accountForm.city.$pristine, 'has-success' : accountForm.city.$valid && !accountForm.city.$pristine}"-->
             <label for="city">{{'CITY'| translate}}</label>
-            <input type="text" name="city" class="form-control" ng-model="ACC.user.address.city">
+            <input type="text" name="city" class="form-control" ng-model="ACC.user.address.city" id="city">
 
           </div>
         </li>
@@ -183,13 +182,13 @@
         <li class="col-sm-12">
           <div class="form-group">
             <label for="country">{{'COUNTRY'|translate}}</label>
-            <input type="text" name="country" class="form-control" ng-model="ACC.user.address.country">
+            <input type="text" name="country" id="country" class="form-control" ng-model="ACC.user.address.country">
           </div>
         </li>
         <li class="col-sm-12">
           <div class="form-group">
             <label for="zipcode">{{'ZIPCODE'|translate}}</label>
-            <input type="text" ng-model="ACC.user.address.zipcode" name="zipcode" class="form-control">
+            <input type="text" ng-model="ACC.user.address.zipcode" id="zipcode" name="zipcode" class="form-control">
           </div>
         </li>
 
