@@ -712,7 +712,7 @@ angular.module('handyforall.site', ['Authentication',
             return TaskService.getTaskDetailsbyid($stateParams.task);
           },
           TaskProfileResolve: function (TaskService, $stateParams) {
-            return TaskService.taskprofileinfo($stateParams.tasker);
+            return TaskService.taskprofileinfo({id: $stateParams.tasker});
           },
           CurrentuserResolve: function (AuthenticationService) {
             var user = AuthenticationService.GetCredentials();
@@ -1118,7 +1118,7 @@ angular.module('handyforall.site', ['Authentication',
         },
         resolve: {
           TaskProfileResolve: function (TaskService, $stateParams) {
-            return TaskService.taskprofileinfo($stateParams.taskerId);
+            return TaskService.taskprofileinfo({id: $stateParams.taskerId});
           }
         }
       })

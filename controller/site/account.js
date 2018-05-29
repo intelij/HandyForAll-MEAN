@@ -1614,7 +1614,7 @@ module.exports = function (io) {
         { $lookup: { from: "categories", localField: "category", foreignField: "_id", as: "category" } },
         { $lookup: { from: "users", localField: "user", foreignField: "_id", as: "user" } },
         { $unwind: { path: "$user", preserveNullAndEmptyArrays: true } },
-        { $lookup: { from: "tasker", localField: "tasker", foreignField: "_id", as: "tasker" } },
+        { $lookup: { from: "users", localField: "tasker", foreignField: "_id", as: "tasker" } },
         { $unwind: { path: "$tasker", preserveNullAndEmptyArrays: true } },
         { $lookup: { from: 'reviews', localField: 'user._id', foreignField: 'user', as: 'userrating' } },
         { $lookup: { from: 'reviews', localField: '_id', foreignField: 'task', as: 'taskrating' } },
@@ -1657,8 +1657,6 @@ module.exports = function (io) {
         { $project: { document: "$$ROOT" } },
         { $group: { "_id": null, "count": { "$sum": 1 }, "TaskDetails": { $push: "$document" } } },
         { $project: { TaskDetails: { $slice: ["$TaskDetails", skip, limit] }, count: 1 } }
-
-
       ];
       if (objectID.isValid(req.body._id)) {
         db.GetAggregation('task', aggregationData, function (err, doc) {
