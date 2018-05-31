@@ -138,8 +138,6 @@ html(ng-app='handyforall.site', ng-controller='rootCtrl as rc')
                 window.currentUser = '#{username}';
     body
 
-
-
         section(ui-view='commonview')
             section(ng-include="'app/site/modules/common/views/header.html'")
             section(ui-view='content', autoscroll='true')
