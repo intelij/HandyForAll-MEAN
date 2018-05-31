@@ -199,7 +199,7 @@ USERS_SCHEMA.USER = {
     demand_name: String,
     demand_description: String,
     demand_specification: String,
-    demand_images: String,
+    demand_images: [{type: String}],
     product_image: String,
   }],
   working_days: [{
