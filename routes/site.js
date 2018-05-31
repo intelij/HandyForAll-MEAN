@@ -36,6 +36,7 @@ module.exports = function (app, io) {
     var common = require('../controller/site/common.js')(app);
 
     app.get('/sitemap.xml', common.sitemap);
+    app.post('/site/common/courier_guy', common.courierGuy);
 
     app.get('/site/users/getusers', siteUsers.getusers);
     // app.post('/site/users/checkEmail', siteUsers.checkEmail);
