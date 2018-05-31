@@ -34,8 +34,8 @@
     </ul>
   </div>
   <div class="account-edit" ng-show="ACC.accountMode">
-    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" dismiss-on-timeout="{{alertTimeout}}"
-               close="closeAlert($index)">{{alert.msg}}
+    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" dismiss-on-timeout="{{alertTimeout}}" close="closeAlert($index)">
+      {{alert.msg}}
     </uib-alert>
     <form name="accountForm" submit-validate role="form" novalidate>
       <div class="imgview">
@@ -48,9 +48,9 @@
         <li class="col-sm-6">
           <div class="form-group"
                ng-class="{ 'has-error' : accountForm.fname.$invalid && !accountForm.fname.$pristine, 'has-success' : accountForm.fname.$valid && !accountForm.fname.$pristine}">
-            <label for="fname">{{'FIRST_NAME' | translate}} </label>
+            <label for="fname{{tab.heading}}">{{'FIRST_NAME' | translate}} </label>
             <input type="text" name="fname" class="form-control" ng-pattern="/^[a-zA-Z ]*$/"
-                   ng-model="ACC.user.name.first_name" id="fname"
+                   ng-model="ACC.user.name.first_name" id="fname{{tab.heading}}"
                    on-blur-validation required>
             <p class="help-block">
               <span ng-show="accountForm.fname.$invalid && !accountForm.fname.$pristine">{{'Enter the first name' | translate}}</span>
@@ -61,10 +61,9 @@
         <li class="col-sm-6">
           <div class="form-group"
                ng-class="{ 'has-error' : accountForm.lname.$invalid && !accountForm.lname.$pristine, 'has-success' : accountForm.lname.$valid && !accountForm.lname.$pristine}">
-            <label for="lname">{{'LAST_NAME' | translate}}</label>
+            <label for="lname{{tab.heading}}">{{'LAST_NAME' | translate}}</label>
             <input type="text" name="lname" class="form-control" ng-pattern="/^[a-zA-Z ]*$/"
-                   ng-model="ACC.user.name.last_name" id="lname"
-                   on-blur-validation required>
+                   ng-model="ACC.user.name.last_name" id="lname{{tab.heading}}" on-blur-validation required>
             <p class="help-block">
               <span ng-show="accountForm.lname.$invalid && !accountForm.lname.$pristine">{{'Enter the last name' | translate}}</span>
               <span class="validerr" ng-show="accountForm.lname.$error.pattern && !accountForm.lname.$untouched">{{'LAST NAME ONLY ALLOW CHARACTERS' | translate}}</span>
@@ -74,13 +73,12 @@
         <li class="col-sm-12">
           <div class="form-group" ng-init="isDisabled = true"
                ng-class="{ 'has-error' : accountForm.email.$invalid && !accountForm.email.$pristine, 'has-success' : accountForm.email.$valid && !accountForm.email.$pristine}">
-            <label for="email">{{'EMAIL'| translate}}</label>
+            <label for="email{{tab.heading}}">{{'EMAIL'| translate}}</label>
             <input type="email" name="email" class="form-control" ng-disabled={{isDisabled}} ng-model="ACC.user.email"
-                   on-blur-validation id="email"
+                   on-blur-validation id="email{{tab.heading}}"
                    required>
             <p class="help-block">
-              <span
-                  ng-show="accountForm.email.$invalid && !accountForm.email.$pristine">{{'ENTER EMAIL' | translate}}</span>
+              <span ng-show="accountForm.email.$invalid && !accountForm.email.$pristine">{{'ENTER EMAIL' | translate}}</span>
             </p>
           </div>
         </li>
@@ -125,22 +123,22 @@
         <li class="col-sm-12">
           <div class="form-group"
                ng-class="{ 'has-error' : accountForm.email.$invalid && !accountForm.email.$pristine, 'has-success' : accountForm.email.$valid && !accountForm.email.$pristine}">
-            <label for="email">{{'GENDER'| translate}}</label>
-            <select name="gender" ng-model='ACC.user.gender'>
+            <label for="gender{{tab.heading}}">{{'GENDER'| translate}}</label>
+            <select name="gender" ng-model='ACC.user.gender' id="gender{{tab.heading}}">
               <option value="" selected disabled hidden>{{'SELECT_A_GENDER' | translate}}</option>
               <option value="male">{{'MALE' | translate}}</option>
               <option value="female">{{'FEMALE' | translate}}</option>
               <option value="none">{{'RATHER NOT SAY' | translate}}</option>
             </select>
             <span class="validerr" ng-show="becometaskerForm.gender.$invalid && !becometaskerForm.gender.$pristine">{{'SELECT GENDER' | translate }}.</span>
+          </div>
         </li>
         <li class="col-sm-12">
           <div class="form-group"
                ng-class="{ 'has-error' : accountForm.phone.$invalid && !accountForm.phone.$pristine, 'has-success' : accountForm.phone.$valid && !accountForm.phone.$pristine}">
             <label>{{'PHONE_NUMBER'| translate}}</label>
             <input type="text" name="phone" class="form-control" ng-model="ACC.user.phone" ng-intl-tel-input
-                   on-blur-validation
-                   required>
+                   on-blur-validation required>
             <p class="help-block">
               <span ng-show="accountForm.phone.$invalid && !accountForm.phone.$pristine">{{'ENTER VALID PHONE NUMBER' | translate}}</span>
             </p>
@@ -149,11 +147,10 @@
         <li class="col-sm-12">
           <div class="form-group"
                ng-class="{ 'has-error' : accountForm.line1.$invalid && !accountForm.line1.$pristine, 'has-success' : accountForm.line1.$valid && !accountForm.line1.$pristine}">
-            <label for="line1">{{'ADDRESS_LINE_1'| translate}}</label>
+            <label for="line1{{tab.heading}}">{{'ADDRESS_LINE_1'| translate}}</label>
             <input name="line1" class="form-control" placeholder="{{'ENTER YOUR LOCATION'| translate}}"
                    type="text" places-auto-complete size=80 ng-model="ACC.temp_address" types="['address']"
-                   on-place-changed="ACC.placeChanged()" id="line1"
-                   on-blur-validation required>
+                   on-place-changed="ACC.placeChanged()" id="line1{{tab.heading}}" on-blur-validation required>
             <p class="help-block">
               <span ng-show="accountForm.line1.$invalid && !accountForm.line1.$pristine">{{'ENTER THE VALID PLACE' | translate}}</span>
             </p>
@@ -161,8 +158,8 @@
         </li>
         <li class="col-sm-12">
           <div class="form-group">
-            <label for="line2">{{'ADDRESS_LINE_2'| translate}}</label>
-            <input type="text" name="line2" class="form-control" ng-model="ACC.user.address.line2" id="line2">
+            <label for="line2{{tab.heading}}">{{'ADDRESS_LINE_2'| translate}}</label>
+            <input type="text" name="line2" class="form-control" ng-model="ACC.user.address.line2" id="line2{{tab.heading}}">
           </div>
         </li>
         <li class="col-sm-12">
@@ -207,3 +204,4 @@
       </ul>
     </form>
   </div>
+</div>
