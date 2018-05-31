@@ -1,4 +1,4 @@
-<div class="tab-pane" ng-init="ACC.accountMode = false">
+<div class="tab-pane" ng-init="ACC.accountMode = false;timeStamp = ACC.getTimeStamp()">
   <div class="account-section">
     <span>{{'ACCOUNT' | translate}}</span>
     <a class="btn btn-secondary btn-small" ng-click="ACC.accountMode = !ACC.accountMode; ACC.valueChange()">
@@ -48,9 +48,9 @@
         <li class="col-sm-6">
           <div class="form-group"
                ng-class="{ 'has-error' : accountForm.fname.$invalid && !accountForm.fname.$pristine, 'has-success' : accountForm.fname.$valid && !accountForm.fname.$pristine}">
-            <label for="fname{{tab.heading}}">{{'FIRST_NAME' | translate}} </label>
+            <label for="fname{{timeStamp}}">{{'FIRST_NAME' | translate}} </label>
             <input type="text" name="fname" class="form-control" ng-pattern="/^[a-zA-Z ]*$/"
-                   ng-model="ACC.user.name.first_name" id="fname{{tab.heading}}"
+                   ng-model="ACC.user.name.first_name" id="fname{{timeStamp}}"
                    on-blur-validation required>
             <p class="help-block">
               <span ng-show="accountForm.fname.$invalid && !accountForm.fname.$pristine">{{'Enter the first name' | translate}}</span>
@@ -61,9 +61,9 @@
         <li class="col-sm-6">
           <div class="form-group"
                ng-class="{ 'has-error' : accountForm.lname.$invalid && !accountForm.lname.$pristine, 'has-success' : accountForm.lname.$valid && !accountForm.lname.$pristine}">
-            <label for="lname{{tab.heading}}">{{'LAST_NAME' | translate}}</label>
+            <label for="lname{{timeStamp}}">{{'LAST_NAME' | translate}}</label>
             <input type="text" name="lname" class="form-control" ng-pattern="/^[a-zA-Z ]*$/"
-                   ng-model="ACC.user.name.last_name" id="lname{{tab.heading}}" on-blur-validation required>
+                   ng-model="ACC.user.name.last_name" id="lname{{timeStamp}}" on-blur-validation required>
             <p class="help-block">
               <span ng-show="accountForm.lname.$invalid && !accountForm.lname.$pristine">{{'Enter the last name' | translate}}</span>
               <span class="validerr" ng-show="accountForm.lname.$error.pattern && !accountForm.lname.$untouched">{{'LAST NAME ONLY ALLOW CHARACTERS' | translate}}</span>
@@ -73,9 +73,9 @@
         <li class="col-sm-12">
           <div class="form-group" ng-init="isDisabled = true"
                ng-class="{ 'has-error' : accountForm.email.$invalid && !accountForm.email.$pristine, 'has-success' : accountForm.email.$valid && !accountForm.email.$pristine}">
-            <label for="email{{tab.heading}}">{{'EMAIL'| translate}}</label>
+            <label for="email{{timeStamp}}">{{'EMAIL'| translate}}</label>
             <input type="email" name="email" class="form-control" ng-disabled={{isDisabled}} ng-model="ACC.user.email"
-                   on-blur-validation id="email{{tab.heading}}"
+                   on-blur-validation id="email{{timeStamp}}"
                    required>
             <p class="help-block">
               <span ng-show="accountForm.email.$invalid && !accountForm.email.$pristine">{{'ENTER EMAIL' | translate}}</span>
@@ -123,8 +123,8 @@
         <li class="col-sm-12">
           <div class="form-group"
                ng-class="{ 'has-error' : accountForm.email.$invalid && !accountForm.email.$pristine, 'has-success' : accountForm.email.$valid && !accountForm.email.$pristine}">
-            <label for="gender{{tab.heading}}">{{'GENDER'| translate}}</label>
-            <select name="gender" ng-model='ACC.user.gender' id="gender{{tab.heading}}">
+            <label for="gender{{timeStamp}}">{{'GENDER'| translate}}</label>
+            <select name="gender" ng-model='ACC.user.gender' id="gender{{timeStamp}}">
               <option value="" selected disabled hidden>{{'SELECT_A_GENDER' | translate}}</option>
               <option value="male">{{'MALE' | translate}}</option>
               <option value="female">{{'FEMALE' | translate}}</option>
@@ -147,10 +147,10 @@
         <li class="col-sm-12">
           <div class="form-group"
                ng-class="{ 'has-error' : accountForm.line1.$invalid && !accountForm.line1.$pristine, 'has-success' : accountForm.line1.$valid && !accountForm.line1.$pristine}">
-            <label for="line1{{tab.heading}}">{{'ADDRESS_LINE_1'| translate}}</label>
+            <label for="line1{{timeStamp}}">{{'ADDRESS_LINE_1'| translate}}</label>
             <input name="line1" class="form-control" placeholder="{{'ENTER YOUR LOCATION'| translate}}"
                    type="text" places-auto-complete size=80 ng-model="ACC.temp_address" types="['address']"
-                   on-place-changed="ACC.placeChanged()" id="line1{{tab.heading}}" on-blur-validation required>
+                   on-place-changed="ACC.placeChanged()" id="line1{{timeStamp}}" on-blur-validation required>
             <p class="help-block">
               <span ng-show="accountForm.line1.$invalid && !accountForm.line1.$pristine">{{'ENTER THE VALID PLACE' | translate}}</span>
             </p>
@@ -158,15 +158,15 @@
         </li>
         <li class="col-sm-12">
           <div class="form-group">
-            <label for="line2{{tab.heading}}">{{'ADDRESS_LINE_2'| translate}}</label>
-            <input type="text" name="line2" class="form-control" ng-model="ACC.user.address.line2" id="line2{{tab.heading}}">
+            <label for="line2{{timeStamp}}">{{'ADDRESS_LINE_2'| translate}}</label>
+            <input type="text" name="line2" class="form-control" ng-model="ACC.user.address.line2" id="line2{{timeStamp}}">
           </div>
         </li>
         <li class="col-sm-12">
           <div class="form-group">
             <!-- ng-class="{ 'has-error' : accountForm.city.$invalid && !accountForm.city.$pristine, 'has-success' : accountForm.city.$valid && !accountForm.city.$pristine}"-->
-            <label for="city">{{'CITY'| translate}}</label>
-            <input type="text" name="city" class="form-control" ng-model="ACC.user.address.city" id="city">
+            <label for="city{{timeStamp}}">{{'CITY'| translate}}</label>
+            <input type="text" name="city" class="form-control" ng-model="ACC.user.address.city" id="city{{timeStamp}}">
 
           </div>
         </li>
@@ -178,14 +178,14 @@
         </li>
         <li class="col-sm-12">
           <div class="form-group">
-            <label for="country">{{'COUNTRY'|translate}}</label>
-            <input type="text" name="country" id="country" class="form-control" ng-model="ACC.user.address.country">
+            <label for="country{{timeStamp}}">{{'COUNTRY'|translate}}</label>
+            <input type="text" name="country" id="country{{timeStamp}}" class="form-control" ng-model="ACC.user.address.country">
           </div>
         </li>
         <li class="col-sm-12">
           <div class="form-group">
-            <label for="zipcode">{{'ZIPCODE'|translate}}</label>
-            <input type="text" ng-model="ACC.user.address.zipcode" id="zipcode" name="zipcode" class="form-control">
+            <label for="zipcode{{timeStamp}}">{{'ZIPCODE'|translate}}</label>
+            <input type="text" ng-model="ACC.user.address.zipcode" id="zipcode{{timeStamp}}" name="zipcode" class="form-control">
           </div>
         </li>
 
