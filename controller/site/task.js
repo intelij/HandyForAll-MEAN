@@ -47,11 +47,10 @@ module.exports = function (io) {
   };
 
   router.taskprofileinfo = function (req, res) {
-    var slug = req.body.slug;
     var options = {};
     options.populate = 'profile_details.question skills.experience';
     //options.populate = 'skills.experience';
-    db.GetOneDocument('tasker', { _id: req.body.slug, status: { $ne: 0 } }, {}, options, function (err, taskdata) {
+    db.GetOneDocument('users', { _id: req.body.id, status: { $ne: 0 } }, {}, options, function (err, taskdata) {
       if (err || !taskdata) {
         res.status(500).send(err);
       } else {

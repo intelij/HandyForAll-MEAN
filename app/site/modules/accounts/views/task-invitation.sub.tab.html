@@ -94,67 +94,67 @@
             <ul >
 
               <li ng-if="taskDetails.status == 1 || taskDetails.status == 2 || taskDetails.status == 3 || taskDetails.status == 3.1 || taskDetails.status == 3.2 || taskDetails.status == 4 || taskDetails.status == 4.1 || taskDetails.status == 4.2 || taskDetails.status == 5 || taskDetails.status == 8">
-                <a ng-click="ACC.TaskInviteViewModal($index)" href="javascript:void(0)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; width: 100% !important; padding: 0 12px;margin-bottom: 7px;">
+                <a ng-click="ACC.TaskInviteViewModal($index)" href="javascript:void(0)" class="btn btn-secondary js-deactivate-trigger confrm conform">
                   {{'VIEW' | translate}}
                 </a>
               </li>
               <li ng-if="taskDetails.status == 1">
-                <a ng-click="ACC.ignoreTask(taskDetails._id, 8)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="padding: 0 12px; margin-bottom: 7px; width:100%!important;">
+                <a ng-click="ACC.ignoreTask(taskDetails._id, 8)" class="btn btn-secondary js-deactivate-trigger confrm conform">
                   {{'REJECT' | translate}}
                 </a>
               </li>
               <li ng-if="taskDetails.status == 1">
-                <a ng-click="ACC.taskerconfirmtask(taskDetails._id, taskDetails.tasker._id, 2)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px; padding: 0 12px; margin-bottom: 7px;width:100%!important;">
+                <a ng-click="ACC.taskerconfirmtask(taskDetails._id, taskDetails.tasker._id, 2)" class="btn btn-secondary js-deactivate-trigger confrm conform">
                   {{'CONFIRM' | translate}}
                 </a>
               </li>
               <li ng-if="taskDetails.status > 0">
-                <a ui-sref="chat({ task: taskDetails._id,user:taskDetails.user._id,tasker: taskDetails.tasker._id})" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px;  margin-bottom: 7px;width:100%!important;">
+                <a ui-sref="chat({ task: taskDetails._id,user:taskDetails.user._id,tasker: taskDetails.tasker._id})" class="btn btn-secondary js-deactivate-trigger confrm conform">
                   {{'CHAT' | translate}}
                 </a>
               </li>
               <li ng-if="taskDetails.status == 2">
-                <a ng-click="ACC.updatetaskstatus(taskDetails._id, 3, ACC.currentPage)" class="btn btn-secondary js-deactivate-trigger confrm conform" style=" padding: 0 12px; margin-bottom: 7px;width:100%!important;">
+                <a ng-click="ACC.updatetaskstatus(taskDetails._id, 3, ACC.currentPage)" class="btn btn-secondary js-deactivate-trigger confrm conform">
                   {{'START_OFF' | translate}}
                 </a>
               </li>
               <li ng-if="taskDetails.status == 3.1">
-                <a ng-click="ACC.updatetaskstatus(taskDetails._id, 3.2, ACC.currentPage)" class="btn btn-secondary js-deactivate-trigger confrm conform" style=" padding: 0 12px; margin-bottom: 7px;width:100%!important;">
+                <a ng-click="ACC.updatetaskstatus(taskDetails._id, 3.2, ACC.currentPage)" class="btn btn-secondary js-deactivate-trigger confrm conform">
                   {{'START_OFF' | translate}}
                 </a>
               </li>
               <li ng-if="taskDetails.status == 3 || taskDetails.status == 3.2">
-                <a ng-click="ACC.updatetaskstatus(taskDetails._id, 4, ACC.currentPage)" class="btn btn-secondary js-deactivate-trigger confrm conform" style=" padding: 0 12px; margin-bottom: 7px;width:100%!important;">
+                <a ng-click="ACC.updatetaskstatus(taskDetails._id, 4, ACC.currentPage)" class="btn btn-secondary js-deactivate-trigger confrm conform">
                   {{'ARRIVED' | translate}}
                 </a>
               </li>
               <li ng-if="taskDetails.status == 4.1">
-                <a ng-click="ACC.updatetaskstatus(taskDetails._id, 4.2, ACC.currentPage)" class="btn btn-secondary js-deactivate-trigger confrm conform" style=" padding: 0 12px; margin-bottom: 7px;width:100%!important;">
+                <a ng-click="ACC.updatetaskstatus(taskDetails._id, 4.2, ACC.currentPage)" class="btn btn-secondary js-deactivate-trigger confrm conform">
                   {{'ARRIVED' | translate}}
                 </a>
               </li>
               <li ng-if="taskDetails.status == 4 || taskDetails.status == 4.1 || taskDetails.status == 4.2">
-                <a ng-click="ACC.updatetaskstatus(taskDetails._id, 5, ACC.currentPage)" class="btn btn-secondary js-deactivate-trigger confrm conform" style=" padding: 0 12px; margin-bottom: 7px; width:100%!important;">
+                <a ng-click="ACC.updatetaskstatus(taskDetails._id, 5, ACC.currentPage)" class="btn btn-secondary js-deactivate-trigger confrm conform">
                   {{'START_JOB' | translate}}
                 </a>
               </li>
               <li ng-if="taskDetails.status == 5">
-                <a ng-disabled="taskDetails.status == 7" ng-click="ACC.TaskerextrapriceModal(taskDetails._id, 6, 1)" class="btn btn-secondary js-deactivate-trigger confrm conform" style=" padding: 0 12px; width:100%!important;">
+                <a ng-disabled="taskDetails.status == 7" ng-click="ACC.TaskerextrapriceModal(taskDetails._id, 6, 1)" class="btn btn-secondary js-deactivate-trigger confrm conform">
                   {{'COMPLETE' | translate}}
                 </a>
               </li>
               <li ng-if="taskDetails.status == 6 || taskDetails.status == 7">
-                <a ng-disabled="taskDetails.taskrating[0].rating > 0 && (taskDetails.taskrating[0].type == 'tasker' || taskDetails.taskrating[1].type == 'tasker') " ng-click="ACC.TaskReviewModal($index)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="padding: 0 12px; margin-bottom: 7px;width:100%!important;">
+                <a ng-disabled="taskDetails.taskrating[0].rating > 0 && (taskDetails.taskrating[0].type == 'tasker' || taskDetails.taskrating[1].type == 'tasker')" ng-click="ACC.TaskReviewModal($index)" class="btn btn-secondary js-deactivate-trigger confrm conform">
                   {{'REVIEW USER' | translate}}
                 </a>
               </li>
               <li ng-if="taskDetails.status == 6 || taskDetails.status == 7">
-                <a ng-click="ACC.TaskInviteViewModal($index)" class="btn btn-secondary js-deactivate-trigger confrm conform" style="padding: 0 12px; margin-bottom: 7px;width:100%!important;">
+                <a ng-click="ACC.TaskInviteViewModal($index)" class="btn btn-secondary js-deactivate-trigger confrm conform">
                   {{'VIEW' | translate}}
                 </a>
               </li>
               <li ng-if="taskDetails.status <= 6">
-                <a ng-click="ACC.livetracking(taskDetails)" class="btn btn-secondary js-deactivate-trigger confrm conform" style=" padding: 0 12px; margin-bottom: 7px; width:100%!important;">
+                <a ng-click="ACC.livetracking(taskDetails)" class="btn btn-secondary js-deactivate-trigger confrm conform">
                   {{'Track' | translate}}
                 </a>
               </li>

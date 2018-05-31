@@ -140,9 +140,9 @@ function TaskService($http, $q) {
     $http({
       method: 'POST',
       url: '/site/task/taskprofileinfo',
-      data: { slug: data }
-    }).success(function (data) {
-      deferred.resolve(data);
+      data: data
+    }).success(function (response) {
+      deferred.resolve(response);
     }).error(function (err) {
       deferred.reject(err);
     });
