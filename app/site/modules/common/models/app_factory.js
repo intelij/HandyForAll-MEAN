@@ -420,6 +420,4 @@ function MainService($http, $q) {
     });
     return deferred.promise;
   }
-
-
 }

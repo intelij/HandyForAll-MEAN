@@ -48,7 +48,7 @@ angular.module('handyforall.site', ['Authentication',
   'handyforall.notifications',
   'handyforall.forgotpassword',
   'slickCarousel'
-]).run(['$rootScope', '$state', '$location', '$cookieStore', '$http', '$stateParams', 'AuthenticationService', 'toastr', 'MainService', '$window', 'socket', 'ngMeta', '$cookieStore', function ($rootScope, $state, $location, $cookieStore, $http, $stateParams, AuthenticationService, toastr, MainService, $window, socket, ngMeta, $cookieStore) {
+]).run(['$rootScope', '$state', '$location', '$http', '$stateParams', 'AuthenticationService', 'toastr', 'MainService', '$window', 'socket', 'ngMeta', '$cookieStore', 'AppService', function ($rootScope, $state, $location, $http, $stateParams, AuthenticationService, toastr, MainService, $window, socket, ngMeta, $cookieStore, AppService) {
   ngMeta.init();
   $rootScope.$state = $state;
   $rootScope.siteglobals = $cookieStore.get('siteglobals') || {};
@@ -105,6 +105,7 @@ angular.module('handyforall.site', ['Authentication',
   }
 
   $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+    console.log('state change', toState);
     var userdata = AuthenticationService.GetCredentials();
 
     if (toState.name === "hirestep1" || toState.name === "chat") {
@@ -137,16 +138,7 @@ angular.module('handyforall.site', ['Authentication',
       $state.transitionTo("landing");
       event.preventDefault();
     }
-
-
-
     $rootScope.currentStateHTML = toState; // For Designs
-
-
-
-
-
-
     // Store state history
     if (toState.name !== 'login' && toState.name !== 'social' && toState.name !== 'register' && toState.name !== 'userlogin' && toState.name !== 'taskerlogin' && toState.name !== 'hirestep1' && toState.name !== 'signup') {
       $rootScope.PreviousState = fromState;
@@ -157,6 +149,14 @@ angular.module('handyforall.site', ['Authentication',
       // Clear selected category
       if ($rootScope.PreviousState.name !== 'userlogin' && $rootScope.currentState.name === 'landing') {
         $rootScope.selectedCategory = {};
+      }
+    }
+
+    if (toState.name === 'landing') {
+      if (AppService.checkMobile()) {
+        // ref: https://stackoverflow.com/questions/35878977/redirection-on-statechangestart-with-angularjs-ui-router
+        event.preventDefault();
+        $state.go('mobile');
       }
     }
   });
@@ -1437,8 +1437,13 @@ angular.module('handyforall.site', ['Authentication',
       }
     });
   })
-  .controller('MainCtrl', function ($scope, $location, $rootScope, $http, toastr, MainserviceResolve, MainService, $state, $translate, $cookieStore) {
+  .controller('MainCtrl', function ($scope, $location, $rootScope, $http, toastr, MainserviceResolve, MainService, $state, $translate, $cookieStore, AppService) {
     var mac = this;
+    // If current device is mobile, then redirect to mobile site forcibly
+    // move to event hook (into run function)
+    // if (AppService.checkMobile()) {
+    //   $state.go('mobile');
+    // }
     mac.myInterval = 9000;
 
     mac.filtered_service_categories = MainserviceResolve.filtered_service_categories;

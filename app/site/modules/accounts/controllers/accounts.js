@@ -10,6 +10,10 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
   acc.radiusval = acc.radiusby === "km" ? 1000 : 1609.34;
   acc.taskervariable = user;
 
+  acc.getTimeStamp = function () {
+    return Date.now();
+  };
+
   if (accountServiceResolve[0]) {
     acc.user = accountServiceResolve[0] || {};
   }

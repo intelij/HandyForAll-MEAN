@@ -24,8 +24,8 @@
             </uib-tab>
           </uib-tabset>
           <uib-tabset class="maintab mob-tab-link">
-            <uib-tab index="$index + 1" ng-repeat="tab in ACC.SettingsTab" heading="{{tab.heading | translate}}" ng-click="tab.function.init();tab.initFunction;"
-                     disable="tab.disabled" class="acc-lst">
+            <uib-tab index="$index + 1" ng-repeat="tab in ACC.SettingsTab" heading="{{tab.heading | translate}}"
+                     ng-click="tab.function.init();tab.initFunction;" disable="tab.disabled" class="acc-lst">
               <ng-include src="tab.template"></ng-include>
             </uib-tab>
           </uib-tabset>
