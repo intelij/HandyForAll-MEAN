@@ -1,4 +1,4 @@
-var app = angular.module('handyforall.carddeatil');
+var app = angular.module('handyforall.carddetail');
 app.factory('CarddetailService', CarddetailService);
 
 function CarddetailService($http, $q) {

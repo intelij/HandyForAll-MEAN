@@ -114,7 +114,7 @@
 
         <td ng-if="taskDetails.status == 6 || taskDetails.status == 7 " class="pay-status" >
           <span ng-if="taskDetails.status == 6 " style="float: left; ">
-            <a ng-disabled="taskDetails.invoice.status == 1" ui-sref="carddeatil({slug:taskDetails._id})" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px;  margin-bottom: 7px;">
+            <a ng-disabled="taskDetails.invoice.status == 1" ui-sref="carddetail({slug:taskDetails._id})" class="btn btn-secondary js-deactivate-trigger confrm conform" style="width:80px;  margin-bottom: 7px;">
               {{'PROCEED_TO_PAY' | translate}}
             </a>
           </span>

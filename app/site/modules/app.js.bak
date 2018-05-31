@@ -10,7 +10,7 @@ angular.module('handyforall.category', []);
 angular.module('handyforall.task', []);
 angular.module('handyforall.accounts', []);
 angular.module('handyforall.messages', []);
-angular.module('handyforall.carddeatil', []);
+angular.module('handyforall.carddetail', []);
 angular.module('handyforall.forgotpassword', []);
 angular.module('handyforall.notifications', []);
 
@@ -44,7 +44,7 @@ angular.module('handyforall.site', ['Authentication',
     'handyforall.page',
     'handyforall.accounts',
     'handyforall.messages',
-    'handyforall.carddeatil',
+    'handyforall.carddetail',
     'handyforall.notifications',
     'handyforall.forgotpassword',
     'slickCarousel'
@@ -932,8 +932,8 @@ angular.module('handyforall.site', ['Authentication',
                     }
                 }
             })
-            .state('carddeatil', {
-                url: '/carddeatil/:slug',
+            .state('carddetail', {
+                url: '/carddetail/:slug',
                 authenticate: true,
                 views: {
                     "content": {
