@@ -4071,58 +4071,29 @@ module.exports = function (io) {
   controller.payfastReturn = function (req, res) {
     var options = {};
     options.populate = 'tasker user task';
-    
+
     db.GetOneDocument('task', { _id: req.query.task }, {}, options, function (err, task) {
       if (err || !task) {
         res.send(err);
       } else {
-        async.waterfall([
-          function (callback) {
-            db.GetOneDocument('paymentgateway', { status: { $ne: 0 }, alias: 'payfast' }, {}, {}, function (err, paymentgateway) {
-              callback(err, paymentgateway);
-            });
-          },
-          function (paymentgateway, callback) {
-            var transaction = {};
-            transaction.user = task.user;
-            transaction.tasker = task.tasker;
-            transaction.task = req.query.task;
-            transaction.type = 'payfast';
-            transaction.amount = task.invoice.amount.balance_amount;
-            transaction.task_date = task.createdAt;
-            transaction.status = 1
-            db.InsertDocument('transaction', transaction, function (err, transaction) {
-              request.transaction_id = transaction._id;
-              request.trans_date = transaction.createdAt;
-              request.avail_amount = transaction.amount;
-              request.credit_type = transaction.type;
-              callback(err, paymentgateway, transaction);
-            });
-          },
-          function (paymentgateway, transaction, callback) {
-            db.GetOneDocument('settings', { 'alias': 'general' }, {}, {}, function (err, settings) {
-              if (err || !settings) { data.response = 'Configure your website settings'; res.send(data); }
-              else { callback(err, paymentgateway, transaction, settings.settings); }
-            });
-          },
-          function (paymentgateway, transaction, settings, callback) {
-            db.GetDocument('emailtemplate', { name: { $in: ['PaymentDetailstoAdmin', 'PaymentDetailstoTasker', 'PaymentDetailstoUser'] }, 'status': { $ne: 0 } }, {}, {}, function (err, template) {
-              if (err || !template) { data.response = 'Unable to get email template'; res.send(data); }
-              else { callback(err, paymentgateway, transaction, settings, template); }
-            });
-          },
-          function (paymentgateway, transaction, settings, template, callback) {
-            db.GetOneDocument('currencies', { 'default': 1, status: { $ne: 0 } }, {}, {}, function (err, currency) {
-              if (err || !template) { data.response = 'Unable to get currency'; res.send(data); }
-              else { callback(err, paymentgateway, transaction, settings, template, currency); }
-            });
-          }
-        ], function (err, paymentgateway, transaction, settings, template, currency) {
-          if (err) {
-            res.status(400).send(err);
-          } else {
-            res.redirect("/payment-success");
-          }
+        var transaction = {};
+
+        transaction.user = task.user;
+        transaction.tasker = task.tasker;
+        transaction.task = req.query.task;
+        transaction.type = 'payfast';
+        transaction.amount = task.invoice.amount.balance_amount;
+        transaction.task_date = task.createdAt;
+        transaction.status = 1;
+
+        db.InsertDocument('transaction', transaction, function (err, transaction) {
+          taskLibrary.taskPayment({ 'transaction': transaction._id, 'gateway_response': {} }, function (err, response) {
+            if (err || !response) {
+              res.redirect("/payment-failed/" + req.query.task);
+            } else {
+              res.redirect("/payment-success");
+            }
+          });
         });
       }
     });

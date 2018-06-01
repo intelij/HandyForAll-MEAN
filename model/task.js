@@ -89,8 +89,9 @@ module.exports = function (io) {
                   db.GetDocument('emailtemplate', { name: { $in: ['PaymentDetailstoAdmin', 'PaymentDetailstoTasker', 'PaymentDetailstoUser'] }, 'status': { $ne: 0 } }, {}, {}, function (err, template) {
                     if (err) {
                       callback(err, null);
-                    }
-                    else {
+                    } else if (!template || template.length < 4) {
+                      callback(null, { 'status': 1, 'response': 'Success' });
+                    } else {
                       task.payment_type = dataToUpdate.payment_type;
                       var settings = result.settings;
                       var currencies = result.currencies;
@@ -107,6 +108,7 @@ module.exports = function (io) {
                       } else {
                         MaterialFee = '0.00';
                       }
+
                       if (task.invoice.amount.coupon) {
                         CouponCode = currencies.symbol + task.invoice.amount.coupon;
                       } else {
@@ -299,7 +301,7 @@ module.exports = function (io) {
                       });
 
 
-                      callback(err, { 'status': 1, 'response': 'Sucess' });
+                      callback(err, { 'status': 1, 'response': 'Success' });
                     }
                   });
 

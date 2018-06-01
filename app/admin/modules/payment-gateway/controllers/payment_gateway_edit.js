@@ -25,7 +25,7 @@ function editPaymentCtrl(PaymentGatewayEditServiceResolve, PaymentGatewayService
 			}
 			else
 			{
-				toastr.success('Payment Gateway Settings Saved Sucessfully');
+				toastr.success('Payment Gateway Settings Saved Successfully');
         	$state.go('app.paymentgateway.list');
 			}
         }, function(err) {
