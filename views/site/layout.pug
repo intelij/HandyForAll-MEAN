@@ -78,6 +78,7 @@ html(ng-app='handyforall.site', ng-controller='rootCtrl as rc')
         script(src="/app/site/public/scripts/slick.min.js")
         script(src="/app/site/public/scripts/angular-slick.js")
         script(src="/app/site/modules/app.js")
+        script(src="/app/site/modules/app.service.js")
         script(src="/app/site/modules/common/models/app_factory.js")
         script(src="/app/site/modules/common/models/notifications.js")
         script(src="/app/site/modules/users/controllers/authentication/controllers.js")
@@ -136,8 +137,6 @@ html(ng-app='handyforall.site', ng-controller='rootCtrl as rc')
             if ('#{username}')
                 window.currentUser = '#{username}';
     body
-
-
 
         section(ui-view='commonview')
             section(ng-include="'app/site/modules/common/views/header.html'")
