@@ -76,6 +76,7 @@
         "js": {
           "src": [
             "./app/site/modules/app.js",
+            "./app/site/modules/app.service.js",
             "./app/site/modules/common/models/app_factory.js",
             "./app/site/modules/common/models/notifications.js",
             "./app/site/modules/users/controllers/authentication/controllers.js",
