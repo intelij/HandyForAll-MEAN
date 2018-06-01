@@ -1,12 +1,14 @@
 angular.module('handyforall.category')
   .controller('carddetailCtrl', carddetailCtrl);
 
-carddetailCtrl.$inject = ['$scope', '$rootScope', '$window', '$stateParams', '$state', 'CarddetailResolve', 'CarddetailService', 'MainService', 'CurrentUserResolve', '$translate', '$location', '$anchorScroll', 'toastr'];
-function carddetailCtrl($scope, $rootScope, $window, $stateParams, $state, CarddetailResolve, CarddetailService, MainService, CurrentUserResolve, $translate, $location, $anchorScroll, toastr) {
+carddetailCtrl.$inject = ['$scope', '$rootScope', '$window', '$stateParams', '$state', 'CarddetailResolve', 'CarddetailService', 'MainService', 'CurrentUserResolve', '$translate', '$location', '$anchorScroll', 'toastr', '$sce'];
+function carddetailCtrl($scope, $rootScope, $window, $stateParams, $state, CarddetailResolve, CarddetailService, MainService, CurrentUserResolve, $translate, $location, $anchorScroll, toastr, $sce) {
 
   var cdc = this;
   cdc.data = CarddetailResolve.taskdata[0];
   cdc.currentUser = CurrentUserResolve[0];
+
+  cdc.usd_to_zar = 1;
 
   if (cdc.data.status == 7 && cdc.data.invoice.status == 1) {
     cdc.paymentStatus = 'Completed';
@@ -14,6 +16,16 @@ function carddetailCtrl($scope, $rootScope, $window, $stateParams, $state, Cardd
 
   CarddetailService.paymentmode().then(function (response) {
     cdc.paymentmode = response;
+  });
+
+  MainService.getCurrency().then(function (response) {
+    var objZAR = response.find(function(item) {
+      return item.code == "ZAR";
+    });
+
+    if (objZAR) {
+      cdc.usd_to_zar = objZAR.value;
+    }
   });
 
   cdc.balance_amount = cdc.data.invoice.amount.balance_amount;
@@ -98,8 +110,7 @@ function carddetailCtrl($scope, $rootScope, $window, $stateParams, $state, Cardd
     var walletdata = {};
     if(cdc.balance_amount){
       walletdata.amount = cdc.balance_amount;
-    }
-    else{
+    } else{
       walletdata.amount = data.invoice.amount.balance_amount;
     }
     walletdata.taskid = data._id;
@@ -226,8 +237,11 @@ function carddetailCtrl($scope, $rootScope, $window, $stateParams, $state, Cardd
   cdc.payemntvalue = function payemntvalue(objPaymentMethod) {
     cdc.type = objPaymentMethod.code;
 
-    if (objPaymentMethod.settings)
+    if (objPaymentMethod.settings) {
       cdc.payment_settings = objPaymentMethod.settings;
+
+      cdc.payment_settings.request_url = $sce.trustAsResourceUrl(cdc.payment_settings.request_url);
+    }
   }
 
   /*
