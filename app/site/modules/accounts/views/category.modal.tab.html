@@ -4,293 +4,322 @@
 </div>
 <div class="modal-body cat-add-pop">
 
-  <form class="form-horizontal col-sm-12" name="selectcategoryform" role="form" enctype="multipart/form-data" submit-validate
-        novalidate>
-    <div class="form-group" ng-class="{ 'has-error' : selectcategoryform.patname.$invalid && !selectcategoryform.patname.$pristine, 'has-success' : selectcategoryform.patname.$valid && !selectcategoryform.patname.$pristine}">
+  <form class="form-horizontal col-sm-12" name="selectcategoryform" role="form" enctype="multipart/form-data"
+        submit-validate novalidate>
+    <div class="form-group required"
+         ng-class="{'has-error': selectcategoryform.patname.$invalid && !selectcategoryform.patname.$pristine, 'has-success': selectcategoryform.patname.$valid && !selectcategoryform.patname.$pristine}">
       <label class="control-label"> {{'PARENT_CATEGORY' | translate}}</label>
-      <select class="form-control" ng-disabled="ACM.role == 'EDIT'" name="patname" id="patname" ng-model="ACM.selectedCategoryData.categoryid"
+      <select class="form-control" ng-disabled="ACM.role == 'EDIT'" name="patname" id="patname"
+              ng-model="ACM.selectedCategoryData.categoryid" title=""
               ng-change="ACM.onChangeCategory(ACM.selectedCategoryData.categoryid)" on-blur-validation required>
         <option value=''> {{'SELECT_CATEGORY' | translate}}</option>
-        <option ng-if="!category.parent" ng-repeat="category in ACM.categories" value="{{category._id}}">{{category.name}}</option>
+        <option ng-if="!category.parent" ng-repeat="category in ACM.categories" value="{{category._id}}">
+          {{category.name}}
+        </option>
       </select>
       <label ng-show="selectcategoryform.patname.$invalid && !selectcategoryform.patname.$pristine">{{'CATEGORY_NAME_IS_REQUIRED' | translate}}.</label>
     </div>
 
-    <div ng-if="ACM.selectedCategoryData.categoryid" class="form-group" ng-class="{ 'has-error' : selectcategoryform.catname.$invalid && !selectcategoryform.catname.$pristine, 'has-success' : selectcategoryform.catname.$valid && !selectcategoryform.catname.$pristine}">
+    <div ng-if="ACM.selectedCategoryData.categoryid" class="form-group required"
+         ng-class="{'has-error': selectcategoryform.catname.$invalid && !selectcategoryform.catname.$pristine, 'has-success': selectcategoryform.catname.$valid && !selectcategoryform.catname.$pristine}">
       <label class="control-label">{{'CATEGORY_NAME' | translate}}</label>
-      <select ng-disabled="ACM.role == 'EDIT'" class="form-control" name="catname" id="catname" ng-model="ACM.selectedCategoryData.childid"
+      <select ng-disabled="ACM.role == 'EDIT'" class="form-control" name="catname" id="catname"
+              ng-model="ACM.selectedCategoryData.childid" title=""
               ng-change="ACM.onChangeCategoryChild(ACM.selectedCategoryData.childid)" on-blur-validation required>
         <option value=''>{{'SELECT_CATEGORY' | translate}}</option>
-        <option ng-repeat="category in ACM.categories" ng-if="ACM.selectedCategoryData.categoryid==category.parent" value="{{category._id}}">{{category.name}}</option>
+        <option ng-repeat="category in ACM.categories" ng-if="ACM.selectedCategoryData.categoryid==category.parent"
+                value="{{category._id}}">{{category.name}}
+        </option>
       </select>
       <label ng-show="selectcategoryform.catname.$invalid && !selectcategoryform.catname.$pristine">{{'CATEGORY_NAME_IS_REQUIRED' | translate}}.</label>
     </div>
-    <input type="hidden" class="form-control" name="someData" id="someData" ng-model="ACM.selectedCategoryData.userid" on-blur-validation
-           required>
+    <input type="hidden" class="form-control" name="someData" id="someData" ng-model="ACM.selectedCategoryData.userid"
+           on-blur-validation required>
     <div class="category-details" ng-show="ACM.selectedCategoryData.childid">
-      <div class="form-group" ng-if="ACM.category.classification == 'service' || ACM.category.classification == 'product'" ng-class="{ 'has-error' : selectcategoryform.quick_pitch.$invalid && !selectcategoryform.quick_pitch.$pristine, 'has-success' : selectcategoryform.quick_pitch.$valid && !selectcategoryform.quick_pitch.$pristine}">
+      <div class="form-group required"
+           ng-if="ACM.category.classification == 'service' || ACM.category.classification == 'product'"
+           ng-class="{'has-error': selectcategoryform.quick_pitch.$invalid && !selectcategoryform.quick_pitch.$pristine, 'has-success': selectcategoryform.quick_pitch.$valid && !selectcategoryform.quick_pitch.$pristine}">
         <label class="control-label">{{'QUICK_PITCH' | translate}}</label>
-        <textarea class="form-control" name="quick_pitch" id="quick_pitch" ng-maxlength="140" ng-model="ACM.selectedCategoryData.quick_pitch" rows="3"
+        <textarea class="form-control" name="quick_pitch" id="quick_pitch" ng-maxlength="140"
+                  ng-model="ACM.selectedCategoryData.quick_pitch" rows="3"
                   on-blur-validation title="" required></textarea>
         <p class="help-block">
           <span ng-show="selectcategoryform.quick_pitch.$invalid && !selectcategoryform.quick_pitch.$pristine">{{'PITCH IS REQUIRED' | translate}}.</span>
         </p>
       </div>
 
-      <div class="form-group" ng-if="ACM.category.classification == 'career'" ng-class="{ 'has-error' : selectcategoryform.skills.$invalid && !selectcategoryform.skills.$pristine, 'has-success' : selectcategoryform.skills.$valid && !selectcategoryform.skills.$pristine}">
+      <div class="form-group required" ng-if="ACM.category.classification == 'career'"
+           ng-class="{'has-error': selectcategoryform.skills.$invalid && !selectcategoryform.skills.$pristine, 'has-success': selectcategoryform.skills.$valid && !selectcategoryform.skills.$pristine}">
         <label class="control-label">{{'SKILLS' | translate}}</label>
-        <textarea class="form-control" name="skills" id="skills" ng-maxlength="140" ng-model="ACM.selectedCategoryData.skills" rows="3"
+        <textarea class="form-control" name="skills" id="skills" ng-maxlength="140"
+                  ng-model="ACM.selectedCategoryData.skills" rows="3"
                   on-blur-validation title="" required></textarea>
         <p class="help-block">
           <span ng-show="selectcategoryform.skills.$invalid && !selectcategoryform.skills.$pristine">{{'PITCH IS REQUIRED' | translate}}.</span>
         </p>
       </div>
 
-      <!--<div class="form-group" ng-if="ACM.category.classification == 'service'">-->
-        <!--<label class="control-label" for="hour_rate">{{'SET_HOURLY_RATE' | translate}} ( {{'MINIMUM_HOURLY_RATE_IS' | translate}}  {{ACM.defaultcurrency[0].symbol}}{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }} /hr)</label>-->
-        <!--<div style="display: table">-->
-          <!--<div style="display: table-cell">-->
-            <!--<div class="input-group">-->
-              <!--<span class="input-group-addon" > {{ACM.defaultcurrency[0].symbol}} </span>-->
-              <!--<input type="number" name="hour_rate" id="hour_rate" class="form-control" ng-model="ACM.selectedCategoryData.hour_rate" min="{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }}" on-blur-validation required >-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div style="display: table-cell">-->
-            <!--<label class="error" ng-show="selectcategoryform.hour_rate.$error.min">{{'MINIMUM HOURLY RATE SHOULD BE' | translate}} {{ACM.defaultcurrency[0].symbol}} {{ACM.MinimumAmount*  ACM.defaultcurrency[0].value | number:2}}  /hr.</label>-->
-            <!--<label class="error" ng-show="selectcategoryform.hour_rate.$invalid && !selectcategoryform.hour_rate.$pristine && selectcategoryform.hour_rate.$error.required">{{'HOURLY RATE IS REQUIRED' | translate}}.</label>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-      <div class="form-group" ng-if="ACM.category.classification == 'service'">
-        <label class="control-label" for="hour_rate">{{'SET_HOURLY_RATE' | translate}} ( {{'MINIMUM_HOURLY_RATE_IS' | translate}}  {{ACM.defaultcurrency[0].symbol}}{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }} /hr)</label>
+      <div class="form-group required" ng-if="ACM.category.classification == 'service'">
+        <label class="control-label" for="hour_rate">{{'SET_HOURLY_RATE' | translate}} ( {{'MINIMUM_HOURLY_RATE_IS' | translate}} {{ACM.defaultcurrency[0].symbol}}{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }} /hr)</label>
         <div class="input-group">
-          <span class="input-group-addon" > {{ACM.defaultcurrency[0].symbol}} </span>
-          <input type="number" name="hour_rate" id="hour_rate" class="form-control" ng-model="ACM.selectedCategoryData.hour_rate" min="{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }}" on-blur-validation required >
-
+          <span class="input-group-addon"> {{ACM.defaultcurrency[0].symbol}} </span>
+          <input type="number" name="hour_rate" id="hour_rate" class="form-control"
+                 ng-model="ACM.selectedCategoryData.hour_rate"
+                 min="{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }}" on-blur-validation required>
         </div>
         <p class="help-block">
-          <label style="margin-left: 3px;color:red" ng-show="selectcategoryform.hour_rate.$error.min">{{'MINIMUM HOURLY RATE SHOULD BE' | translate}} {{ACM.defaultcurrency[0].symbol}} {{ACM.MinimumAmount*  ACM.defaultcurrency[0].value | number:2}}  /hr.</label>
-          <label style="margin-bottom: -192px;color:red" ng-show="selectcategoryform.hour_rate.$invalid && !selectcategoryform.hour_rate.$pristine && selectcategoryform.hour_rate.$error.required">{{'HOURLY RATE IS REQUIRED' | translate}}.</label>
+          <label style="margin-left: 3px;color:red" ng-show="selectcategoryform.hour_rate.$error.min">{{'MINIMUM HOURLY RATE SHOULD BE' | translate}} {{ACM.defaultcurrency[0].symbol}} {{ACM.MinimumAmount*
+            ACM.defaultcurrency[0].value | number:2}} /hr.</label>
+          <label style="margin-bottom: -192px;color:red"
+                 ng-show="selectcategoryform.hour_rate.$invalid && !selectcategoryform.hour_rate.$pristine && selectcategoryform.hour_rate.$error.required">{{'HOURLY RATE IS REQUIRED' | translate}}.</label>
         </p>
       </div>
 
       <div class="form-group" ng-if="ACM.category.classification == 'product'">
-        <label class="control-label" for="unit_price">{{'SET_UNIT_PRICE' | translate}} ( {{'MINIMUM_UNIT_PRICE_IS' | translate}}  {{ACM.defaultcurrency[0].symbol}}{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }} /unit )</label>
-        <div style="display: table">
-          <div style="display: table-cell">
-            <div class="input-group">
-              <span class="input-group-addon" > {{ACM.defaultcurrency[0].symbol}} </span>
-              <input type="number" name="unit_price" id="unit_price" class="form-control" ng-model="ACM.selectedCategoryData.unit_price" min="{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }}" on-blur-validation required >
-            </div>
-          </div>
-          <div style="display: table-cell">
-            <label class="error" ng-show="selectcategoryform.unit_price.$error.min">{{'MINIMUM HOURLY RATE SHOULD BE' | translate}} {{ACM.defaultcurrency[0].symbol}} {{ACM.MinimumAmount*  ACM.defaultcurrency[0].value | number:2}}  /hr.</label>
-            <label class="error" ng-show="selectcategoryform.unit_price.$invalid && !selectcategoryform.unit_price.$pristine && selectcategoryform.unit_price.$error.required">{{'HOURLY RATE IS REQUIRED' | translate}}.</label>
-          </div>
+        <label class="control-label" for="unit_price">{{'SET_UNIT_PRICE' | translate}} ( {{'MINIMUM_UNIT_PRICE_IS' | translate}} {{ACM.defaultcurrency[0].symbol}}{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }} /unit )</label>
+
+        <div class="input-group required">
+          <span class="input-group-addon"> {{ACM.defaultcurrency[0].symbol}} </span>
+          <input type="number" name="unit_price" id="unit_price" class="form-control"
+                 ng-model="ACM.selectedCategoryData.unit_price"
+                 min="{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }}" on-blur-validation required>
+        </div>
+        <div class="help-block" style="display: table-cell">
+          <label class="error" ng-show="selectcategoryform.unit_price.$error.min">{{'MINIMUM HOURLY RATE SHOULD BE' | translate}} {{ACM.defaultcurrency[0].symbol}} {{ACM.MinimumAmount* ACM.defaultcurrency[0].value | number:2}} /hr.</label>
+          <label class="error"
+                 ng-show="selectcategoryform.unit_price.$invalid && !selectcategoryform.unit_price.$pristine && selectcategoryform.unit_price.$error.required">{{'HOURLY RATE IS REQUIRED' | translate}}.</label>
         </div>
       </div>
 
-      <div class="form-group" ng-if="ACM.category.classification == 'service' || ACM.category.classification == 'product'">
+      <div class="form-group required"
+           ng-if="ACM.category.classification == 'service' || ACM.category.classification == 'product'">
         <label class="control-label" for="km_rate">{{'SET_KM_RATE' | translate}}</label>
-        <div style="display: table">
-          <div style="display: table-cell">
-            <div class="input-group">
-              <span class="input-group-addon" > {{ACM.defaultcurrency[0].symbol}} </span>
-              <input type="number" name="km_rate" id="km_rate" class="form-control" ng-model="ACM.selectedCategoryData.km_rate" on-blur-validation required >
-            </div>
-          </div>
-          <div style="display: table-cell">
-            <label class="error" ng-show="selectcategoryform.km_rate.$invalid && !selectcategoryform.km_rate.$pristine && selectcategoryform.km_rate.$error.required">{{'KM RATE IS REQUIRED' | translate}}.</label>
-          </div>
+
+        <div class="input-group">
+          <span class="input-group-addon"> {{ACM.defaultcurrency[0].symbol}} </span>
+          <input type="number" name="km_rate" id="km_rate" class="form-control"
+                 ng-model="ACM.selectedCategoryData.km_rate" on-blur-validation required>
+        </div>
+        <div class="help-block" style="display: table-cell">
+          <label class="error"
+                 ng-show="selectcategoryform.km_rate.$invalid && !selectcategoryform.km_rate.$pristine && selectcategoryform.km_rate.$error.required">{{'KM RATE IS REQUIRED' | translate}}.</label>
         </div>
       </div>
 
-      <div class="form-group" ng-if="ACM.category.classification == 'career'">
+      <div class="form-group required" ng-if="ACM.category.classification == 'career'">
         <label class="control-label" for="salary">{{'SET_SALARY' | translate}}</label>
-        <div style="display: table">
-          <div style="display: table-cell">
-            <div class="input-group">
-              <span class="input-group-addon" > {{ACM.defaultcurrency[0].symbol}} </span>
-              <input type="number" name="salary" id="salary" class="form-control" ng-model="ACM.selectedCategoryData.salary" min="{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }}" on-blur-validation required >
-            </div>
-          </div>
-          <div style="display: table-cell">
-            <label class="error" ng-show="selectcategoryform.salary.$error.min">{{'MINIMUM HOURLY RATE SHOULD BE' | translate}} {{ACM.defaultcurrency[0].symbol}} {{ACM.MinimumAmount*  ACM.defaultcurrency[0].value | number:2}}  /hr.</label>
-            <label class="error" ng-show="selectcategoryform.salary.$invalid && !selectcategoryform.salary.$pristine && selectcategoryform.salary.$error.required">{{'HOURLY RATE IS REQUIRED' | translate}}.</label>
-          </div>
+
+        <div class="input-group">
+          <span class="input-group-addon"> {{ACM.defaultcurrency[0].symbol}} </span>
+          <input type="number" name="salary" id="salary" class="form-control" ng-model="ACM.selectedCategoryData.salary"
+                 min="{{ACM.MinimumAmount * ACM.defaultcurrency[0].value | number:2 }}" on-blur-validation required>
         </div>
+
+        <div class="help-block" style="display: table-cell">
+          <label class="error" ng-show="selectcategoryform.salary.$error.min">{{'MINIMUM HOURLY RATE SHOULD BE' | translate}} {{ACM.defaultcurrency[0].symbol}} {{ACM.MinimumAmount* ACM.defaultcurrency[0].value | number:2}} /hr.</label>
+          <label class="error"
+                 ng-show="selectcategoryform.salary.$invalid && !selectcategoryform.salary.$pristine && selectcategoryform.salary.$error.required">{{'HOURLY RATE IS REQUIRED' | translate}}.</label>
+        </div>
+
       </div>
 
-      <div ng-if="ACM.isTasker" class="form-group">
+      <div ng-if="ACM.isTasker" class="form-group required">
         <label class="control-label" for="km_rate">{{'SET_CAPACITY_RATE' | translate}}</label>
-        <div style="display: table">
-          <div style="display: table-cell">
-            <div class="input-group">
-              <span class="input-group-addon" > {{ACM.defaultcurrency[0].symbol}} </span>
-              <input type="number" name="capacity_rate" id="capacity_rate" class="form-control" ng-model="ACM.selectedCategoryData.capacity_rate" on-blur-validation required >
-            </div>
-          </div>
-          <div style="display: table-cell">
-            <label class="error" ng-show="selectcategoryform.capacity_rate.$invalid && !selectcategoryform.capacity_rate.$pristine && selectcategoryform.capacity_rate.$error.required">{{'CAPACITY RATE IS REQUIRED' | translate}}.</label>
-          </div>
+
+        <!--<div class="input-group">-->
+        <!--<span class="input-group-addon" > {{ACM.defaultcurrency[0].symbol}} </span>-->
+        <input type="number" name="capacity_rate" id="capacity_rate" class="form-control"
+               ng-model="ACM.selectedCategoryData.capacity_rate" on-blur-validation title="" required />
+        <!--</div>-->
+
+        <div class="help-block" style="display: table-cell">
+          <label class="error"
+                 ng-show="selectcategoryform.capacity_rate.$invalid && !selectcategoryform.capacity_rate.$pristine && selectcategoryform.capacity_rate.$error.required">{{'CAPACITY RATE IS REQUIRED' | translate}}.</label>
         </div>
+
       </div>
 
-      <div ng-if="ACM.category.classification == 'service' || ACM.category.classification == 'career'" class="form-group" ng-class="{ 'has-error' : selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine, 'has-success' : selectcategoryform.levels.$valid && !selectcategoryform.levels.$pristine}">
+      <div ng-if="ACM.category.classification == 'service' || ACM.category.classification == 'career'"
+           class="form-group required"
+           ng-class="{'has-error': selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine, 'has-success': selectcategoryform.levels.$valid && !selectcategoryform.levels.$pristine}">
         <label class="control-label">{{'LEVEL_OF_EXPERIENCE' | translate}}</label>
-        <div style="display: table">
-          <div style="display: table-cell">
-            <select name="levels" class="form-control width-212" id="experience" ng-model="ACM.selectedCategoryData.experience" on-blur-validation required>
-              <option value=''>{{'SELECT_YOUR_EXPERIENCE' | translate}}</option>
-              <option ng-repeat="experience in ACM.experiences" value="{{experience._id}}">{{experience.name}}</option>
-            </select>
-          </div>
-          <div style="display: table-cell">
-            <label class="error" ng-show="selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine">{{'EXPERIENCE IS REQUIRED' | translate}}.</label>
-          </div>
+
+        <select name="levels" class="form-control" id="experience" ng-model="ACM.selectedCategoryData.experience"
+                on-blur-validation title="" required>
+          <option value=''>{{'SELECT_YOUR_EXPERIENCE' | translate}}</option>
+          <option ng-repeat="experience in ACM.experiences" value="{{experience._id}}">{{experience.name}}</option>
+        </select>
+
+        <div class="help-block" style="display: table-cell">
+          <label class="error" ng-show="selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine">{{'EXPERIENCE IS REQUIRED' | translate}}.</label>
         </div>
+
       </div>
 
-      <div ng-if="ACM.category.classification == 'product'" class="form-group" ng-class="{ 'has-error' : selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine, 'has-success' : selectcategoryform.levels.$valid && !selectcategoryform.levels.$pristine}">
+      <div ng-if="ACM.category.classification == 'product'" class="form-group required"
+           ng-class="{'has-error': selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine, 'has-success': selectcategoryform.levels.$valid && !selectcategoryform.levels.$pristine}">
         <label class="control-label">{{'BRAND' | translate}}</label>
-        <div style="display: table">
-          <div style="display: table-cell">
-            <select name="levels" class="form-control width-212" id="brand" ng-model="ACM.selectedCategoryData.brand" on-blur-validation required>
-              <option value=''>{{'SELECT_BRAND' | translate}}</option>
-              <option ng-repeat="brand in ACM.brands" value="{{brand._id}}">{{brand.name}}</option>
-            </select>
-          </div>
-          <div style="display: table-cell">
-            <label class="error" ng-show="selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine">{{'BRAND IS REQUIRED' | translate}}.</label>
-          </div>
+
+        <select name="levels" class="form-control" id="brand" ng-model="ACM.selectedCategoryData.brand"
+                on-blur-validation title="" required>
+          <option value=''>{{'SELECT_BRAND' | translate}}</option>
+          <option ng-repeat="brand in ACM.brands" value="{{brand._id}}">{{brand.name}}</option>
+        </select>
+
+        <div class="help-block" style="display: table-cell">
+          <label class="error" ng-show="selectcategoryform.levels.$invalid && !selectcategoryform.levels.$pristine">{{'BRAND IS REQUIRED' | translate}}.</label>
         </div>
+
       </div>
 
-      <div ng-if="!ACM.isTasker && ACM.category.classification == 'career'" class="form-group" ng-class="{ 'has-error' : selectcategoryform.experience_year.$invalid && !selectcategoryform.experience_year.$pristine, 'has-success' : selectcategoryform.experience_year.$valid && !selectcategoryform.experience_year.$pristine}">
+      <div ng-if="!ACM.isTasker && ACM.category.classification == 'career'" class="form-group required"
+           ng-class="{'has-error': selectcategoryform.experience_year.$invalid && !selectcategoryform.experience_year.$pristine, 'has-success': selectcategoryform.experience_year.$valid && !selectcategoryform.experience_year.$pristine}">
         <label class="control-label">{{'EXPERIENCE_YEAR' | translate}}</label>
-        <div style="display: table">
-          <div style="display: table-cell">
-            <select name="experience_year" class="form-control width-212" id="experience_year" ng-model="ACM.selectedCategoryData.experience_year" on-blur-validation required>
-              <option value=''>{{'SELECT_YOUR_EXPERIENCE' | translate}}</option>
-              <option ng-repeat="experience_year in ACM.experience_years" value="{{experience_year._id}}">{{experience_year.name}}</option>
-            </select>
-          </div>
-          <div style="display: table-cell">
-            <label class="error" ng-show="selectcategoryform.experience_year.$invalid && !selectcategoryform.experience_year.$pristine">{{'EXPERIENCE IS REQUIRED' | translate}}.</label>
-          </div>
+
+        <select name="experience_year" class="form-control" id="experience_year" title=""
+                ng-model="ACM.selectedCategoryData.experience_year" on-blur-validation required>
+          <option value=''>{{'SELECT_YOUR_EXPERIENCE' | translate}}</option>
+          <option ng-repeat="experience_year in ACM.experience_years" value="{{experience_year._id}}">
+            {{experience_year.name}}
+          </option>
+        </select>
+
+        <div class="help-block" style="display: table-cell">
+          <label class="error"
+                 ng-show="selectcategoryform.experience_year.$invalid && !selectcategoryform.experience_year.$pristine">{{'EXPERIENCE IS REQUIRED' | translate}}.</label>
         </div>
+
       </div>
 
-      <div ng-if="ACM.selectedCategoryData.childid && ACM.category.classification == 'product'" class="form-group " ng-class="{ 'has-error' : selectcategoryform.inventory.$invalid && !selectcategoryform.inventory.$pristine, 'has-success' : selectcategoryform.inventory.$valid && !selectcategoryform.inventory.$pristine}">
+      <div ng-if="ACM.selectedCategoryData.childid && ACM.category.classification == 'product'" class="form-group required"
+           ng-class="{'has-error': selectcategoryform.inventory.$invalid && !selectcategoryform.inventory.$pristine, 'has-success': selectcategoryform.inventory.$valid && !selectcategoryform.inventory.$pristine}">
         <label class="control-label" for="inventory">Inventory</label>
-        <div style="display: table">
-          <div style="display: table-cell">
-            <div class="input-group mb-10">
-              <span class="input-group-addon">{{ACM.defaultcurrency.symbol}}</span>
-              <input type="number" name="inventory" id="inventory" class="form-control" ng-model="ACM.selectedCategoryData.inventory" on-blur-validation required>
-            </div>
-          </div>
-          <div style="display: table-cell">
-            <label class="error" ng-show="selectcategoryform.inventory.$invalid && !selectcategoryform.inventory.$pristine && selectcategoryform.inventory.$error.required">
-              Inventory is required.
-            </label>
-          </div>
+
+        <div class="input-group mb-10">
+          <span class="input-group-addon">{{ACM.defaultcurrency.symbol}}</span>
+          <input type="number" name="inventory" id="inventory" class="form-control"
+                 ng-model="ACM.selectedCategoryData.inventory" on-blur-validation required>
         </div>
+
+        <div class="help-block" style="display: table-cell">
+          <label class="error"
+                 ng-show="selectcategoryform.inventory.$invalid && !selectcategoryform.inventory.$pristine && selectcategoryform.inventory.$error.required">
+            Inventory is required.
+          </label>
+        </div>
+
       </div>
 
       <div ng-if="ACM.selectedCategoryData.childid && ACM.category.classification == 'product'" class="form-group"
-           ng-class="{ 'has-error' : selectcategoryform.product_image.$invalid && !selectcategoryform.product_image.$pristine, 'has-success' : selectcategoryform.product_image.$valid && !selectcategoryform.product_image.$pristine}">
+           ng-class="{'required': !ACM.selectedCategoryData._id, 'has-error': selectcategoryform.product_image.$invalid && !selectcategoryform.product_image.$pristine, 'has-success': selectcategoryform.product_image.$valid && !selectcategoryform.product_image.$pristine}">
         <label class="control-label">Product Image</label>
-        <input ui-jq="filestyle" type="file" ngf-select="temp=true" ng-model="ACM.selectedCategoryData.product_image" name="product_image"
+        <input ui-jq="filestyle" type="file" ngf-select="temp=true" ng-model="ACM.selectedCategoryData.product_image"
+               name="product_image"
                ngf-max-size="1MB" ngf-pattern="'image/jpg,image/jpeg,image/png,image/gif'"
                ngf-model-invalid="errorFiles" class="filestyle"
                ui-options="{ buttonText: 'Select file', iconName: 'fa fa-inbox'}" id="product_image"
                ng-required="!ACM.selectedCategoryData._id">
-        <div class="form-group" ng-class="{ 'has-error' : selectcategoryform.product_image.$invalid && !selectcategoryform.product_image.$pristine, 'has-success' : selectcategoryform.product_image.$valid && !selectcategoryform.product_image.$pristine}">
+        <div class="form-group"
+             ng-class="{'has-error': selectcategoryform.product_image.$invalid && !selectcategoryform.product_image.$pristine, 'has-success': selectcategoryform.product_image.$valid && !selectcategoryform.product_image.$pristine}">
           <span class="help-block">Allowed files: jpeg, png, jpg. Max file size 1Mb</span>
-          <img ng-if="temp" height="150" ngf-src="ACM.selectedCategoryData.product_image" >
-          <img ng-if="!temp&&!ACM.selectedCategoryData.product_image==''" height="150" ngf-src="ACM.selectedCategoryData.product_image" >
+          <img ng-if="temp" height="150" ngf-src="ACM.selectedCategoryData.product_image">
+          <img ng-if="!temp&&!ACM.selectedCategoryData.product_image==''" height="150"
+               ngf-src="ACM.selectedCategoryData.product_image">
         </div>
       </div>
 
       <div ng-if="ACM.selectedCategoryData.childid && ACM.category.classification == 'career'" class="form-group"
-           ng-class="{ 'has-error' : selectcategoryform.career_attachment.$invalid && !selectcategoryform.career_attachment.$pristine, 'has-success' : selectcategoryform.career_attachment.$valid && !selectcategoryform.career_attachment.$pristine}">
+           ng-class="{'required': !ACM.selectedCategoryData._id,'has-error': selectcategoryform.career_attachment.$invalid && !selectcategoryform.career_attachment.$pristine, 'has-success': selectcategoryform.career_attachment.$valid && !selectcategoryform.career_attachment.$pristine}">
         <label class="control-label">{{ACM.isTasker ? "Job Details" : "CV"}}</label>
-        <input ui-jq="filestyle" type="file" ngf-select="temp=true" ng-model="ACM.selectedCategoryData.career_attachment" name="career_attachment"
+        <input ui-jq="filestyle" type="file" ngf-select="temp=true"
+               ng-model="ACM.selectedCategoryData.career_attachment" name="career_attachment"
                ngf-max-size="1MB" ngf-pattern="'*'"
                ngf-model-invalid="errorFiles" class="filestyle"
                ui-options="{ buttonText: 'Select file', iconName: 'fa fa-inbox'}" id="career_attachment"
                ng-required="!ACM.selectedCategoryData._id">
       </div>
 
-      <div ng-if="ACM.isTasker" class="form-group" ng-class="{ 'has-error' : selectcategoryform.travel_arrangement.$invalid && !selectcategoryform.travel_arrangement.$pristine, 'has-success' : selectcategoryform.travel_arrangement.$valid && !selectcategoryform.travel_arrangement.$pristine}">
+      <div ng-if="ACM.isTasker" class="form-group"
+           ng-class="{'has-error': selectcategoryform.travel_arrangement.$invalid && !selectcategoryform.travel_arrangement.$pristine, 'has-success': selectcategoryform.travel_arrangement.$valid && !selectcategoryform.travel_arrangement.$pristine}">
         <label class="control-label">{{'TRAVEL_ARRANGEMENT' | translate}}</label>
-        <div style="display: table">
-          <div style="display: table-cell">
-            <select name="travel_arrangement" class="form-control width-212" id="travel_arrangement" ng-model="ACM.selectedCategoryData.travel_arrangement" on-blur-validation>
-              <option value=''>{{'SELECT_YOUR_ARRANGEMENT' | translate}}</option>
-              <option ng-repeat="travel_arrangement in ACM.travel_arrangements" value="{{travel_arrangement._id}}">{{travel_arrangement.name}}</option>
-            </select>
-          </div>
-          <div style="display: table-cell">
-            <label class="error" ng-show="selectcategoryform.travel_arrangement.$invalid && !selectcategoryform.travel_arrangement.$pristine">{{'TRAVEL ARRANGEMENT IS REQUIRED' | translate}}.</label>
-          </div>
+
+        <select name="travel_arrangement" class="form-control" id="travel_arrangement" title=""
+                ng-model="ACM.selectedCategoryData.travel_arrangement" on-blur-validation>
+          <option value=''>{{'SELECT_YOUR_ARRANGEMENT' | translate}}</option>
+          <option ng-repeat="travel_arrangement in ACM.travel_arrangements" value="{{travel_arrangement._id}}">
+            {{travel_arrangement.name}}
+          </option>
+        </select>
+
+        <div class="help-block" style="display: table-cell">
+          <label class="error"
+                 ng-show="selectcategoryform.travel_arrangement.$invalid && !selectcategoryform.travel_arrangement.$pristine">{{'TRAVEL ARRANGEMENT IS REQUIRED' | translate}}.</label>
         </div>
+
       </div>
 
-      <div class="form-group chk-bx" ng-if="ACM.role == 'EDIT'">
-        <input type="checkbox" name="task" id="task" ng-model="ACM.selectedCategoryData.terms" on-blur-validation required>
+      <div class="form-group required chk-bx" ng-if="ACM.role == 'EDIT'">
+        <input type="checkbox" name="task" id="task" ng-model="ACM.selectedCategoryData.terms" on-blur-validation title=""
+               required>
         <label class="control-label">{{'I_WILL_EMBODY_THE_TASKFIXER_PLEDGE_IN_DOING_THESE_TASKS' | translate}}</label>
-        <label style="margin-bottom: -192px;color:red" ng-show="selectcategoryform.task.$invalid && !selectcategoryform.task.$pristine">{{'check box is required' | translate}}.</label>
+        <label style="margin-bottom: -192px;color:red"
+               ng-show="selectcategoryform.task.$invalid && !selectcategoryform.task.$pristine">{{'check box is required' | translate}}.</label>
       </div>
-      <div ng-if="ACM.isTasker" class="form-group" ng-class="{ 'has-error' : selectcategoryform.demand_name.$invalid && !selectcategoryform.demand_name.$pristine, 'has-success' : selectcategoryform.demand_name.$valid && !selectcategoryform.demand_name.$pristine}">
+      <div ng-if="ACM.isTasker" class="form-group required"
+           ng-class="{'has-error': selectcategoryform.demand_name.$invalid && !selectcategoryform.demand_name.$pristine, 'has-success': selectcategoryform.demand_name.$valid && !selectcategoryform.demand_name.$pristine}">
         <label class="control-label">{{'DEMAND_NAME' | translate}}</label>
-        <div style="display: table">
-          <div style="display: table-cell">
-            <textarea class="form-control width-212" name="demand_name" id="demand_name" ng-maxlength="40"
-                      ng-model="ACM.selectedCategoryData.demand_name" rows="1"
-                      on-blur-validation required>></textarea>
-          </div>
-          <div style="display: table-cell">
-            <label class="error" ng-show="selectcategoryform.demand_name.$invalid && !selectcategoryform.demand_name.$pristine">{{'DEMAND NAME IS REQUIRED' | translate}}.</label>
-          </div>
+
+        <textarea class="form-control" name="demand_name" id="demand_name" ng-maxlength="40"
+                  ng-model="ACM.selectedCategoryData.demand_name" rows="1" title=""
+                  on-blur-validation required>></textarea>
+
+        <div class="help-block" style="display: table-cell">
+          <label class="error"
+                 ng-show="selectcategoryform.demand_name.$invalid && !selectcategoryform.demand_name.$pristine">{{'DEMAND NAME IS REQUIRED' | translate}}.</label>
         </div>
+
       </div>
-      <div ng-if="ACM.isTasker" class="form-group" ng-class="{ 'has-error' : selectcategoryform.demand_description.$invalid && !selectcategoryform.demand_description.$pristine, 'has-success' : selectcategoryform.demand_description.$valid && !selectcategoryform.demand_description.$pristine}">
+      <div ng-if="ACM.isTasker" class="form-group required"
+           ng-class="{'has-error': selectcategoryform.demand_description.$invalid && !selectcategoryform.demand_description.$pristine, 'has-success': selectcategoryform.demand_description.$valid && !selectcategoryform.demand_description.$pristine}">
         <label class="control-label">{{'DEMAND_DESCRIPTION' | translate}}</label>
-        <div style="display: table">
-          <div style="display: table-cell">
-            <textarea class="form-control width-212" name="demand_description" id="demand_description" ng-maxlength="140"
-                      ng-model="ACM.selectedCategoryData.demand_description" rows="3"
-                      on-blur-validation required>></textarea>
-          </div>
-          <div style="display: table-cell">
-            <label class="error" ng-show="selectcategoryform.demand_description.$invalid && !selectcategoryform.demand_description.$pristine">{{'DEMAND DESCRIPTION IS REQUIRED' | translate}}.</label>
-          </div>
+
+        <textarea class="form-control" name="demand_description" id="demand_description" ng-maxlength="140"
+                  ng-model="ACM.selectedCategoryData.demand_description" rows="3" title=""
+                  on-blur-validation required>></textarea>
+
+        <div class="help-block" style="display: table-cell">
+          <label class="error"
+                 ng-show="selectcategoryform.demand_description.$invalid && !selectcategoryform.demand_description.$pristine">{{'DEMAND DESCRIPTION IS REQUIRED' | translate}}.</label>
         </div>
+
       </div>
-      <div ng-if="ACM.isTasker" class="form-group" ng-class="{ 'has-error' : selectcategoryform.demand_specification.$invalid && !selectcategoryform.demand_specification.$pristine, 'has-success' : selectcategoryform.demand_specification.$valid && !selectcategoryform.demand_specification.$pristine}">
+      <div ng-if="ACM.isTasker" class="form-group required"
+           ng-class="{'has-error': selectcategoryform.demand_specification.$invalid && !selectcategoryform.demand_specification.$pristine, 'has-success': selectcategoryform.demand_specification.$valid && !selectcategoryform.demand_specification.$pristine}">
         <label class="control-label">{{'DEMAND_SPECIFICATION' | translate}}</label>
-        <div style="display: table">
-          <div style="display: table-cell">
-            <textarea class="form-control width-212" name="demand_specification" id="demand_specification" ng-maxlength="140"
-                      ng-model="ACM.selectedCategoryData.demand_specification" rows="3"
-                      on-blur-validation required>></textarea>
-          </div>
-          <div style="display: table-cell">
-            <label class="error" ng-show="selectcategoryform.demand_specification.$invalid && !selectcategoryform.demand_specification.$pristine">{{'DEMAND SPECIFICATION IS REQUIRED' | translate}}.</label>
-          </div>
+
+        <textarea class="form-control" name="demand_specification" id="demand_specification" ng-maxlength="140"
+                  ng-model="ACM.selectedCategoryData.demand_specification" rows="3" title=""
+                  on-blur-validation required>></textarea>
+
+        <div class="help-block" style="display: table-cell">
+          <label class="error"
+                 ng-show="selectcategoryform.demand_specification.$invalid && !selectcategoryform.demand_specification.$pristine">{{'DEMAND SPECIFICATION IS REQUIRED' | translate}}.</label>
         </div>
+
       </div>
-      <div ng-if="ACM.isTasker" class="form-group" ng-class="{ 'has-error' : selectcategoryform.demand_images.$invalid && !selectcategoryform.demand_images.$pristine, 'has-success' : selectcategoryform.demand_images.$valid && !selectcategoryform.demand_images.$pristine}">
+      <div ng-if="ACM.isTasker" class="form-group"
+           ng-class="{'has-error': selectcategoryform.demand_images.$invalid && !selectcategoryform.demand_images.$pristine, 'has-success': selectcategoryform.demand_images.$valid && !selectcategoryform.demand_images.$pristine}">
         <label class="control-label">{{'DEMAND_IMAGES' | translate}}</label>
         <input ui-jq="filestyle" type="file" ngf-select="temp=true" ng-model="ACM.selectedCategoryData.demand_images"
                name="demand_images" ngf-max-size="4MB" ngf-pattern="'image/jpg,image/jpeg,image/png,image/gif'"
-               ngf-model-invalid="errorFiles" class="filestyle" multiple ng-change="ACM.onDemandImages(ACM.selectedCategoryData.demand_images)"
+               ngf-model-invalid="errorFiles" class="filestyle" multiple
+               ng-change="ACM.onDemandImages(ACM.selectedCategoryData.demand_images)"
                ui-options="{ buttonText: 'Select file', iconName: 'fa fa-inbox'}" id="demand_images">
-        <div class="form-group" ng-class="{ 'has-error' : selectcategoryform.demand_images.$invalid && !selectcategoryform.demand_images.$pristine, 'has-success' : selectcategoryform.demand_images.$valid && !selectcategoryform.demand_images.$pristine}">
+        <div class="form-group"
+             ng-class="{ 'has-error': selectcategoryform.demand_images.$invalid && !selectcategoryform.demand_images.$pristine, 'has-success': selectcategoryform.demand_images.$valid && !selectcategoryform.demand_images.$pristine}">
           <span class="help-block">Allowed files: jpeg, png, jpg. Max file size 1Mb</span>
-          <img ng-if="!temp&&!ACM.selectedCategoryData.demand_images==''" height="150" ngf-src="ACM.selectedCategoryData.demand_images" >
+          <img ng-if="!temp&&!ACM.selectedCategoryData.demand_images == ''" height="150"
+               ngf-src="ACM.selectedCategoryData.demand_images">
         </div>
         <div class="form-group has-error" ng-if="ACM.demandImagesMaxLimit">
           <label class="error">Maximum number of images is four.</label>
@@ -300,38 +329,38 @@
   </form>
 </div>
 <div class="modal-footer">
-  <button class="btn btn-primary" type="submit" ng-click="ACM.ok(selectcategoryform.$valid)">{{'OK' | translate}}</button>
+  <button class="btn btn-primary" type="submit" ng-click="ACM.ok(selectcategoryform.$valid)">{{'OK' | translate}}
+  </button>
   <button class="btn btn-warning" type="button" ng-click="ACM.cancel()">{{'CANCEL' | translate}}</button>
 </div>
 <style>
-  .input-group {
-    position: relative;
-    display: table;
-    width: 212px;
-    border-collapse: separate;
-    padding: 3px 0 0 0px;
-  }
   .modal-footer {
     padding: 19px 20px 20px;
     /*margin-top: 463px;*/
     text-align: right;
   }
+
   .form-group {
-    margin-bottom: 0px;
+    margin-bottom: 2px;
   }
+
   .error {
     font-size: 13px;
     color: red;
     padding-left: 10px;
   }
-  .width-212 {
-    width: 212px
-  }
+
   .category-details .input-group {
     width: 100%;
   }
+
   .category-details .help-block {
     margin-bottom: 5px;
     margin-top: 0;
+  }
+  .form-group.required .control-label:after {
+    content:"*";
+    color:red;
+    padding-left: 5px;
   }
 </style>
