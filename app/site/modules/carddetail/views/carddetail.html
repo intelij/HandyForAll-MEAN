@@ -205,9 +205,9 @@
           <form action="{{CDC.payment_settings.request_url}}" method="POST">
             <input type="hidden" name="merchant_id" value="10000100">
             <input type="hidden" name="merchant_key" value="46f0cd694581a">
-            <input type="hidden" name="return_url" ng-value="CDC.payment_settings.url.return">
-            <input type="hidden" name="cancel_url" ng-value="CDC.payment_settings.url.cancel">
-            <input type="hidden" name="notify_url" ng-value="CDC.payment_settings.url.notify">
+            <input type="hidden" name="return_url" ng-value="CDC.payment_settings.urls.return + '?task=' + CDC.data._id">
+            <input type="hidden" name="cancel_url" ng-value="CDC.payment_settings.urls.cancel + '?task=' + CDC.data._id">
+            <input type="hidden" name="notify_url" ng-value="CDC.payment_settings.urls.notify + '?task=' + CDC.data._id">
             <input type="hidden" name="item_name" ng-value="CDC.data.booking_information.service_type">
             <input type="hidden" name="amount" ng-value="CDC.data.invoice.amount.grand_total * CDC.usd_to_zar">
             <input class="bluebtn marginsds" value="{{'PAYFAST_PAYMENT' | translate}}" ng-click="CDC.payfastPayment(CDC.data)" type="submit">
