@@ -292,6 +292,7 @@
   "WALLET": "Wallet",
   "WALLET_PAYMENT": "Wallet payment",
   "PAYPAL_PAYMENT": "Paypal Payment",
+  "PAYFAST_PAYMENT": "Payfast Payment",
   "RECHARGE_WALLET_MONEY": "Recharge Wallet Money",
   "CURRENT_BALANCE": "Current Balance ",
   "GO_TO_ACCOUNT_PAGE": "Go To Account Page",

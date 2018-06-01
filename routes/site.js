@@ -158,6 +158,7 @@ module.exports = function (app, io) {
     app.post('/site/account/paypalPayment', ensureAuthorized, account.paypalPayment);
     app.post('/site/account/paymentmode', ensureAuthorized, account.paymentmode);
     app.get('/site/account/paypal-execute', account.paypalExecute);
+    app.get('/site/account/payfast-return', account.payfastReturn);
     app.get('/site/account/downloadPdf', account.downloadPdf);
     app.get('/site/account/userdownloadPdf', account.userdownloadPdf);
 

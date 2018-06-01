@@ -75,7 +75,7 @@ module.exports = function (io) {
       if (err) {
         callback(err, null);
       } else {
-        callback(err, { 'status': 1, 'response': 'Sucess', wallet: wallet });
+        callback(err, { 'status': 1, 'response': 'Success', wallet: wallet });
       }
 
     });

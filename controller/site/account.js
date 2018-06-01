@@ -2085,6 +2085,8 @@ module.exports = function (io) {
             };
 
             var item = {};
+            var protocol = req.protocol ? req.protocol : "http";
+
             item.name = settings.site_title;
             item.price = request.amount;
             item.currency = 'USD';
@@ -2092,8 +2094,8 @@ module.exports = function (io) {
             json.transactions[0].item_list.items.push(item);
             json.transactions[0].amount.total = request.amount;
             json.transactions[0].amount.currency = 'USD';
-            json.redirect_urls.return_url = "http://" + req.headers.host + "/site/account/walletpaypal-execute?user=" + request.user + "&transaction=" + transaction._id;
-            json.redirect_urls.cancel_url = "http://" + req.headers.host + "/walletpayment-failed";
+            json.redirect_urls.return_url = protocol + "://" + req.headers.host + "/site/account/walletpaypal-execute?user=" + request.user + "&transaction=" + transaction._id;
+            json.redirect_urls.cancel_url = protocol + "://" + req.headers.host + "/walletpayment-failed";
 
             paypal.payment.create(json, function (error, payment) {
               if (error) {
@@ -4066,6 +4068,37 @@ module.exports = function (io) {
     });
   };
 
+  controller.payfastReturn = function (req, res) {
+    var options = {};
+    options.populate = 'tasker user task';
+
+    db.GetOneDocument('task', { _id: req.query.task }, {}, options, function (err, task) {
+      if (err || !task) {
+        res.send(err);
+      } else {
+        var transaction = {};
+
+        transaction.user = task.user;
+        transaction.tasker = task.tasker;
+        transaction.task = req.query.task;
+        transaction.type = 'payfast';
+        transaction.amount = task.invoice.amount.balance_amount;
+        transaction.task_date = task.createdAt;
+        transaction.status = 1;
+
+        db.InsertDocument('transaction', transaction, function (err, transaction) {
+          taskLibrary.taskPayment({ 'transaction': transaction._id, 'gateway_response': {} }, function (err, response) {
+            if (err || !response) {
+              res.redirect("/payment-failed/" + req.query.task);
+            } else {
+              res.redirect("/payment-success");
+            }
+          });
+        });
+      }
+    });
+  };
+
   controller.applyCoupon = function (req, res) {
     var request = {};
     var date = new Date();
@@ -4515,13 +4548,38 @@ module.exports = function (io) {
               paymentArr.push({ 'name': 'Pay Using Wallet', 'code': 'wallet' });
             }
             for (var i = 0; i < docdata.length; i++) {
-              if (docdata[i].alias == "stripe") {
-                docdata[i].gateway_name = "Pay Using Card";
-                paymentArr.push({ 'name': docdata[i].gateway_name, 'code': docdata[i].alias });
-              }
-              if (docdata[i].alias == "paypal") {
-                docdata[i].gateway_name = "Pay Using " + docdata[i].gateway_name;
-                paymentArr.push({ 'name': docdata[i].gateway_name, 'code': docdata[i].alias });
+              switch (docdata[i].alias) {
+                case "stripe":
+                  docdata[i].gateway_name = "Pay Using Card";
+                  paymentArr.push({ 'name': docdata[i].gateway_name, 'code': docdata[i].alias });
+                  break;
+                case "paypal":
+                  docdata[i].gateway_name = "Pay Using " + docdata[i].gateway_name;
+                  paymentArr.push({ 'name': docdata[i].gateway_name, 'code': docdata[i].alias });
+                  break;
+                case "payfast":
+                  docdata[i].gateway_name = "Pay Using " + docdata[i].gateway_name;
+
+                  var server_url = req.protocol ? req.protocol : 'http';
+                  server_url += "://" + req.headers.host;
+
+                  if (docdata[i].settings.mode == 'sandbox')
+                    docdata[i].settings.request_url = "https://sandbox.payfast.co.za/eng/process";
+                  else
+                    docdata[i].settings.request_url = "https://www.payfast.co.za/eng/process";
+
+                  docdata[i].settings.urls = {
+                    'return': server_url + '/site/account/payfast-return',
+                    'cancel': server_url + '/site/account/payfast-cancel',
+                    'notify': server_url + '/site/account/payfast-notify'
+                  };
+
+                  paymentArr.push({
+                    'name': docdata[i].gateway_name,
+                    'code': docdata[i].alias,
+                    'settings': docdata[i].settings
+                  });
+                  break;
               }
             }
             res.send(paymentArr);
