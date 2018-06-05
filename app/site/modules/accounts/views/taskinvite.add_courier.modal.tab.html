@@ -1,0 +1,69 @@
+<!--controller name: TaskInviteAddCourierModalInstanceCtrl-->
+<div class="modal-header">
+  <h3 class="modal-title">{{'EDIT COURIER' | translate}}</h3>
+</div>
+<div class="modal-body cat-add-pop">
+
+  <form class="form-horizontal col-sm-12" name="editCourierForm" role="form" enctype="multipart/form-data"
+        submit-validate novalidate>
+    <div class="form-group required"
+         ng-class="{'has-error': editCourierForm.courier_type.$invalid && !editCourierForm.courier_type.$pristine, 'has-success': editCourierForm.courier_type.$valid && !editCourierForm.courier_type.$pristine}">
+      <label class="control-label"> {{'COURIER_TYPE' | translate}}</label>
+      <select class="form-control" ng-disabled="TVMI.role == 'EDIT'" name="courier_type" id="courier_type"
+              ng-model="TVMI.taskDetail.courier_type" title=""
+              ng-change="TVMI.onChangeCategory(TVMI.taskDetail.courier_type)" on-blur-validation required>
+        <option value=''> {{'SELECT_COURIER' | translate}}</option>
+        <option ng-repeat="item in TVMI.courierList" value="{{item.value}}">
+          {{item.name}}
+        </option>
+      </select>
+      <label ng-show="selectcategoryform.patname.$invalid && !selectcategoryform.patname.$pristine">{{'CATEGORY_NAME_IS_REQUIRED' | translate}}.</label>
+    </div>
+    <div class="form-group required"
+         ng-class="{'has-error': editCourierForm.courier_waybill.$invalid && !editCourierForm.courier_waybill.$pristine, 'has-success': editCourierForm.courier_waybill.$valid && !editCourierForm.courier_waybill.$pristine}">
+      <label class="control-label">{{'WAYBILL' | translate}}</label>
+      <textarea class="form-control" name="courier_waybill" id="courier_waybill" ng-maxlength="140"
+                ng-model="TVMI.taskDetail.courier_waybill" rows="2"
+                on-blur-validation title="" required></textarea>
+      <p class="help-block">
+        <span ng-show="editCourierForm.courier_waybill.$invalid && !editCourierForm.courier_waybill.$pristine">{{'WAYBILL IS REQUIRED' | translate}}.</span>
+      </p>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" type="submit" ng-click="TVMI.ok(editCourierForm.$valid)">{{'OK' | translate}}
+  </button>
+  <button class="btn btn-warning" type="button" ng-click="TVMI.cancel()">{{'CANCEL' | translate}}</button>
+</div>
+<style>
+  .modal-footer {
+    padding: 19px 20px 20px;
+    /*margin-top: 463px;*/
+    text-align: right;
+  }
+
+  .form-group {
+    margin-bottom: 2px;
+  }
+
+  .error {
+    font-size: 13px;
+    color: red;
+    padding-left: 10px;
+  }
+
+  .category-details .input-group {
+    width: 100%;
+  }
+
+  .category-details .help-block {
+    margin-bottom: 5px;
+    margin-top: 0;
+  }
+  .form-group.required .control-label:after {
+    content:"*";
+    color:red;
+    padding-left: 5px;
+  }
+</style>

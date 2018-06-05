@@ -153,6 +153,16 @@
                   {{'VIEW' | translate}}
                 </a>
               </li>
+              <li ng-if="taskDetails.status == 7">
+                <a ng-click="ACC.TaskInviteAddCourierModal($index)" class="btn btn-secondary js-deactivate-trigger confrm conform">
+                  {{'WAYBILL' | translate}}
+                </a>
+              </li>
+              <li ng-if="taskDetails.status == 7" style="float: right;">
+                <a ng-click="ACC.TaskDetailsParcelMonitorModal($index)" class="btn btn-secondary js-deactivate-trigger confrm conform">
+                  {{'PARCEL MONITOR' | translate}}
+                </a>
+              </li>
               <li ng-if="taskDetails.status <= 6">
                 <a ng-click="ACC.livetracking(taskDetails)" class="btn btn-secondary js-deactivate-trigger confrm conform">
                   {{'Track' | translate}}
@@ -166,6 +176,7 @@
         </tbody>
       </table>
     </div>
+  </div>
 </ul>
 <div style="margin-top: 200px;margin-left: 300px;" ng-if="ACC.taskInvitation.length > 0" class="pagination_inner clearfix">
   <nav>
@@ -290,7 +301,6 @@
     text-align: center;
     display: inline-block;
     width: 100%;
-    text-align: center;
   }
 
   .emptyfie>span {

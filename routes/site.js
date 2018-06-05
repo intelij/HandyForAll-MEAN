@@ -189,6 +189,7 @@ module.exports = function (app, io) {
     app.get('/site/account/walletpaypal-execute', account.walletpaypalExecute);
     app.post('/site/account/getuserwallettransaction', account.getuserwallettransaction);
     app.post('/site/account/getPaymentdetails', account.getPaymentdetails);
+    app.post('/site/account/update_task_courier', account.updatetaskcourier);
 
 
     /** Messages Page **/
