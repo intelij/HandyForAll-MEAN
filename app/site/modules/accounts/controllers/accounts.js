@@ -720,7 +720,6 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
     } else {
       toastr.error('There is no images');
     }
-
   };
 
   acc.categoryModal = function (category) {
@@ -1174,8 +1173,6 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
       return data;
     });
     acc.dummyAddress = dummy.length;
-
-
   };
 
   acc.taskerconfirmpay = function (taskid, status) {
@@ -1318,9 +1315,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 
     }, function () {
     });
-
-  }
-
+  };
 
   acc.TaskInviteViewModal = function (index) {
     var modalInstance = $uibModal.open({
@@ -1330,6 +1325,67 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
       controllerAs: 'TVMI',
       resolve: {
         TaskInvite: function () {
+          return acc.taskInvitation[index];
+        },
+        DefaultCurrency: function () {
+          return $scope.DefaultCurrency;
+        },
+        getsettings: function () {
+          return acc.getsettings;
+        }
+      }
+    });
+    modalInstance.result.then(function (data) {
+    }, function () {
+    });
+  };
+
+  acc.TaskInviteAddCourierModal = function (index) {
+    var modalInstance = $uibModal.open({
+      animation: true,
+      templateUrl: 'app/site/modules/accounts/views/taskinvite.add_courier.modal.tab.html',
+      controller: 'TaskInviteAddCourierModalInstanceCtrl',
+      controllerAs: 'TVMI',
+      resolve: {
+        TaskDetail: function () {
+          return acc.taskInvitation[index];
+        },
+        DefaultCurrency: function () {
+          return $scope.DefaultCurrency;
+        },
+        getsettings: function () {
+          return acc.getsettings;
+        }
+      }
+    });
+    modalInstance.result.then(function (data) {
+      console.log('data', data);
+      const courierData = {
+        taskid: data._id,
+        courier_type: data.courier_type,
+        courier_waybill: data.courier_waybill,
+      };
+      accountService.updateTaskCourier(courierData)
+        .then(function (response) {
+          toastr.success('Task updated successfully');
+          }, function (err) {
+        });
+    }, function () {
+    });
+  };
+
+  acc.TaskDetailsParcelMonitorModal = function (index) {
+    if (!acc.taskInvitation[index].courier_waybill) {
+      toastr.error('Did not add waybill still.');
+      return;
+    }
+    var modalInstance = $uibModal.open({
+      animation: true,
+      templateUrl: 'app/site/modules/accounts/views/taskinvite.track_parcel.modal.tab.html',
+      controller: 'TaskInviteTrackParcelModalInstanceCtrl',
+      controllerAs: 'TVMI',
+      resolve: {
+        TaskDetail: function () {
           return acc.taskInvitation[index];
         },
         DefaultCurrency: function () {
@@ -1393,7 +1449,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
 
       }
     });
-  }
+  };
 
   acc.GetTaskList = function GetTaskList(status, page) {
     acc.status = status;
@@ -1415,8 +1471,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
       }
       acc.getTaskListResponse = true;
     });
-  }
-
+  };
 
   acc.updateTaskDetails = function (index, status) {
     var modalInstance = $uibModal.open({
@@ -1437,15 +1492,16 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
       type = 'user';
       if (acc.taskList.length > 0 && angular.isDefined(acc.taskList[index]._id)) {
 
-        accountService.updateTask(acc.taskList[index]._id, status).then(function (response) {
-          acc.taskList.splice(index, 1);
-        }, function (err) {
-        });
+        accountService.updateTask(acc.taskList[index]._id, status)
+          .then(function (response) {
+              acc.taskList.splice(index, 1);
+            }, function (err) {
+          });
       }
 
     }, function () {
     });
-  }
+  };
 
   acc.TaskDetailsViewModal = function (index) {
     var modalInstance = $uibModal.open({
@@ -1964,6 +2020,7 @@ function accountsCtrl($scope, $rootScope, MainService, accountService, accountSe
       });
     });
   };
+
   acc.livetracking = function (data) {
     var modalInstance = $uibModal.open({
       animation: true,
@@ -2032,9 +2089,6 @@ angular.module('handyforall.accounts').controller('TaskPayModalInstanceCtrl', fu
   };
 
 });
-
-
-
 
 angular.module('handyforall.accounts').controller('DeactivateCtrl', function ($uibModalInstance, user, $state) {
   var decm = this;
@@ -2266,6 +2320,63 @@ angular.module('handyforall.accounts').controller('TaskInviteViewModalInstanceCt
   tvmi.ok = function (working_day, index) {
     var data = {};
     $uibModalInstance.close(data);
+  };
+  tvmi.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+});
+
+angular.module('handyforall.accounts').controller('TaskInviteAddCourierModalInstanceCtrl', function ($uibModalInstance, TaskDetail, DefaultCurrency, getsettings, accountService, toastr, $translate) {
+  var tvmi = this;
+  tvmi.taskDetail = TaskDetail;
+  tvmi.DefaultCurrency = DefaultCurrency;
+  tvmi.getsettings = getsettings;
+  function init() {
+    console.log('TaskInvite', tvmi.taskDetail);
+    tvmi.courierList = accountService.getCourierList();
+  }
+  init();
+
+  tvmi.ok = function (valid) {
+    if (valid) {
+      $uibModalInstance.close(tvmi.taskDetail);
+    } else {
+      $translate('FORM IS INVALID').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
+    }
+  };
+
+  tvmi.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+});
+
+angular.module('handyforall.accounts').controller('TaskInviteTrackParcelModalInstanceCtrl', function ($uibModalInstance, TaskDetail, DefaultCurrency, getsettings, accountService) {
+  var tvmi = this;
+  tvmi.taskDetail = TaskDetail;
+  tvmi.DefaultCurrency = DefaultCurrency;
+  tvmi.getsettings = getsettings;
+  tvmi.courierList = accountService.getCourierList();
+  tvmi.entity = {};
+  function init() {
+    console.log(tvmi.taskDetail.courier_type);
+    console.log(tvmi.courierList[0].value);
+    console.log(tvmi.taskDetail.courier_waybill);
+    if (tvmi.taskDetail.courier_type === tvmi.courierList[0].value.toString()) {
+      const data = {
+        waybill: tvmi.taskDetail.courier_waybill,
+      };
+      accountService.getCourierGuy(data)
+        .then(function (response) {
+          console.log('response', response);
+          tvmi.entity = response;
+          }, function (err) {
+        });
+    }
+  }
+  init();
+
+  tvmi.ok = function () {
+    $uibModalInstance.close();
   };
   tvmi.cancel = function () {
     $uibModalInstance.dismiss('cancel');

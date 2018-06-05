@@ -62,8 +62,10 @@ function accountService($http, $q, Upload) {
     getSecondFlowCagetories: getSecondFlowCagetories,
     getFirstFlowList: getFirstFlowList,
     getSecondFlowList: getSecondFlowList,
-    getAvailabilities: getAvailabilities
-
+    getAvailabilities: getAvailabilities,
+    getCourierList: getCourierList,
+    updateTaskCourier: updateTaskCourier,
+    getCourierGuy: getCourierGuy,
   };
   return accountService;
 
@@ -223,6 +225,20 @@ function accountService($http, $q, Upload) {
       data: data
     }).success(function (data) {
       deferred.resolve(data[0]);
+    }).error(function (err) {
+      deferred.reject(err);
+    });
+    return deferred.promise;
+  }
+
+  function getCourierGuy(data) {
+    var deferred = $q.defer();
+    $http({
+      method: 'POST',
+      url: '/site/common/courier_guy',
+      data: data
+    }).success(function (data) {
+      deferred.resolve(data);
     }).error(function (err) {
       deferred.reject(err);
     });
@@ -560,6 +576,20 @@ function accountService($http, $q, Upload) {
     $http({
       method: 'POST',
       url: '/site/account/updateTask',
+      data: data
+    }).success(function (data) {
+      deferred.resolve(data);
+    }).error(function (err) {
+      deferred.reject(err);
+    });
+    return deferred.promise;
+  }
+
+  function updateTaskCourier(data) {
+    var deferred = $q.defer();
+    $http({
+      method: 'POST',
+      url: '/site/account/update_task_courier',
       data: data
     }).success(function (data) {
       deferred.resolve(data);
@@ -968,6 +998,18 @@ function accountService($http, $q, Upload) {
       {
         name: 'pm_9_10',
       }
+    ];
+  }
+  function getCourierList() {
+    return [
+      {
+        name: 'The Courier Guy',
+        value: 'courier_guy'
+      },
+      {
+        name: 'Dawn Wing',
+        value: 'dawn_wing'
+      },
     ];
   }
 }

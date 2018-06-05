@@ -17,6 +17,8 @@ TASK_SCHEMA.TASK = {
 	payment_mode: String,
 	payment_type: String,
 	bookingmode: String,
+	courier_type: String,
+	courier_waybill: String,
 	usertaskcancellationreason: String,
 	status: { type: Number, default: 1 },
 	reject_job: [{
