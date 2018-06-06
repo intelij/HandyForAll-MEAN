@@ -81,7 +81,7 @@ figlet('NodejsOnDemand', function (err, data) {
                     }
                     db.InsertDocument('admins', { "username": request.admin_name, "name": request.admin_name, "email": request.email, "role": 'admin', "password": request.admin_password, "status": 1 }, function (err, result) {
                       if (err) {
-                        console.log('Error On Admin');
+                        console.log('The admin already exists with the same name.');
 
                         mongoose.disconnect();
                       } else {
