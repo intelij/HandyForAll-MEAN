@@ -1,0 +1,563 @@
+<!--controller name: TaskInviteTrackParcelModalInstanceCtrl-->
+<div class="availabilities-day-form adminweekmodal">
+  <div class="availabilities-day-form adminweekmodal" id="viewdetails">
+    <div class="">
+      <div class="">
+        <div class="modal-header">
+          <button type="button" class="close" ng-click="TVMI.ok()" data-dismiss="modal">×</button>
+          <h1 class="day-text">{{'PARCEL TRACKING'| translate}}</h1>
+        </div>
+        <div class="modal-body" style="padding-bottom: 0;">
+          <div style="text-align: center">
+            <table width="100%" cellpadding="1" cellspacing="0">
+              <tbody>
+              <tr valign="top">
+                <td>
+                  <table width="100%" cellpadding="5" cellspacing="0" class="outer">
+                    <tbody>
+                    <tr>
+                      <td colspan="8" align="center" class="head-text">
+                        Waybill Details
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="header-text-nopadding" align="center">
+                        Waybill
+                      </td>
+                      <td class="header-text-nopadding" align="center">
+                        Date
+                      </td>
+                      <td class="header-text-nopadding" align="center">
+                        Consignee
+                      </td>
+                      <td class="header-text-nopadding" align="center">
+                        Service
+                      </td>
+                      <td class="header-text-nopadding" align="center">
+                        Orig Hub
+                      </td>
+                      <td class="header-text-nopadding" align="center">
+                        Dest Hub
+                      </td>
+                      <td class="header-text-nopadding" align="center">
+                        Pieces
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td valign="top" align="left" class="std-text-nopadding">
+                        {{TVMI.entity.waybill_detail.waybill}}
+                      </td>
+                      <td valign="top" align="left" class="std-text-nopadding">
+                        {{TVMI.entity.waybill_detail.date}}
+                      </td>
+                      <td valign="top" align="left" class="std-text-nopadding">
+                        {{TVMI.entity.waybill_detail.consignee}}
+                      </td>
+                      <td valign="top" align="left" class="std-text-nopadding">
+                        {{TVMI.entity.waybill_detail.service}}
+                      </td>
+                      <td valign="top" align="left" class="std-text-nopadding">
+                        {{TVMI.entity.waybill_detail.orig_hub}}
+                      </td>
+                      <td valign="top" align="left" class="std-text-nopadding">
+                        {{TVMI.entity.waybill_detail.dest_hub}}
+                      </td>
+                      <td valign="top" align="left" class="std-text-nopadding">
+                        {{TVMI.entity.waybill_detail.pieces}}
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <br>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+
+            <table width="100%" cellpadding="5" cellspacing="0" class="outer">
+              <tbody>
+                <tr>
+                  <td colspan="4" align="center" class="head-text">
+                    POD Details
+                  </td>
+                </tr>
+                <tr>
+                  <td class="header-text-nopadding" align="center" width="100">
+                    Date
+                  </td>
+                  <td class="header-text-nopadding" align="center" width="100">
+                    Time
+                  </td>
+                  <td class="header-text-nopadding" align="center" width="100">
+                    Recipient
+                  </td>
+                  <td class="header-text-nopadding" align="center" width="100">
+                    Details
+                  </td>
+                </tr>
+                <tr>
+                  <td valign="top" align="left" class="std-text-nopadding" width="100">
+                    {{TVMI.entity.pod_detail.date}}
+                  </td>
+                  <td valign="top" align="left" class="std-text-nopadding" width="100">
+                    {{TVMI.entity.pod_detail.time}}
+                  </td>
+                  <td valign="top" align="left" class="std-text-nopadding" width="100">
+                    {{TVMI.entity.pod_detail.recipient}}
+                  </td>
+                  <td valign="top" align="left" class="std-text-nopadding" width="100">
+                    {{TVMI.entity.pod_detail.details}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <br>
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tbody>
+              <tr valign="top">
+                <td width="30%">
+                  <table class="outer" cellpadding="5" cellspacing="0">
+                    <tbody>
+                    <tr>
+                      <td class="head-text" align="center" width="150">Signature<p><img
+                          ng-src="{{TVMI.entity.signature}}">
+                      </p></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <br>
+                  <table width="100%" cellpadding="5" cellspacing="0" class="outer">
+                    <tbody>
+                      <tr>
+                        <td colspan="3" class="head-text" align="center">
+                          References
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="header-text-nopadding" align="center">
+                          Number
+                        </td>
+                        <td class="header-text-nopadding" align="center">
+                          Page
+                        </td>
+                        <td class="header-text-nopadding" align="center">
+                          Message
+                        </td>
+                      </tr>
+                      <tr ng-repeat="item in TVMI.entity.references">
+                        <td align="center" width="100%" valign="top" class="std-text-nopadding">
+                          {{item.number}}
+                        </td>
+                        <td align="center" width="100%" valign="top" class="std-text-nopadding">
+                          {{item.page}}
+                        </td>
+                        <td align="center" width="100%" valign="top" class="std-text-nopadding">
+                          {{item.message}}
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+
+                  <br>
+
+                  <table id="eventTable3" class="outer" width="100%" cellpadding="5" cellspacing="0">
+                    <tbody>
+                    <tr>
+                      <td colspan="3" align="center" class="head-text"> Waybill Event Details
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="header-text-nopadding" align="center">
+                        Date
+                      </td>
+                      <td class="header-text-nopadding" align="center">
+                        Time
+                      </td>
+                      <td class="header-text-nopadding" align="center">
+                        Details
+                      </td>
+                    </tr>
+                    <tr ng-repeat="item in TVMI.entity.events">
+                      <td valign="top" align="left" class="std-text-nopadding">
+                        {{item.date}}
+                      </td>
+                      <td valign="top" align="left" class="std-text-nopadding">
+                        {{item.time}}
+                      </td>
+                      <td valign="top" align="left" class="std-text-nopadding">
+                        {{item.details}}
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+        <div class="modal-footer" style="margin-top: 0;">
+          <button type="button" class="bluebtn" data-dismiss="modal" ng-click="TVMI.ok()">{{'CANCEL'|translate }}
+          </button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+  <style>
+    .availabilities-day-form .modal-header {
+      background-color: #545454;
+    }
+
+    #viewdetails .modal-body {
+      float: left;
+      text-align: left;
+      width: 100%;
+      background: #fff;
+    }
+
+    #viewdetails .modal-body {
+      float: left;
+      text-align: left;
+      width: 100%;
+      background: #fff;
+    }
+
+    #viewdetails .view-detail-pop > li label {
+      font-weight: normal;
+    }
+
+    #viewdetails .view-detail-pop input {
+      padding: 5px;
+    }
+
+    .modal-body {
+      position: relative;
+      padding: 20px;
+    }
+
+    HR
+    {
+      color: #DDDDDD;
+    }
+
+    TD.header-text
+    {
+      PADDING-RIGHT: 5px;
+      PADDING-LEFT: 5px;
+      PADDING-TOP: 5px;
+      PADDING-BOTTOM: 5px;
+      font-size: 11px;
+      color: white;
+      text-decoration: none;
+      font-weight : BOLD;
+      font-family : verdana, arial, geneva, sans-serif;
+      background-color: #0543AC;
+    }
+
+    TD.header-text-thin
+    {
+      PADDING-RIGHT: 5px;
+      PADDING-LEFT: 5px;
+      PADDING-TOP: 5px;
+      PADDING-BOTTOM: 5px;
+      font-size: 11px;
+      color: white;
+      text-decoration: none;
+      font-weight : normal;
+      font-family : verdana, arial, geneva, sans-serif;
+      background-color: #0543AC;
+    }
+
+    TD.header-text-nopadding
+    {
+      PADDING-TOP: 5px;
+      PADDING-BOTTOM: 5px;
+      font-size: 11px;
+      color: white;
+      text-decoration: none;
+      font-weight : BOLD;
+      font-family : verdana, arial, geneva, sans-serif;
+      background-color: #0543AC;
+      border:1px solid #000000;
+      border-top-width: 0px;
+      border-right-width: 1px;
+      border-bottom-width: 1px;
+      border-left-width: 0px;
+    }
+
+    TD.head-text {
+      PADDING-RIGHT: 5px;
+      PADDING-LEFT: 5px;
+      PADDING-TOP: 5px;
+      PADDING-BOTTOM: 5px;
+      font-size: 11px;
+      color: #0543AC;
+      text-decoration: none;
+      font-weight : BOLD;
+      font-family : verdana, arial, geneva, sans-serif;
+    }
+
+    TD.outer {
+      border-color: #0543AC #0543AC #0543AC #0543AC;
+      border-style: solid;
+      border-top-width: 1px;
+      border-right-width: 1px;
+      border-bottom-width: 1px;
+      border-left-width: 1px;
+      font-size: 11px;
+      color: white;
+      text-decoration: none;
+      font-weight : BOLD;
+      font-family : verdana, arial, geneva, sans-serif;
+      background-color: #0543AC;
+    }
+
+
+    TABLE.outer {
+      border-color: #0543AC #0543AC #0543AC #0543AC;
+      border-style: solid;
+      border-top-width: 1px;
+      border-right-width: 1px;
+      border-bottom-width: 1px;
+      border-left-width: 1px;
+
+    }
+
+    DIV.outer {
+      border-color: #0543AC #0543AC #0543AC #0543AC;
+      border-style: solid;
+      border-top-width: 1px;
+      border-right-width: 1px;
+      border-bottom-width: 1px;
+      border-left-width: 1px;
+    }
+
+    .button {
+      PADDING-RIGHT: 2px;
+      PADDING-LEFT: 2px;
+      PADDING-TOP: 2px;
+      PADDING-BOTTOM: 2px;
+      FONT-WEIGHT: bold;
+      COLOR: white;
+      FONT-FAMILY: verdana, arial, helvetica;
+      FONT-SIZE: 11px;
+      BACKGROUND-COLOR: #0543AC;
+
+    }
+
+    .button-greyed {
+      PADDING-RIGHT: 2px;
+      PADDING-LEFT: 2px;
+      PADDING-TOP: 2px;
+      PADDING-BOTTOM: 2px;
+      FONT-WEIGHT: bold;
+      COLOR: #666666;
+      FONT-FAMILY: verdana, arial, helvetica;
+      FONT-SIZE: 11px;
+      BACKGROUND-COLOR: #CCCCCC;
+    }
+
+    input.txtbox {
+
+      font-size: 12px;
+      color: #FF9966;
+      text-decoration: none;
+      font-weight : bold;
+      font-family : verdana, arial, geneva, sans-serif;
+      background-color : white;
+
+      background-color: #CC392B;
+      font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px; color: #333333;
+
+      width: 150px;
+    }
+
+    input.txtbox-medium {
+
+      font-size: 12px;
+      color: #FF9966;
+      text-decoration: none;
+      font-weight : bold;
+      font-family : verdana, arial, geneva, sans-serif;
+      background-color : white;
+
+      background-color: #CC392B;
+      font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px; color: #ffffff;
+
+      width: 100px;
+    }
+
+    input.txtbox-small {
+
+      font-size: 12px;
+      color: #FF9966;
+      text-decoration: none;
+      font-weight : bold;
+      font-family : verdana, arial, geneva, sans-serif;
+      background-color : white;
+
+      background-color: #CC392B;
+      font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px; color: #333333;
+
+
+      width: 20px;
+    }
+
+    .textbox {
+
+      FONT-WEIGHT: normal;
+      COLOR: #0543AC;
+      FONT-FAMILY: verdana, arial, helvetica;
+      FONT-SIZE: 11px;
+      BACKGROUND-COLOR: white;
+    }
+
+    .std-text {
+      PADDING-RIGHT: 2px;
+      PADDING-LEFT: 2px;
+      PADDING-TOP: 2px;
+      PADDING-BOTTOM: 2px;
+      font-size: 11px;
+      color: #0543AC;
+      text-decoration: none;
+      font-weight : normal;
+      font-family : verdana, arial, geneva, sans-serif;
+    }
+
+    .std-text-fat {
+      PADDING-RIGHT: 2px;
+      PADDING-LEFT: 2px;
+      PADDING-TOP: 2px;
+      PADDING-BOTTOM: 2px;
+      font-size: 12px;
+      color: #0543AC;
+      text-decoration: none;
+      font-weight : normal;
+      font-family : verdana, arial, geneva, sans-serif;
+    }
+
+    .std-text-nopadding {
+      PADDING-TOP: 2px;
+      PADDING-BOTTOM: 2px;
+      font-size: 11px;
+      color: #0543AC;
+      text-decoration: none;
+      font-weight : normal;
+      font-family : verdana, arial, geneva, sans-serif;
+      border-color: #CCCCCC;
+      border-style: solid;
+      border-top-width: 0px;
+      border-right-width: 1px;
+      border-bottom-width: 1px;
+      border-left-width: 0px;
+    }
+
+    .std-text-grey {
+      PADDING-RIGHT: 2px;
+      PADDING-LEFT: 2px;
+      PADDING-TOP: 2px;
+      PADDING-BOTTOM: 2px;
+      font-size: 11px;
+      color: #BBBBBB;
+      text-decoration: none;
+      font-weight : normal;
+      font-family : verdana, arial, geneva, sans-serif;
+    }
+
+    select {
+      text-decoration:none;
+      background-color: #CC392B;
+      font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px; color: #FFFFFF;
+    }
+
+    head-text {
+      PADDING-RIGHT: 5px;
+      PADDING-LEFT: 5px;
+      PADDING-TOP: 5px;
+      PADDING-BOTTOM: 5px;
+      font-size: 11px;
+      color: #0543AC;
+      text-decoration: none;
+      font-weight : BOLD;
+      font-family : verdana, arial, geneva, sans-serif;
+    }
+
+
+    A.aa-main-lnk:link {
+      font-size: 11px;
+      color: #666666;
+      text-decoration: underline;
+      font-weight : normal;
+      font-family : verdana, arial, geneva, sans-serif;
+    }
+
+    A.aa-main-lnk:visited     {
+      font-size: 11px;
+      color: #666666;
+      text-decoration: underline;
+      font-weight : normal;
+      font-family : verdana, arial, geneva, sans-serif;
+    }
+
+    A.aa-main-lnk:hover       {
+
+      background-color : white;
+      font-size: 11px;
+      color: #000099;
+      text-decoration: underline;
+      font-weight : normal;
+      font-family : verdana, arial, geneva, sans-serif;
+    }
+
+    A.aa-main-lnk:active      {
+      font-size: 11px;
+      color: #000099;
+      text-decoration: underline;
+      font-weight : normal;
+      font-family : verdana, arial, geneva, sans-serif;
+    }
+    A.aa-blue-lnk:link        {
+      font-size: 11px;
+      color: #FFFFFF;
+      text-decoration: underline;
+      font-weight : normal;
+      font-family : verdana, arial, geneva, sans-serif;
+    }
+
+    A.aa-blue-lnk:visited     {
+      font-size: 11px;
+      color: #FFFFFF;
+      text-decoration: underline;
+      font-weight : normal;
+      font-family : verdana, arial, geneva, sans-serif;
+    }
+
+    A.aa-blue-lnk:hover       {
+
+      background-color : #CC392B;
+      font-size: 11px;
+      color: #333333;
+      text-decoration: underline;
+      font-weight : normal;
+      font-family : verdana, arial, geneva, sans-serif;
+    }
+
+    A.aa-blue-lnk:active      {
+
+      background-color : white;
+      font-size: 11px;
+      color: #333333;
+      text-decoration: underline;
+      font-weight : normal;
+      font-family : verdana, arial, geneva, sans-serif;
+    }
+  </style>
+</div>

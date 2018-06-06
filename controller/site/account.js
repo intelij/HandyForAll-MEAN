@@ -1627,7 +1627,9 @@ module.exports = function (io) {
             "user": { $first: "$user" },
             "billing_address": { $first: "$billing_address" },
             "task_address": { $first: "$task_address" },
-            "amount": { $first: "$amount" },
+            "amount": {$first: "$amount"},
+            courier_type: {$first: "$courier_type"},
+            courier_waybill: {$first: "$courier_waybill"},
             "invoice": { $first: "$invoice" },
             "booking_information": { $first: "$booking_information" },
             "worked_hours": { $first: "$worked_hours" },
@@ -2373,6 +2375,20 @@ module.exports = function (io) {
             });
           }
         });
+      }
+    });
+  };
+
+  controller.updatetaskcourier = function (req, res) {
+    const courier = {
+      courier_type: req.body.courier_type,
+      courier_waybill: req.body.courier_waybill,
+    };
+    db.UpdateDocument('task', { '_id': req.body.taskid }, courier, {}, function (err, result) {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(result);
       }
     });
   };
