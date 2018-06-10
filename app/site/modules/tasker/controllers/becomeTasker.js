@@ -501,23 +501,21 @@ function becomeTaskerCtrl($scope, $compile, uiCalendarConfig, $uibModal, $state,
       btc.taskerData.taskerfile = $scope.surveyFiles;
 
       AuthenticationService.BecomeTaskerRegister(btc.taskerData, function (err, response) {
+        console.log('tasker registration response', response);
+
         if (err) {
           $translate('YOUR CREDENTIALS ARE WRONG' + err).then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
+        } else if (response.ok) {
+          AuthenticationService.SetCredentials(user.currentUser.username, user.currentUser.user_id, user.currentUser.authdata, 'tasker', 1);
+          $rootScope.$emit('eventName', { count: 0 });
+          $cookieStore.remove('TaskerData');
+          $translate('TASKER ADDED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
+          $location.path('/account');
+        } else if (response.errors) {
+          toastr.error(response.errors);
         } else {
-          if (response.ok) {
-            AuthenticationService.SetCredentials(user.currentUser.username, user.currentUser.user_id, user.currentUser.authdata, 'tasker', 1);
-            $rootScope.$emit('eventName', { count: 0 });
-            $cookieStore.remove('TaskerData');
-            $translate('TASKER ADDED SUCCESSFULLY').then(function (headline) { toastr.error(headline); }, function (error) { console.error(error); });
-            $location.path('/account');
-          }
-          
-          if (response.errors) {
-            toastr.error(response.errors);
-          } else {
-            $cookieStore.remove('TaskerData');
-            $state.go('becometasker.success', {}, { reload: false });
-          }
+          $cookieStore.remove('TaskerData');
+          $state.go('becometasker.success', {}, { reload: false });
         }
       });
     } else {

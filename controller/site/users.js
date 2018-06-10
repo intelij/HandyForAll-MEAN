@@ -506,10 +506,6 @@ module.exports = function (io) {
 
 
   router.taskerRegister = function (req, res) {
-
-
-    console.log("Hey REgister");
-
     req.body.taskerfiles = [];
     req.body.password = bcrypt.hashSync(req.body.pwd, bcrypt.genSaltSync(8));
 
@@ -531,11 +527,22 @@ module.exports = function (io) {
     delete req.body.avatarflag;
     delete req.body.next;
 
-    var data = {};
+    var token = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZ";
+    var len = 6;
+    var code = '';
+    for (var i = 0; i < len; i++) {
+      var rnum = Math.floor(Math.random() * token.length);
+      code += token.substring(rnum, rnum + 1);
+    }
+
+    req.body.unique_code = code;
+
     db.GetOneDocument('tasker', { 'email': req.body.email }, {}, {}, function (err, user) {
       if (err || user) {
         res.send('wrong');
       } else {
+        console.log("Hey, Tasker Register!");
+
         taskerLibrary.taskerRegister(req.body, function (err, response) {
           if (err) {
             res.send(err);
