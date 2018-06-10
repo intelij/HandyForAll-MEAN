@@ -566,6 +566,8 @@ module.exports = function (app, io) {
       query = {status: {$eq: req.body.status}};
     }
 
+    query.role = "tasker";
+
     if (req.body.sort) {
       var sorted = req.body.sort.field;
     }

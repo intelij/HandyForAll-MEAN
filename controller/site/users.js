@@ -18,7 +18,7 @@ module.exports = function (io) {
   var router = {};
 
   router.getusers = function (req, res) {
-    var condition = { status: 1 };
+    var condition = { status: 1, role: 'user' };
     if (req.query.filter) {
       var filter = JSON.parse(req.query.filter);
       var username = filter.name;
