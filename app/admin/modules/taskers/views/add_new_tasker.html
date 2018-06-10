@@ -417,7 +417,7 @@
             </div>
 
 
-            <div class="lop-div-task">
+            <div class="lop-div-task" ng-if="ANTSC.tasker && ANTSC.tasker.location && ANTSC.tasker.location.lat">
               <ng-map id="foo" center="[{{ANTSC.tasker.location.lat}},{{ANTSC.tasker.location.lng}}]" zoom="8" mayTypeId="TERRAIN">
                 <shape id="circle" name="circle" centered="true" stroke-color='#FF0000' stroke-opacity="0.8" stroke-weight="2" center="[{{ANTSC.tasker.location.lat}},{{ANTSC.tasker.location.lng}}]"
                        radius="{{ANTSC.tasker.radius * ANTSC.radiusval}}" on-radius_changed="ANTSC.mapToInput()" on-center_changed="ANTSC.mapToInput()"
