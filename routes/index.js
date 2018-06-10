@@ -112,10 +112,9 @@ module.exports = function (app, passport, io) {
     });
 
     app.post('/siteregister', validationLoginUser, passport.authenticate('site-register', {
-      successRedirect: '/site-success',
       failureRedirect: '/site-failure',
       failureFlash: true
-    }));
+    }), AuthService.handleLocalLogin);
 
 
     // app.get('/auth/facebook', passport.authenticate('facebook', { scope: ["email", "user_location"] }));
@@ -156,10 +155,9 @@ module.exports = function (app, passport, io) {
     */
 
     app.post('/site/taskerregister', passport.authenticate('tasker-register', {
-      successRedirect: '/site-success',
       failureRedirect: '/site-failure',
       failureFlash: true
-    }));
+    }), AuthService.handleLocalLogin);
 
     app.get('/site-failure', function (req, res) {
       console.log("failure", req.session.flash);

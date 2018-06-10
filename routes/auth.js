@@ -79,7 +79,7 @@ module.exports = function(passport, io) {
                               newUser.address = req.body.address;
                               newUser.phone = req.body.phone;
                               newUser.referalcode = req.body.referalcode;
-                              if (smsdocdata.settings.twilio.mode == 'production') {
+                              if (smsdocdata.settings.twilio && smsdocdata.settings.twilio.mode == 'production') {
                                 newUser.verification_code = [{ "mobile": otp.generate(secret) }];
                               }
                               newUser.name = { 'first_name': req.body.firstname, 'last_name': req.body.lastname };
