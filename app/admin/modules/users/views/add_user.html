@@ -307,10 +307,10 @@ Must Contain Atleast One uppercase,One lower case,One Numeric digit.</span>
 </div>
 <div class="row">
   <div class="form-group col-sm-6" >
-    <label for="phone_number">Phone No</label>
-    <input type="text" name="tel" id="tel" class="form-control" ng-model="USAC.editUserData.emergency_contact.phone" ng-intl-tel-input>
+    <label for="emergency_tel">Phone No</label>
+    <input type="text" name="emergency_tel" id="emergency_tel" class="form-control" ng-model="USAC.editUserData.emergency_contact.phone" ng-intl-tel-input>
     <!--<p class="help-block">
-      <span ng-show="userEditForm.tel.$invalid && !userEditForm.tel.$pristine">Phone Number is required.</span>
+      <span ng-show="userEditForm.emergency_tel.$invalid && !userEditForm.emergency_tel.$pristine">Phone Number is required.</span>
 
     </p>-->
       <span style="color:red" ng-if="USAC.editUserData.phone.number == USAC.editUserData.emergency_contact.phone.number && USAC.editUserData.phone.number != undefined">emergecy contact number should not be same as personal contact number.</span>

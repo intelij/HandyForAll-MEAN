@@ -10,7 +10,6 @@ function usersListCtrl(usersServiceResolve, UsersService, $scope, MainService,to
     }).map(function (menu) {
         return menu.status;
     })[0];
-    console.log("tlc.permission",tlc.permission);
 
      if (usersServiceResolve[2]) {
         tlc.allValue = usersServiceResolve[2].allValue || 0;

@@ -21,8 +21,10 @@ module.exports = function (io) {
   function taskerRegister(dat, callback) {
     var data = {};
 
-    db.InsertDocument('tasker', dat, function (err, result) {
+    db.InsertDocument('users', dat, function (err, result) {
       if (err) {
+        console.error('Failed to register the tasker', err);
+
         data.response = 'Unable save your data';
         callback(data);
       } else {
@@ -40,7 +42,7 @@ module.exports = function (io) {
             });
           }
         ], function (err, settings, template) {
-          if (template && Array.isArray(template)) {
+          if (template && Array.isArray(template) && template.length > 1) {
             var name;
             if (result.name) {
               name = result.name.first_name + " (" + result.username + ")";

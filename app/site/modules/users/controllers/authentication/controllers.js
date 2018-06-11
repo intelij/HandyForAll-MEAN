@@ -212,22 +212,20 @@ function registerCtrl($scope, $rootScope, $location, AuthenticationService, $sta
       } else {
         if (typeof rgc.UserDetails.location.lat != 'undefined' && typeof rgc.UserDetails.location.lng != 'undefined') {
           AuthenticationService.Register(rgc.UserDetails, function (err, response) {
-            console.log("response", response)
+            console.log("response", response);
             if (err) {
               console.log(err);
               $translate(err).then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
               // $translate('EMAIL ID OR USER NAME OR PHONE NUMBER ALREADY EXISTS').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
-            } else {
-              if (response.user == rgc.UserDetails.username) {
-                if (response.verification_code.length == 0) {
-                  $state.go('landing', {}, { reload: true });
-                  $translate('REGISTER SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
-                } else {
-                  $state.go('signupotp', { 'id': response.user_id }, { reload: false });
-                }
+            } else if (response.user == rgc.UserDetails.username) {
+              if (!response.verification_code || !response.verification_code.length) {
+                $state.go('landing', {}, { reload: true });
+                $translate('REGISTER SUCCESSFULLY').then(function (headline) { toastr.success(headline); }, function (translationId) { toastr.success(headline); });
               } else {
-                $translate('EMAIL ID OR USER NAME OR PHONE NUMBER ALREADY EXISTS').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
+                $state.go('signupotp', { 'id': response.user_id }, { reload: false });
               }
+            } else {
+              $translate('EMAIL ID OR USER NAME OR PHONE NUMBER ALREADY EXISTS').then(function (headline) { toastr.error(headline); }, function (translationId) { toastr.error(headline); });
             }
           });
         } else {
