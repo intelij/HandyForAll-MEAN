@@ -66,9 +66,10 @@
             </div>
             <div class="lop-div-task">
               <ng-map id="foo" center="[{{BTC.data.location.lat}},{{BTC.data.location.lng}}]" zoom="8" mayTypeId="TERRAIN">
-                <shape id="circle" name="circle" centered="true" stroke-color='#FF0000' stroke-opacity="0.8" stroke-weight="2" center="[{{BTC.data.location.lat}},{{BTC.data.location.lng}}]"
-                  radius="{{BTC.data.radius * BTC.radiusval}}" on-radius_changed="BTC.mapToInput()" on-center_changed="BTC.mapToInput()"
-                  editable="true"></shape>
+                <shape id="circle" name="circle" centered="true" stroke-color='#FF0000' stroke-opacity="0.8" stroke-weight="2"
+                       center="[{{BTC.data.location.lat}},{{BTC.data.location.lng}}]" radius="{{BTC.data.radius * BTC.radiusval}}"
+                       on-radius_changed="BTC.mapToInput()" on-center_changed="BTC.mapToInput()" editable="true">
+                </shape>
               </ng-map>
             </div>
             <div class="lop-div-task">
