@@ -1,5 +1,5 @@
 # HandyForAll
-SqDeveloper's HandyForAll powered by MEAN Stack
+HandyForAll powered by MEAN Stack
 
 ## Prerequisites
 
